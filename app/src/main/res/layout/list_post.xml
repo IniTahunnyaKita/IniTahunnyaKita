@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:alibabi="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="5dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp">
+        <com.kitekite.initahunnyakita.widget.RoundedImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:id="@+id/full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="Ensa Shop"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <com.kitekite.initahunnyakita.widget.CustomTextView
+        android:id="@+id/post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="Dompet Gaul"
+        alibabi:ttf_name="roboto/Roboto-Medium.ttf"/>
+
+    <com.kitekite.initahunnyakita.widget.CustomTextView
+        android:id="@+id/post_overview"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        alibabi:ttf_name="roboto/Roboto-Light.ttf"/>
+
+    <ImageView
+        android:id="@+id/post_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/post_thumbs_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/post_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+
+</LinearLayout>
