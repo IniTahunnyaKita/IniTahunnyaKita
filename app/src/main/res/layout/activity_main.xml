@@ -1,23 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/root_view"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <ImageView
         android:layout_width="5dp"
         android:layout_height="match_parent"
-        android:src="@color/DeepSkyBlue"/>
+        android:src="@color/Crimson"/>
 
     <ImageView
         android:layout_width="5dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:src="@color/SteelBlue"/>
+        android:src="@color/SuperDarkRed"/>
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-
-
 
 </RelativeLayout>

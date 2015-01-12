@@ -1,20 +1,22 @@
-package com.kitekite.initahunnyakita;
+package com.kitekite.initahunnyakita.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.kitekite.initahunnyakita.adapter.TimelineAdapter;
+import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.BlurImage;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.widget.ProfileItem;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,9 @@ public class HangoutFragment extends Fragment {
         Bitmap blurredImg = BlurImage.BlurBitmap(getActivity(),
                 BitmapFactory.decodeResource(getResources(), R.drawable.prof_pic), 20);
         ((ImageView) header.findViewById(R.id.list_bg)).setImageBitmap(blurredImg);
+        ((ProfileItem)header.findViewById(R.id.profile_item_following)).setItemValue(56);
+        ((ProfileItem)header.findViewById(R.id.profile_item_shares)).setItemValue(71);
+        ((ProfileItem)header.findViewById(R.id.profile_item_friends)).setItemValue(650);
         mListView.addHeaderView(header, null, false);
         mListView.setDividerHeight(0);
         ArrayList<HangoutPost> list = new ArrayList<HangoutPost>();
@@ -59,7 +64,7 @@ public class HangoutFragment extends Fragment {
             post.setThumbsUp(DebugPostValues.thumbsUps[i]);
             list.add(post);
         }
-        TimelineAdapter mAdapter= new TimelineAdapter(getActivity(),R.layout.list,list);
+        HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),R.layout.list,list);
         mListView.setAdapter(mAdapter);
     }
 

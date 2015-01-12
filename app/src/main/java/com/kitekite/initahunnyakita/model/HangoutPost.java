@@ -35,7 +35,7 @@ public class HangoutPost {
     }
 
     public void setThumbsUp(int value){
-        this.thumbsUp = value + " thumbs up";
+        this.thumbsUp = Integer.toString(value);
     }
 
     public void setPrice(String currency, int value){

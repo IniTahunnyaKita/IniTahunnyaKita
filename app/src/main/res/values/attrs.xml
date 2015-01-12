@@ -3,4 +3,7 @@
     <declare-styleable name="CustomTextView">
         <attr name="ttf_name" format="string"/>
     </declare-styleable>
+    <declare-styleable name="ProfileItem">
+        <attr name="item_title" format="string"/>
+    </declare-styleable>
 </resources>

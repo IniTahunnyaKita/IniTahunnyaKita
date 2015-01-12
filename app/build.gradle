@@ -25,5 +25,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.github.markushi:circlebutton:1.1'
     compile files('src/main/libs/Header2ActionBar-0.2.1.jar')
 }

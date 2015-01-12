@@ -12,8 +12,8 @@
         android:paddingLeft="5dp">
         <com.kitekite.initahunnyakita.widget.RoundedImageView
             android:id="@+id/profile_picture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/profile_pic_size"
+            android:layout_height="@dimen/profile_pic_size"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"/>
         <TextView
@@ -52,18 +52,41 @@
 
     <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/post_thumbs_up"
+        android:layout_height="50dp"
+        android:background="@color/Silver">
+        <ImageView
+            android:id="@+id/thumbs_up_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_thumbs_up_default"/>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"/>
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/thumbs_up_btn">
+            <TextView
+                android:id="@+id/post_thumbs_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="thumbs up"/>
+
+            </LinearLayout>
         <TextView
             android:id="@+id/post_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
         </RelativeLayout>
 
 
