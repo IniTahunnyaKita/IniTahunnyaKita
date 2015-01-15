@@ -137,7 +137,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         dest[0] -= (v.getMeasuredWidth() / 2);
         //dest[1] = dm.heightPixels / 2 - (v.getMeasuredHeight() / 2) - statusBarOffset;
         int mHeaderHeight = mContext.getResources().getDimensionPixelSize(R.dimen.profile_header_height);
-        dest[1] = statusBarOffset + (v.getMeasuredHeight() / 2) + mHeaderHeight/2;
+        dest[1] = (statusBarOffset*4)/5 + (v.getMeasuredHeight() / 2) + mHeaderHeight/2;
 
         MainActivity mainActivity = MainActivity.getMainActivity();
         mainActivity.iconPos = originalPos;

@@ -2,7 +2,9 @@ package com.kitekite.initahunnyakita;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
@@ -35,12 +38,15 @@ public class MainActivity extends ActionBarActivity {
     public static MainActivity mainActivity;
     public int [] iconPos = new int[2];
     public int [] iconDest = new int[2];
+    FragmentTabHost mTabHost;
+    private AccelerateDecelerateInterpolator mSmoothInterpolator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mSmoothInterpolator = new AccelerateDecelerateInterpolator();
         mainActivity = this;
 
         initActionBar();
@@ -104,7 +110,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void doTranslateAnimation(String imgUrl){
-        Log.d("taikodok","kepanggil kok");
         final RoundedImageView duplicateImg = new RoundedImageView(this);
         int iconSize = getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(iconSize,iconSize);
@@ -125,8 +130,8 @@ public class MainActivity extends ActionBarActivity {
         int headerLogoSize = getResources().getDimensionPixelSize(R.dimen.profile_header_logo_size);
         float ratio = ((float) headerLogoSize/iconSize);
         AnimationSet animSet = new AnimationSet(true);
-        animSet.setFillAfter(false);
-        animSet.setDuration(600);
+        animSet.setFillAfter(true);
+        animSet.setDuration(800);
         TranslateAnimation translateAnim = new TranslateAnimation(0, ((float)(iconDest[0] - iconPos[0])/ratio), 0, ((float)(iconDest[1] - iconPos[1])/ratio));
         animSet.addAnimation(translateAnim);
         ScaleAnimation scaleAnim = new ScaleAnimation(1f,ratio,1f,ratio, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
@@ -143,7 +148,12 @@ public class MainActivity extends ActionBarActivity {
                 if(profileFragment!=null){
                     profileFragment.mHeaderLogo.setVisibility(View.VISIBLE);
                 }
-                rootView.removeView(duplicateImg);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rootView.removeView(duplicateImg);
+                    }
+                }, 100);
             }
 
             @Override
@@ -151,9 +161,21 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+        animSet.setInterpolator(mSmoothInterpolator);
         //anim.setDuration(500);
         //anim.setFillAfter(true);
         duplicateImg.startAnimation(animSet);
     }
+
+    /*public void initTabs(){
+        mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+        mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+        mTabHost.addTab(setIndicator(MainActivity.this,mTabHost.newTabSpec(TAB_1_TAG),
+                R.drawable.tab_indicator_gen,"Audio",R.drawable.genres_icon),Tab1Container.class,null);
+        mTabHost.addTab(setIndicator(MainActivity.this,mTabHost.newTabSpec(TAB_2_TAG),
+                R.drawable.tab_indicator_gen,"Video",R.drawable.genres_icon),Tab2Container.class,null);
+        mTabHost.addTab(setIndicator(MainActivity.this,mTabHost.newTabSpec(TAB_3_TAG),
+                R.drawable.tab_indicator_gen,"Latest",R.drawable.genres_icon),Tab3Container.class,null);
+    }*/
 
 }
