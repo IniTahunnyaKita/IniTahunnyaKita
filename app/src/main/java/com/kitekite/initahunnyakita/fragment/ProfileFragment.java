@@ -1,6 +1,7 @@
 package com.kitekite.initahunnyakita.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,13 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.util.Global;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -40,6 +43,8 @@ public class ProfileFragment extends Fragment{
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
     private TypedValue mTypedValue = new TypedValue();
     private static int mFirstTime;
+    private String fullname;
+    private SharedPreferences loginCookies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -56,6 +61,7 @@ public class ProfileFragment extends Fragment{
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
         mListView = (ListView) view.findViewById(android.R.id.list);
         mRealHeader = view.findViewById(R.id.header);
+
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFakeHeader = inflater.inflate(R.layout.fake_profile_header,mListView,false);
         mHeaderLogo = (ImageView) view.findViewById(R.id.header_logo);
@@ -145,9 +151,10 @@ public class ProfileFragment extends Fragment{
 
     public void setActionBarBgTransparent(){
         ActionBar actionBar = ((ActionBarActivity)mContext).getSupportActionBar();
-        actionBar.getCustomView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        actionBar.getCustomView().findViewById(R.id.action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.GONE);
-        actionBar.getCustomView().findViewById(R.id.page_type_title).setVisibility(View.GONE);
+        actionBar.getCustomView().findViewById(R.id.action_bar_title).setVisibility(View.GONE);
+        actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
     private void interpolate(View view1, View view2, float interpolation) {

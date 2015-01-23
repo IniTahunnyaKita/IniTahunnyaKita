@@ -2,8 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:alibabi="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:layout_gravity="fill_horizontal" android:orientation="horizontal"
-    android:background="@color/DarkRed">
+    android:layout_gravity="fill_horizontal" android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/header_logo_holder"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/action_bar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/DarkRed"/>
+
+    <ImageView
+        android:id="@+id/action_bar_watermark"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="-50dp"
+        android:visibility="gone"/>
+
 
     <com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/app_logo"
@@ -17,7 +38,7 @@
         alibabi:ttf_name="black_jack.ttf"/>
 
     <com.kitekite.initahunnyakita.widget.CustomTextView
-        android:id="@+id/page_type_title"
+        android:id="@+id/action_bar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -26,11 +47,5 @@
         android:text="Hang Out"
         android:textColor="@android:color/white"
         alibabi:ttf_name="roboto/Roboto-Light.ttf"/>
-
-    <ImageView
-        android:id="@+id/header_logo_holder"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
