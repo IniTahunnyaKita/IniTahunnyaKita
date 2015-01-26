@@ -3,17 +3,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:layout_width="5dp"
-        android:layout_height="match_parent"
-        android:src="@color/Crimson"/>
-
-    <ImageView
-        android:layout_width="5dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:src="@color/SuperDarkRed"/>
-
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
@@ -21,6 +10,9 @@
 
     <include
         layout="@layout/main_tabs"/>
+
+    <include
+        layout="@layout/poll_holder"/>
 
     <ImageView
         android:id="@+id/blur_image"

@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,9 +63,11 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             postHolder.title = (TextView) v.findViewById(R.id.post_title);
             postHolder.overview = (TextView) v.findViewById(R.id.post_overview);
             postHolder.postImg = (ImageView) v.findViewById(R.id.post_image);
-            postHolder.thumbsUpBtn = (ImageView) v.findViewById(R.id.thumbs_up_btn);
+            postHolder.thumbsUpBtn = (RelativeLayout) v.findViewById(R.id.thumbs_up_btn);
+            postHolder.thumbsUpIv = (ImageView) v.findViewById(R.id.thumbs_up_img);
             postHolder.thumbsUpState = false;
             postHolder.thumbsUp = (TextView) v.findViewById(R.id.post_thumbs_up);
+            postHolder.pollBtn = (LinearLayout) v.findViewById(R.id.post_poll_btn);
             postHolder.price = (TextView) v.findViewById(R.id.post_price);
             v.setTag(postHolder);
         }
@@ -83,16 +86,23 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         postHolder.thumbsUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int totalThumbsUp = group.get(position).getThumbsUp();
                 if(!postHolder.thumbsUpState){
+                    totalThumbsUp++;
+                    group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = true;
-                    postHolder.thumbsUpBtn.setImageResource(R.drawable.ic_thumbs_up_enabled);
+                    postHolder.thumbsUpIv.setImageResource(R.drawable.ic_thumbs_up_enabled);
+                    postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 } else {
+                    totalThumbsUp--;
+                    group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = false;
-                    postHolder.thumbsUpBtn.setImageResource(R.drawable.ic_thumbs_up_default);
+                    postHolder.thumbsUpIv.setImageResource(R.drawable.ic_thumbs_up_default);
+                    postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 }
             }
         });
-        postHolder.thumbsUp.setText(group.get(position).getThumbsUp());
+        postHolder.thumbsUp.setText(Integer.toString(group.get(position).getThumbsUp()));
         postHolder.price.setText(group.get(position).getPrice());
         Picasso.with(mContext)
                 .load(group.get(position).getItemUrl())
@@ -112,6 +122,12 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         };
         postHolder.fullName.setOnClickListener(profileClickListener);
         postHolder.profilePic.setOnClickListener(profileClickListener);
+        postHolder.pollBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.getMainActivity().addPollItem(group.get(position));
+            }
+        });
 
 		return v;
         //case TYPE_DISCUSS:
@@ -151,9 +167,11 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         TextView title;
         TextView overview;
         ImageView postImg;
-        ImageView thumbsUpBtn;
+        RelativeLayout thumbsUpBtn;
+        ImageView thumbsUpIv;
         boolean thumbsUpState;
         TextView thumbsUp;
+        LinearLayout pollBtn;
         TextView price;
 	}
 

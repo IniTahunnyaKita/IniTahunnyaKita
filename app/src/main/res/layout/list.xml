@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="?attr/actionBarSize"
+    android:paddingBottom="@dimen/tab_height"
     android:dividerHeight="0dp"
     android:scrollbars="none"
     android:listSelector="@android:color/transparent"/>

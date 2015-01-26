@@ -3,8 +3,9 @@
     xmlns:alibabi="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingLeft="5dp">
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,6 +24,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:text="Ensa Shop"
+            android:textColor="@color/Black"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -37,7 +39,7 @@
 
     <com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/post_overview"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
@@ -45,49 +47,102 @@
 
     <ImageView
         android:id="@+id/post_image"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"/>
 
-    <RelativeLayout
-        android:layout_width="300dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/Silver">
+        android:orientation="horizontal"
+        android:background="@drawable/hangoutpost_btn_container_bg">
+    <RelativeLayout
+        android:id="@+id/thumbs_up_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:background="@drawable/hangoutpost_btn_bg">
         <ImageView
-            android:id="@+id/thumbs_up_btn"
+            android:id="@+id/thumbs_up_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
             android:src="@drawable/ic_thumbs_up_default"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:orientation="vertical"
-            android:layout_toRightOf="@+id/thumbs_up_btn">
+            android:paddingLeft="5dp"
+            android:layout_toRightOf="@+id/thumbs_up_img">
             <TextView
                 android:id="@+id/post_thumbs_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="thumbs up"/>
 
             </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@drawable/hangoutpost_btn_bg">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_discuss"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Discuss"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/post_poll_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@drawable/hangoutpost_btn_bg">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_poll"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Poll"/>
+        </LinearLayout>
+    </LinearLayout>
         <TextView
             android:id="@+id/post_price"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:gravity="center_horizontal"
             android:textSize="16sp"
-            android:textStyle="bold"/>
-        </RelativeLayout>
+            android:textColor="@color/Black"
+            android:textStyle="bold"
+            android:background="@color/Gray"/>
 
 
 </LinearLayout>

@@ -5,4 +5,6 @@
     <dimen name="profile_header_height">200dp</dimen>
     <dimen name="profile_header_logo_size">100dp</dimen>
     <dimen name="profile_pic_size">40dp</dimen>
+    <dimen name="tab_height">46dp</dimen>
+    <dimen name="poll_holder_item_size">45dp</dimen>
 </resources>

@@ -53,7 +53,7 @@
         android:layout_below="@+id/passwordBox"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="@drawable/search_and_login_button"
+        android:background="@drawable/default_btn_bg"
         android:text="Login" 
         android:textColor="@android:color/white" />
         "

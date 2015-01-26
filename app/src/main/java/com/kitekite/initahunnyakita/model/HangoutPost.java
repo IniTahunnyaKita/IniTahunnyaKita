@@ -11,7 +11,7 @@ public class HangoutPost {
     String title;
     String overview;
     Uri itemUrl;
-    String thumbsUp;
+    int thumbsUp;
     String price;
 
     public void setProfileUrl(String url){
@@ -35,7 +35,7 @@ public class HangoutPost {
     }
 
     public void setThumbsUp(int value){
-        this.thumbsUp = Integer.toString(value);
+        this.thumbsUp = value;
     }
 
     public void setPrice(String currency, int value){
@@ -63,7 +63,7 @@ public class HangoutPost {
         return this.itemUrl;
     }
 
-    public String getThumbsUp(){
+    public int getThumbsUp(){
         return this.thumbsUp;
     }
 

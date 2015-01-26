@@ -28,11 +28,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dobmob.dobsliding.DobSlidingMenu;
 import com.dobmob.dobsliding.events.OnCollapsedListener;
@@ -42,12 +45,18 @@ import com.dobmob.dobsliding.models.SlidingItem;
 import com.kitekite.initahunnyakita.fragment.FragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
+import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -65,8 +74,11 @@ public class MainActivity extends ActionBarActivity {
     public static MainActivity mainActivity;
     public int [] iconPos = new int[2];
     public int [] iconDest = new int[2];
+    List pollList = new ArrayList< HangoutPost>();
     FragmentTabHost mTabHost;
     DobSlidingMenu vSlidingMenu;
+    LinearLayout holderLayout;
+    LinearLayout pollHolder;
     View slidingView;
     ImageView blurredBg;
     View content;
@@ -77,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
     public Bitmap blurredBitmap;
     boolean isLoggedIn;
     private static boolean isExpanded = false;
+    private static boolean isPollLayoutShown = false;
     Drawable windowBackground;
 
     @Override
@@ -98,6 +111,8 @@ public class MainActivity extends ActionBarActivity {
         initActionBar();
 
         initTabs();
+
+        initPollHolder();
 
         blurredBg = (ImageView)mainActivity.findViewById(R.id.blur_image);
         inflater = LayoutInflater.from(mainActivity);
@@ -143,7 +158,10 @@ public class MainActivity extends ActionBarActivity {
                 slidingView.getLocationInWindow(pos);
                 Log.d(TAG,"onexpand"+"xpos:" + pos[0]+"ypos:"+pos[1]);
                 setBlurredBackground(contentHeight);
-                vSlidingMenu.expand();
+                if(!isExpanded)
+                    vSlidingMenu.expand();
+                else
+                    vSlidingMenu.collapse();
                 //blurBackground(slidingView);
             }
         };
@@ -391,5 +409,72 @@ public class MainActivity extends ActionBarActivity {
         isExpanded = expanded;
     }
 
+    public void initPollHolder(){
+        holderLayout = (LinearLayout) findViewById(R.id.holder_layout);
+        pollHolder = (LinearLayout) findViewById(R.id.poll_holder);
+        ImageView cancelBtn = (ImageView) holderLayout.findViewById(R.id.poll_cancel_btn);
+        Button pollBtn = (Button) holderLayout.findViewById(R.id.poll_btn);
+        View.OnClickListener closeHolder = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPollHolder(false);
+            }
+        };
+        cancelBtn.setOnClickListener(closeHolder);
+        pollBtn.setOnClickListener(closeHolder);
+    }
+
+    public void showPollHolder(final boolean show){
+        isPollLayoutShown = show;
+        ObjectAnimator mover = ObjectAnimator.ofFloat(holderLayout,"translationY", 0f, 210f);
+        if(!show)
+            mover = ObjectAnimator.ofFloat(holderLayout, "translationY", 210f, 0f);
+        mover.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(!show) {
+                    pollHolder.removeAllViews();
+                    pollList.clear();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        mover.setDuration(800);
+        mover.start();
+    }
+
+    public void addPollItem(HangoutPost post){
+        if(pollList.size()==5){
+            Toast.makeText(this,"Can't add more options",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final int size = getResources().getDimensionPixelSize(R.dimen.poll_holder_item_size);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+        lp.setMargins(15,0,0,0);
+        lp.gravity = Gravity.CENTER_VERTICAL;
+        ImageView item = new ImageView(this);
+        item.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Picasso.with(this)
+                .load(post.getItemUrl())
+                .into(item);
+        pollHolder.addView(item,lp);
+        pollList.add(post);
+        if(!isPollLayoutShown)
+            showPollHolder(true);
+    }
 
 }
