@@ -16,13 +16,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
-import com.kitekite.initahunnyakita.util.Global;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -66,7 +64,14 @@ public class ProfileFragment extends Fragment{
         mFakeHeader = inflater.inflate(R.layout.fake_profile_header,mListView,false);
         mHeaderLogo = (ImageView) view.findViewById(R.id.header_logo);
         mFirstTime = 0;
-
+        mHeaderLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] pos = new int[2];
+                mHeaderLogo.getLocationOnScreen(pos);
+                Log.d("kodok","headerposx:"+mHeaderLogo.getMeasuredHeight()+"y:"+pos[1]);
+            }
+        });
         mListView.addHeaderView(mFakeHeader);
         initListView();
         //load image
@@ -151,7 +156,8 @@ public class ProfileFragment extends Fragment{
 
     public void setActionBarBgTransparent(){
         ActionBar actionBar = ((ActionBarActivity)mContext).getSupportActionBar();
-        actionBar.getCustomView().findViewById(R.id.action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.action_bar_title).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);

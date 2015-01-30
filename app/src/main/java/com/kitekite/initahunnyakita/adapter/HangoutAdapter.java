@@ -142,7 +142,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         DisplayMetrics dm = new DisplayMetrics();
         ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
         int statusBarOffset = dm.heightPixels - root.getMeasuredHeight();
-
         int originalPos[] = new int[2];
 
         v.getLocationOnScreen(originalPos);
@@ -153,7 +152,10 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         dest[0] -= (v.getMeasuredWidth() / 2);
         //dest[1] = dm.heightPixels / 2 - (v.getMeasuredHeight() / 2) - statusBarOffset;
         int mHeaderHeight = mContext.getResources().getDimensionPixelSize(R.dimen.profile_header_height);
-        dest[1] = (statusBarOffset*4)/5 + (v.getMeasuredHeight() / 2) + mHeaderHeight/2;
+        int headerLogoSize = mContext.getResources().getDimensionPixelSize(R.dimen.profile_header_logo_size);
+        dest[1] = -headerLogoSize / 2 + mHeaderHeight/2+168;
+        dest[1] = 240;
+        Log.d("kodok","status bar offset:"+headerLogoSize+"y pos:"+mHeaderHeight);
 
         MainActivity mainActivity = MainActivity.getMainActivity();
         mainActivity.iconPos = originalPos;

@@ -1,23 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kitekite.initahunnyakita.widget.NotificationLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#44000000">
-
-    <Button
-        android:id="@+id/clickMe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="click me" />
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:paddingTop="?attr/actionBarSize"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="#44FFFFFF">
 
     <ImageView
-        android:id="@+id/toggleMe"
+        android:layout_width="match_parent"
+        android:layout_height="201dp"
+        android:layout_marginTop="-200dp"
+        android:src="#44FFFFFF"
+        android:contentDescription="dummy"/>
+
+    <TextView
+        android:id="@+id/notif_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_centerHorizontal="true"
+        android:text="Notifications"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/notif_title"
+        android:src="@color/DarkGray"/>
+
+    <ListView
+        android:id="@+id/notif_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notif_title"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/transparent"/>
+
+    <ImageView
+        android:id="@+id/notif_toggle"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@color/Maroon"/>
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:src="@drawable/rounded_grey_bg"/>
 
-</RelativeLayout>
+</com.kitekite.initahunnyakita.widget.NotificationLayout>

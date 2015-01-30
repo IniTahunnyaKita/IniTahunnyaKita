@@ -3,22 +3,49 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <com.kitekite.initahunnyakita.widget.RevealLayout
+        android:id="@+id/reveal_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <include
-        layout="@layout/main_tabs"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Shop mode ;)"
+            android:background="@color/PowderBlue"
+            android:gravity="center"
+            android:textSize="32sp"
+            android:textColor="#FFF"
+        />
 
-    <include
-        layout="@layout/poll_holder"/>
+        <RelativeLayout
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/frame_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <include
+                layout="@layout/main_tabs"/>
+
+            <include
+                layout="@layout/poll_holder"/>
+        </RelativeLayout>
+
+    </com.kitekite.initahunnyakita.widget.RevealLayout>
 
     <ImageView
         android:id="@+id/blur_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:scaleType="fitStart"
         android:visibility="gone" />
+
+
+    <include
+        layout="@layout/notification_layout"/>
 
 </RelativeLayout>

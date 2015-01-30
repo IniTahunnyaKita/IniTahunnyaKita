@@ -53,31 +53,32 @@
         android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"/>
 
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:background="@drawable/hangoutpost_btn_container_bg">
+        <TableRow
+            android:layout_weight="1"
+            android:stretchColumns="*">
     <RelativeLayout
         android:id="@+id/thumbs_up_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:clickable="true"
         android:background="@drawable/hangoutpost_btn_bg">
         <ImageView
             android:id="@+id/thumbs_up_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:paddingLeft="5dp"
             android:src="@drawable/ic_thumbs_up_default"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:orientation="vertical"
-            android:paddingLeft="5dp"
             android:layout_toRightOf="@+id/thumbs_up_img">
             <TextView
                 android:id="@+id/post_thumbs_up"
@@ -88,50 +89,56 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="thumbs up"/>
+                android:text="thumbs up"
+                android:textSize="12sp"/>
 
             </LinearLayout>
         </RelativeLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:clickable="true"
             android:background="@drawable/hangoutpost_btn_bg">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_discuss"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:text="Discuss"/>
         </LinearLayout>
 
 
         <LinearLayout
             android:id="@+id/post_poll_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:clickable="true"
             android:background="@drawable/hangoutpost_btn_bg">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_poll"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:text="Poll"/>
         </LinearLayout>
-    </LinearLayout>
+        </TableRow>
+    </TableLayout>
         <TextView
             android:id="@+id/post_price"
             android:layout_width="match_parent"
