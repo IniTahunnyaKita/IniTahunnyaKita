@@ -10,13 +10,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -26,7 +24,6 @@ import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -42,11 +39,11 @@ public class NotificationLayout extends RelativeLayout{
     private ImageView blurredBg;
     private int initialY, maxHeight, mActionBarSize, topOffset;
     private float initialTouchY;
-    private int layoutHeight = getRootView().getMeasuredHeight();
     private int triggerPixel = 250;
     private Timer t;
     private int timeCounter = 0;
-    private boolean isExpanded = false;
+    private static boolean isExpanded = false;
+    private static boolean isBlurred = false;
     ArrayList<PropertyValuesHolder> props;
     ObjectAnimator anim;
     int contentWidth = getResources().getDisplayMetrics().widthPixels;
@@ -77,7 +74,7 @@ public class NotificationLayout extends RelativeLayout{
         styledAttributes.recycle();
         maxHeight = getResources().getDisplayMetrics().heightPixels - mActionBarSize;
         Log.d("kodok", "initlayout" + getResources().getDisplayMetrics().heightPixels + " " + mActionBarSize);
-        anim = ObjectAnimator.ofFloat(layout,"y",0,-getResources().getDisplayMetrics().heightPixels+mActionBarSize+100);
+        anim = ObjectAnimator.ofFloat(layout,"y",0,-getResources().getDisplayMetrics().heightPixels+mActionBarSize);
         anim.setDuration(0);
         anim.start();
 
@@ -98,25 +95,44 @@ public class NotificationLayout extends RelativeLayout{
 
     public boolean dispatchTouchEvent(MotionEvent event) {
         int [] location = new int[2];
-        int goBack = -getResources().getDisplayMetrics().heightPixels+mActionBarSize+100;
+        int goBack = -getResources().getDisplayMetrics().heightPixels+mActionBarSize;
         topOffset = getResources().getDisplayMetrics().heightPixels - layout.getMeasuredHeight();
         blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                //ignore double tap
+                if(event.getRawY()<mActionBarSize+topOffset)
+                    return true;
+                layout.setVisibility(VISIBLE);
                 layout.getLocationInWindow(location);
                 initialY = location[1];
                 initialTouchY = event.getRawY();
                 blurredBg.setVisibility(View.VISIBLE);
                 drawBlurredBackground();
                 cutBackground((float) getToggleYPosition() / maxHeight);
+                isBlurred = true;
                 return true;
             case MotionEvent.ACTION_MOVE:
-                cutBackground((float)getToggleYPosition()/maxHeight);
+                //ignore double tap
+                if(event.getRawY()<mActionBarSize)
+                    return true;
+                layout.setVisibility(VISIBLE);
+                if(!isBlurred){
+                    Log.d("hello","hello");
+                    layout.getLocationInWindow(location);
+                    initialY = location[1];
+                    initialTouchY = event.getRawY();
+                    blurredBg.setVisibility(View.VISIBLE);
+                    drawBlurredBackground();
+                    cutBackground((float) getToggleYPosition() / maxHeight);
+                    isBlurred = true;
+                }
                 int newPos;
                 if(isExpanded && (event.getRawY() - initialTouchY > 0))
                     newPos = initialY + (int) (event.getRawY() - initialTouchY)/3;
                 else
                     newPos = initialY + (int) (event.getRawY() - initialTouchY);
+                cutBackground((float)getToggleYPosition()/maxHeight);
                 props = new ArrayList<PropertyValuesHolder>(1);
                 props.add(PropertyValuesHolder.ofFloat("y", newPos));
                 anim = ObjectAnimator.ofPropertyValuesHolder(layout,
@@ -125,6 +141,9 @@ public class NotificationLayout extends RelativeLayout{
                 anim.start();
                 return true;
             case MotionEvent.ACTION_UP:
+                //ignore double tap
+                if(event.getRawY()<mActionBarSize)
+                    return true;
                 if(!isExpanded){
                     if(triggerPixel < event.getRawY() - initialTouchY)
                     {
@@ -186,8 +205,14 @@ public class NotificationLayout extends RelativeLayout{
         }
         @Override
         public void onAnimationEnd(Animator animation) {
-            if(!isExpanded)
-                blurredBg.setVisibility(View.GONE);
+            if(!isExpanded) {
+                if(blurredBitmap!=null)
+                    blurredBitmap.recycle();
+                blurredBitmap = null;
+                blurredBg.setVisibility(GONE);
+                layout.setVisibility(GONE);
+                isBlurred = false;
+            }
             else
                 cutBackground(100);
         }
@@ -212,6 +237,8 @@ public class NotificationLayout extends RelativeLayout{
     }
 
     public void cutBackground(float percent){
+        if(blurredBitmap == null)
+            return;
         Bitmap mutableBitmap = blurredBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Paint p = new Paint();
         p.setColor(Color.TRANSPARENT);

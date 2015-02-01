@@ -10,6 +10,7 @@
     android:paddingTop="?attr/actionBarSize"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:visibility="gone"
     android:background="#44FFFFFF">
 
     <ImageView

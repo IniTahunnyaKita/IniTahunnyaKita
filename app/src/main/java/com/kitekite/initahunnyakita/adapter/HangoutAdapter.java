@@ -2,6 +2,7 @@ package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -26,6 +27,8 @@ import com.kitekite.initahunnyakita.widget.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import android.graphics.Bitmap.Config;
 
 public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	public final static int TYPE_PROFILE = 0;
@@ -78,6 +81,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         Picasso.with(mContext)
                 .load(group.get(position).getProfileUrl())
                 .error(R.drawable.ensa_shop)
+                .resize(50,50)
                 .tag(mContext)
                 .into(postHolder.profilePic);
         postHolder.fullName.setText(group.get(position).getFullname());

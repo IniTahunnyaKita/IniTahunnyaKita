@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -38,8 +40,10 @@ import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
+import com.kitekite.initahunnyakita.util.DebugPostValues;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
+import com.kitekite.initahunnyakita.widget.ActionBarLayout;
 import com.kitekite.initahunnyakita.widget.RevealLayout;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
 import com.nineoldandroids.animation.Animator;
@@ -78,10 +82,10 @@ public class MainActivity extends ActionBarActivity {
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
     public Bitmap blurredBitmap;
     boolean isLoggedIn;
-    private static boolean isExpanded,isPollLayoutShown = false;
-    final private static int USER_MODE  = 1;
-    final private static int SHOP_MODE  = 2;
-    private static int mode  = USER_MODE;
+    private static boolean isPollLayoutShown = false;
+    final public static int USER_MODE  = 1;
+    final public static int SHOP_MODE  = 2;
+    public static int mode  = USER_MODE;
     Drawable windowBackground;
 
     @Override
@@ -139,46 +143,23 @@ public class MainActivity extends ActionBarActivity {
         LayoutInflater mInflater = LayoutInflater.from(this);
 
         LayoutParams lp = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
+        ActionBarLayout mCustomView = (ActionBarLayout) mInflater.inflate(R.layout.custom_actionbar, null);
+        mCustomView.setHasRevealLayout(true);
         mActionBar.setCustomView(mCustomView, lp);
-        //set toggle for notification
-        View.OnClickListener notificationToggle = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRevealLayout.next();
-                if(mode==USER_MODE) {
-                    mode = SHOP_MODE;
-                    YoYo.with(Techniques.SlideOutRight)
-                            .duration(500)
-                            .playOn(findViewById(R.id.usermode_action_bar_bg));
-                    YoYo.with(Techniques.SlideInLeft)
-                            .duration(500)
-                            .playOn(findViewById(R.id.shopmode_action_bar_bg));
-                }else {
-                    mode = USER_MODE;
-                    YoYo.with(Techniques.SlideInLeft)
-                            .duration(500)
-                            .playOn(findViewById(R.id.usermode_action_bar_bg));
-                    YoYo.with(Techniques.SlideOutRight)
-                            .duration(500)
-                            .playOn(findViewById(R.id.shopmode_action_bar_bg));
-                }
-            }
-        };
-        mCustomView.findViewById(R.id.action_bar_title).setOnClickListener(notificationToggle);
+
+        /*mCustomView.findViewById(R.id.action_bar_title).setOnClickListener(notificationToggle);
         mCustomView.findViewById(R.id.action_bar_watermark).setOnClickListener(notificationToggle);
         mCustomView.findViewById(R.id.usermode_action_bar_bg).setOnClickListener(notificationToggle);
         mCustomView.findViewById(R.id.app_logo).setOnClickListener(notificationToggle);
-        mCustomView.setOnTouchListener(new View.OnTouchListener() {
+        mCustomView.findViewById(R.id.action_bar_watermark).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_MOVE){
-                    findViewById(R.id.notif_toggle).requestFocus();
-
-                }
+                findViewById(R.id.notification_layout).dispatchTouchEvent(event);
                 return false;
             }
-        });
+        });*/
+
+
     }
 
     private void selectFragment(int position) {
@@ -278,15 +259,26 @@ public class MainActivity extends ActionBarActivity {
         View v = LayoutInflater.from(ctx).inflate(R.layout.tab_item, null);
         //v.setBackgroundResource(R.drawable.tab_indicator);
         ImageView tabImg = (ImageView) v.findViewById(R.id.tab_image);
+        TextView tabTitle = (TextView) v.findViewById(R.id.tab_title);
         String tag = spec.getTag();
-        if(tag.equals(TAB_1_TAG))
+        if(tag.equals(TAB_1_TAG)) {
             tabImg.setBackgroundResource(R.drawable.ic_hangout_tab);
-        else if(tag.equals(TAB_2_TAG))
+            tabTitle.setText("Hang Out");
+        }
+        else if(tag.equals(TAB_2_TAG)) {
             tabImg.setBackgroundResource(R.drawable.ic_discover_tab);
-        else if(tag.equals(TAB_3_TAG))
+            tabTitle.setText("Discover");
+        }
+        else if(tag.equals(TAB_3_TAG)){
             tabImg.setBackgroundResource(R.drawable.ic_trending_tab);
-        else if(tag.equals(TAB_4_TAG))
+            tabTitle.setText("Discussion");
+
+        }
+        else if(tag.equals(TAB_4_TAG)){
             tabImg.setBackgroundResource(R.drawable.ic_thebag_tab);
+            tabTitle.setText("The Bag");
+
+        }
         return spec.setIndicator(v);
     }
 
@@ -309,28 +301,16 @@ public class MainActivity extends ActionBarActivity {
 
     private void initNotification(){
         ListView notificationList = (ListView) findViewById(R.id.notif_listview);
-        ArrayList<NotificationItem> list = new ArrayList<NotificationItem>();
-        NotificationItem item1 = new NotificationItem();
-        NotificationItem item2 = new NotificationItem();
-        NotificationItem item3 = new NotificationItem();
-        item1.setFullname("Jethro Satya");
-        item1.setAction(NotificationItem.ACTION_TYPE_COMMENT);
-        item1.setContent("gila ini gaul bangetttttttttttt");
-        item1.setProfileUrl("http://i58.tinypic.com/1zeum54.jpg");
-        item1.setItemUrl("file:///android_asset/jerseynesia_item1.jpg");
-        list.add(item1);
-        item2.setFullname("Leviero Leviero");
-        item2.setAction(NotificationItem.ACTION_TYPE_COMMENT);
-        item2.setContent("bro jadi beli komputer baru? ini aja bro lenovo FTW");
-        item2.setProfileUrl("http://i59.tinypic.com/2vxftiw.jpg");
-        item2.setItemUrl("http://www.lenovo.com/images/gallery/1060x596/lenovo-laptop-convertible-thinkpad-yoga-silver-front-1.jpg");
-        list.add(item2);
-        item3.setFullname("Jethro Satya");
-        item3.setAction(NotificationItem.ACTION_TYPE_COMMENT);
-        item3.setContent("spam super hahahahahahahahhahhahaha");
-        item3.setProfileUrl("http://i58.tinypic.com/1zeum54.jpg");
-        item3.setItemUrl("file:///android_asset/ensa_shop_item1.jpg");
-        list.add(item3);
+        ArrayList<NotificationItem> list = new ArrayList<>();
+        for (int i=0;i< DebugPostValues.NotificationItems.fullnames.length;i++){
+            NotificationItem item = new NotificationItem();
+            item.setFullname(DebugPostValues.NotificationItems.fullnames[i]);
+            item.setAction(NotificationItem.ACTION_TYPE_COMMENT);
+            item.setContent(DebugPostValues.NotificationItems.contents[i]);
+            item.setProfileUrl(DebugPostValues.NotificationItems.profileUrls[i]);
+            item.setItemUrl(DebugPostValues.NotificationItems.itemUrls[i]);
+            list.add(item);
+        }
         NotificationAdapter adapter = new NotificationAdapter(this, 0, list);
         notificationList.setAdapter(adapter);
     }
@@ -358,10 +338,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-    }
-
-    private static void setIsExpanded(boolean expanded){
-        isExpanded = expanded;
     }
 
     public void initPollHolder(){
@@ -423,7 +399,7 @@ public class MainActivity extends ActionBarActivity {
         }
         final int size = getResources().getDimensionPixelSize(R.dimen.poll_holder_item_size);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
-        lp.setMargins(15,0,0,0);
+        lp.setMargins(15, 0, 0, 0);
         lp.gravity = Gravity.CENTER_VERTICAL;
         ImageView item = new ImageView(this);
         item.setScaleType(ImageView.ScaleType.CENTER_CROP);
