@@ -7,24 +7,19 @@ The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-From DobSliding:
-* proguard-project.txt
-From NineOldAndroids:
-* AndroidManifest.xml
-* lint.xml
-* pom.xml
+* .gitignore
+* README.md
+* default.properties
+* proguard.cfg
 
 Moved Files:
 ------------
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-In NineOldAndroids:
-* src\ => nineOldAndroids\src\main\java\
-In DobSliding:
-* AndroidManifest.xml => dobSliding\src\main\AndroidManifest.xml
-* res\ => dobSliding\src\main\res\
-* src\ => dobSliding\src\main\java\
+* AndroidManifest.xml => verticalpager\src\main\AndroidManifest.xml
+* res\ => verticalpager\src\main\res\
+* src\ => verticalpager\src\main\java\
 
 Next Steps:
 -----------

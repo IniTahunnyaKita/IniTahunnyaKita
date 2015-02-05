@@ -2,8 +2,6 @@ package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,15 +19,13 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.fragment.ItemDetailFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import android.graphics.Bitmap.Config;
 
 public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	public final static int TYPE_PROFILE = 0;
@@ -51,7 +45,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         this.mContext = context;
         this.resources = mContext.getResources();
         gestureDetector = new GestureDetector(mContext,new DoubleTapListener());
-	}
 	
 	public Object getChild(int childPosition) {
 		// TODO Auto-generated method stub
@@ -202,7 +195,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            Log.d("kdok","doubletap");
+            Log.d("kodok","doubletap");
             ((ActionBarActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_container,new ItemDetailFragment(),"ITEM_DETAIL")
