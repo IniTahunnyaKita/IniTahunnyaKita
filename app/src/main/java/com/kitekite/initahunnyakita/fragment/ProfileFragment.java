@@ -1,8 +1,10 @@
 package com.kitekite.initahunnyakita.fragment;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -86,26 +89,30 @@ public class ProfileFragment extends Fragment{
                 .tag(mContext)
                 .into((ImageView)view.findViewById(R.id.header_picture));
         mHeaderLogo.setVisibility(View.INVISIBLE);
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int scrollY = getScrollY();
-                //sticky actionbar
-                mRealHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
-                //header_logo --> actionbar icon
-                float ratio = clamp(mRealHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
-                Log.d("taikodok","kodokbanget");
-                if(mFirstTime>1) {
-                    Log.d("taikodok","kodok");
-                    interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
-                } else if (mFirstTime<=1)
-                    mFirstTime++;
-            }
-        });
+        if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
+            mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                }
+
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int scrollY = getScrollY();
+                    //sticky actionbar
+                    mRealHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+                    //header_logo --> actionbar icon
+                    float ratio = clamp(mRealHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
+                    Log.d("taikodok", "kodokbanget");
+                    if (mFirstTime > 1) {
+                        Log.d("taikodok", "kodok");
+                        interpolate(mHeaderLogo, getActionBarIconView(), mSmoothInterpolator.getInterpolation(ratio));
+                    } else if (mFirstTime <= 1)
+                        mFirstTime++;
+                }
+            });
+        }
 
     }
 
@@ -163,6 +170,7 @@ public class ProfileFragment extends Fragment{
         actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void interpolate(View view1, View view2, float interpolation) {
         RectF mRect1 = new RectF();
         RectF mRect2 = new RectF();

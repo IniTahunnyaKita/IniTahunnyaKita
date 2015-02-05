@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.fragment.ItemDetailFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
@@ -37,6 +40,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	private ArrayList<HangoutPost> group;
     private static Context mContext;
     private static Resources resources;
+    private GestureDetector gestureDetector;
 
 	public HangoutAdapter(Context context, int textViewResourceId) {
 	    super(context, textViewResourceId);
@@ -46,6 +50,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	    this.group = list;
         this.mContext = context;
         this.resources = mContext.getResources();
+        gestureDetector = new GestureDetector(mContext,new DoubleTapListener());
 	}
 	
 	public Object getChild(int childPosition) {
@@ -81,7 +86,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         Picasso.with(mContext)
                 .load(group.get(position).getProfileUrl())
                 .error(R.drawable.ensa_shop)
-                .resize(50,50)
+                .resize(80,80)
                 .tag(mContext)
                 .into(postHolder.profilePic);
         postHolder.fullName.setText(group.get(position).getFullname());
@@ -91,7 +96,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             @Override
             public void onClick(View v) {
                 int totalThumbsUp = group.get(position).getThumbsUp();
-                if(!postHolder.thumbsUpState){
+                if (!postHolder.thumbsUpState) {
                     totalThumbsUp++;
                     group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = true;
@@ -113,6 +118,13 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
                 .error(R.drawable.ensa_shop)
                 .tag(mContext)
                 .into(postHolder.postImg);
+        postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("kdok","ontouch");
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
         View.OnClickListener profileClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,5 +192,24 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         LinearLayout pollBtn;
         TextView price;
 	}
+
+    private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.d("kdok","doubletap");
+            ((ActionBarActivity) mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container,new ItemDetailFragment(),"ITEM_DETAIL")
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        }
+    }
 
 }

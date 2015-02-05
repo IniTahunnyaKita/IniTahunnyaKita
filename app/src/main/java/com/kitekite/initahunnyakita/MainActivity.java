@@ -270,7 +270,7 @@ public class MainActivity extends ActionBarActivity {
             tabTitle.setText("Discover");
         }
         else if(tag.equals(TAB_3_TAG)){
-            tabImg.setBackgroundResource(R.drawable.ic_trending_tab);
+            tabImg.setBackgroundResource(R.drawable.ic_discussion_tab);
             tabTitle.setText("Discussion");
 
         }
