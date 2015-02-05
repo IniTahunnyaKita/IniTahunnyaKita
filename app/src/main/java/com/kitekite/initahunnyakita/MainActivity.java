@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -90,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
 
         //go to login activity if user's not logged in
@@ -177,7 +179,11 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().popBackStack();
             if(backstackCount==1) {
                 setActionBarDefault();
-                showWatermark(R.drawable.hangout_actionbar_watermark,true);
+                getSupportActionBar().show();
+                YoYo.with(Techniques.SlideInUp)
+                        .duration(800)
+                        .playOn(mTabHost);
+                showWatermark(R.drawable.hangout_actionbar_watermark, true);
             }
         }
         else

@@ -13,18 +13,23 @@ import java.util.List;
  */
 public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
 
+    private List<Class<? extends Fragment>> mPagesClasses;
+    private Context mContext;
+
 
     public ItemDetailPagerAdapter(FragmentManager fm, Context context,List<Class<? extends Fragment>> pages) {
         super(fm);
+        mContext = context;
+        mPagesClasses = pages;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return Fragment.instantiate(mContext, mPagesClasses.get(posiiton).getName());
+        return Fragment.instantiate(mContext, mPagesClasses.get(position).getName());
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mPagesClasses.size();
     }
 }

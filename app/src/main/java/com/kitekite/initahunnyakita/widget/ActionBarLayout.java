@@ -13,7 +13,7 @@ import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
 
 /**
- * Created by feliciaanggrainihidayat on 31/1/15.
+ * Created by florian on 31/1/15.
  */
 public class ActionBarLayout extends RelativeLayout{
     private static boolean hasRevealLayout = false;

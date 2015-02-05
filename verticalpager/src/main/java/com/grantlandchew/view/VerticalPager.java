@@ -1,6 +1,7 @@
 package com.grantlandchew.view;
 
 /*
+ * 
  * Copyright (C) 2011 Grantland Chew
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,10 +73,29 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 /**
- * @author Grantland Chew
- * @since Feb 13, 2011
+ * This is a slightly modified version of the vertical pager by Grantland Chew: <br>
+ * <a href="https://github.com/grantland/android-verticalpager">https://github.com/grantland/android-verticalpager</a>
+ * <p>
+ * Custom changes: <br>
+ * 1) removed the code that shrinks the first page a little bit to make beginning of the next page visible. <br>
+ * 2) onMeasure will better handle pages height (changed from MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY). <br>
+ * 3) added {@link VerticalPager#snapToPage(int, int)} method to request snap with a custom duration <br>
+ * 4) added {@link VerticalPager#setPagingEnabled(boolean)} method to lock/unlock paging
  */
 public class VerticalPager extends ViewGroup {
+
+    /**
+     * Default page snap duration in milliseconds.
+     */
+    public static final int PAGE_SNAP_DURATION_DEFAULT = 300;
+
+    /**
+     * Instant page snap duration in milliseconds.
+     */
+    public static final int PAGE_SNAP_DURATION_INSTANT = 1;
+
+    private boolean mIsPagingEnabled = true;
+
     public static final String TAG = "VerticalPager";
 
     private static final int INVALID_SCREEN = -1;
@@ -117,8 +137,10 @@ public class VerticalPager extends ViewGroup {
     /**
      * Used to inflate the Workspace from XML.
      *
-     * @param context The application's context.
-     * @param attrs The attribtues set containing the Workspace's customization values.
+     * @param context
+     *            The application's context.
+     * @param attrs
+     *            The attribtues set containing the Workspace's customization values.
      */
     public VerticalPager(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -127,17 +149,15 @@ public class VerticalPager extends ViewGroup {
     /**
      * Used to inflate the Workspace from XML.
      *
-     * @param context The application's context.
-     * @param attrs The attribtues set containing the Workspace's customization values.
-     * @param defStyle Unused.
+     * @param context
+     *            The application's context.
+     * @param attrs
+     *            The attribtues set containing the Workspace's customization values.
+     * @param defStyle
+     *            Unused.
      */
     public VerticalPager(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        //TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.com_deezapps_widget_HorizontalPager);
-        //pageHeightSpec = a.getDimensionPixelSize(R.styleable.com_deezapps_widget_HorizontalPager_pageWidth, SPEC_UNDEFINED);
-        //a.recycle();
-
         init(context);
     }
 
@@ -158,7 +178,7 @@ public class VerticalPager extends ViewGroup {
      *
      * @return The index of the currently displayed page.
      */
-    int getCurrentPage() {
+    public int getCurrentPage() {
         return mCurrentPage;
     }
 
@@ -167,7 +187,7 @@ public class VerticalPager extends ViewGroup {
      *
      * @param currentPage
      */
-    public void setCurrentPage(int currentPage) {
+    void setCurrentPage(int currentPage) {
         mCurrentPage = Math.max(0, Math.min(currentPage, getChildCount()));
         scrollTo(getScrollYForPage(mCurrentPage), 0);
         invalidate();
@@ -177,24 +197,25 @@ public class VerticalPager extends ViewGroup {
         return pageHeight;
     }
 
-    //public void setPageHeight(int pageHeight) {
-    //    this.pageHeightSpec = pageHeight;
-    //}
+    // public void setPageHeight(int pageHeight) {
+    // this.pageHeightSpec = pageHeight;
+    // }
 
     /**
-     * Gets the value that getScrollX() should return if the specified page is the current page (and no other scrolling is occurring).
-     * Use this to pass a value to scrollTo(), for example.
+     * Gets the value that getScrollX() should return if the specified page is the current page (and no other scrolling
+     * is occurring). Use this to pass a value to scrollTo(), for example.
+     *
      * @param whichPage
      * @return
      */
     private int getScrollYForPage(int whichPage) {
-    	int height = 0;
-    	for(int i = 0; i < whichPage; i++) {
-    		final View child = getChildAt(i);
+        int height = 0;
+        for (int i = 0; i < whichPage; i++) {
+            final View child = getChildAt(i);
             if (child.getVisibility() != View.GONE) {
-	    		height += child.getHeight();
+                height += child.getHeight();
             }
-    	}
+        }
         return height - pageHeightPadding();
     }
 
@@ -246,8 +267,12 @@ public class VerticalPager extends ViewGroup {
 
         final int count = getChildCount();
         for (int i = 0; i < count; i++) {
+            // getChildAt(i).measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(),
+            // MeasureSpec.EXACTLY),
+            // MeasureSpec.makeMeasureSpec(pageHeight,
+            // MeasureSpec.UNSPECIFIED));
             getChildAt(i).measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),
-            		MeasureSpec.makeMeasureSpec(pageHeight, MeasureSpec.UNSPECIFIED));
+                    MeasureSpec.makeMeasureSpec(pageHeight, MeasureSpec.EXACTLY));
         }
 
         if (mFirstLayout) {
@@ -265,16 +290,10 @@ public class VerticalPager extends ViewGroup {
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() != View.GONE) {
-            	if(i == 0) {
-            		child.getHeight();
-                    child.layout(0, measuredHeight, right - left, measuredHeight + (int)(pageHeight*.96));
-                    measuredHeight +=  (pageHeight*.96);
-            	} else {
-            		height = pageHeight * (int)Math.ceil((double)child.getMeasuredHeight()/(double)pageHeight);
-            		height = Math.max(pageHeight, height);
-                    child.layout(0, measuredHeight, right - left, measuredHeight + height);
-                    measuredHeight += height;
-            	}
+                height = pageHeight * (int) Math.ceil((double) child.getMeasuredHeight() / (double) pageHeight);
+                height = Math.max(pageHeight, height);
+                child.layout(0, measuredHeight, right - left, measuredHeight + height);
+                measuredHeight += height;
             }
         }
     }
@@ -323,7 +342,7 @@ public class VerticalPager extends ViewGroup {
             if (mCurrentPage > 0) {
                 getChildAt(mCurrentPage - 1).addFocusables(views, direction);
             }
-        } else if (direction == View.FOCUS_RIGHT){
+        } else if (direction == View.FOCUS_RIGHT) {
             if (mCurrentPage < getChildCount() - 1) {
                 getChildAt(mCurrentPage + 1).addFocusables(views, direction);
             }
@@ -332,22 +351,23 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        //Log.d(TAG, "onInterceptTouchEvent::action=" + ev.getAction());
+        if (!mIsPagingEnabled)
+            return false;
 
-        /*
-         * This method JUST determines whether we want to intercept the motion.
-         * If we return true, onTouchEvent will be called and we do the actual
-         * scrolling there.
-         */
+        // Log.d(TAG, "onInterceptTouchEvent::action=" + ev.getAction());
 
-        /*
-         * Shortcut the most recurring case: the user is in the dragging
-         * state and he is moving his finger.  We want to intercept this
-         * motion.
-         */
+		/*
+		 * This method JUST determines whether we want to intercept the motion. If we return true, onTouchEvent will be
+		 * called and we do the actual scrolling there.
+		 */
+
+		/*
+		 * Shortcut the most recurring case: the user is in the dragging state and he is moving his finger. We want to
+		 * intercept this motion.
+		 */
         final int action = ev.getAction();
         if ((action == MotionEvent.ACTION_MOVE) && (mTouchState != TOUCH_STATE_REST)) {
-            //Log.d(TAG, "onInterceptTouchEvent::shortcut=true");
+            // Log.d(TAG, "onInterceptTouchEvent::shortcut=true");
             return true;
         }
 
@@ -356,10 +376,10 @@ public class VerticalPager extends ViewGroup {
 
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                /*
-                 * mIsBeingDragged == false, otherwise the shortcut would have caught it. Check
-                 * whether the user has moved far enough from his original down touch.
-                 */
+			/*
+			 * mIsBeingDragged == false, otherwise the shortcut would have caught it. Check whether the user has moved
+			 * far enough from his original down touch.
+			 */
                 if (mTouchState == TOUCH_STATE_REST) {
                     checkStartScroll(x, y);
                 }
@@ -372,11 +392,10 @@ public class VerticalPager extends ViewGroup {
                 mLastMotionY = y;
                 mAllowLongPress = true;
 
-                /*
-                 * If being flinged and user touches the screen, initiate drag;
-                 * otherwise don't.  mScroller.isFinished should be false when
-                 * being flinged.
-                 */
+			/*
+			 * If being flinged and user touches the screen, initiate drag; otherwise don't. mScroller.isFinished should
+			 * be false when being flinged.
+			 */
                 mTouchState = mScroller.isFinished() ? TOUCH_STATE_REST : TOUCH_STATE_SCROLLING;
                 break;
 
@@ -388,18 +407,33 @@ public class VerticalPager extends ViewGroup {
                 break;
         }
 
-        /*
-         * The only time we want to intercept motion events is if we are in the
-         * drag mode.
-         */
+		/*
+		 * The only time we want to intercept motion events is if we are in the drag mode.
+		 */
         return mTouchState != TOUCH_STATE_REST;
     }
 
+    /**
+     * Enable or disable pages switching.
+     *
+     * @param enabled
+     *            true - enable pages switching, false - disable.
+     */
+    public void setPagingEnabled(boolean enabled) {
+        mIsPagingEnabled = enabled;
+    }
+
+    /**
+     * @return true - if pages switching enabled, false - otherwise.
+     */
+    public boolean isPagingEnabled() {
+        return mIsPagingEnabled;
+    }
+
     private void checkStartScroll(float x, float y) {
-        /*
-         * Locally do absolute value. mLastMotionX is set to the y value
-         * of the down event.
-         */
+		/*
+		 * Locally do absolute value. mLastMotionX is set to the y value of the down event.
+		 */
         final int xDiff = (int) Math.abs(x - mLastMotionX);
         final int yDiff = (int) Math.abs(y - mLastMotionY);
 
@@ -416,8 +450,10 @@ public class VerticalPager extends ViewGroup {
             // Either way, cancel any pending longpress
             if (mAllowLongPress) {
                 mAllowLongPress = false;
-                // Try canceling the long press. It could also have been scheduled
-                // by a distant descendant, so use the mAllowLongPress flag to block
+                // Try canceling the long press. It could also have been
+                // scheduled
+                // by a distant descendant, so use the mAllowLongPress flag to
+                // block
                 // everything
                 final View currentScreen = getChildAt(mCurrentPage);
                 currentScreen.cancelLongPress();
@@ -436,6 +472,9 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (!mIsPagingEnabled)
+            return false;
+
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -447,10 +486,9 @@ public class VerticalPager extends ViewGroup {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                /*
-                * If being flinged and user touches, stop the fling. isFinished
-                * will be false if being flinged.
-                */
+			/*
+			 * If being flinged and user touches, stop the fling. isFinished will be false if being flinged.
+			 */
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
@@ -469,7 +507,7 @@ public class VerticalPager extends ViewGroup {
                     // Apply friction to scrolling past boundaries.
                     final int count = getChildCount();
                     if (getScrollY() < 0 || getScrollY() + pageHeight > getChildAt(count - 1).getBottom()) {
-                    	deltaY /= 2;
+                        deltaY /= 2;
                     }
 
                     scrollBy(0, deltaY);
@@ -484,34 +522,34 @@ public class VerticalPager extends ViewGroup {
                     final int count = getChildCount();
 
                     // check scrolling past first or last page?
-                    if(getScrollY() < 0) {
-                    	snapToPage(0);
-                    } else if(getScrollY() > measuredHeight - pageHeight) {
-                    	snapToPage(count - 1, BOTTOM);
+                    if (getScrollY() < 0) {
+                        snapToPage(0);
+                    } else if (getScrollY() > measuredHeight - pageHeight) {
+                        snapToPage(count - 1, BOTTOM, PAGE_SNAP_DURATION_DEFAULT);
                     } else {
-	                    for(int i = 0; i < count; i++) {
-	                    	final View child = getChildAt(i);
-	                    	if(child.getTop() < getScrollY() &&
-	                    			child.getBottom() > getScrollY() + pageHeight) {
-	                    		// we're inside a page, fling that bitch
-	                    		mNextPage = i;
-	                    		mScroller.fling(getScrollX(), getScrollY(), 0, -velocityY, 0, 0, child.getTop(), child.getBottom() - getHeight());
-	                			invalidate();
-	                			break;
-	                    	} else if(child.getBottom() > getScrollY() && child.getBottom() < getScrollY() + getHeight()) {
-	                    		// stuck in between pages, oh snap!
-		                    	if(velocityY < -SNAP_VELOCITY) {
-	                    			snapToPage(i + 1);
-		                    	} else if(velocityY > SNAP_VELOCITY) {
-	                    			snapToPage(i, BOTTOM);
-		                    	} else if(getScrollY() + pageHeight/2 > child.getBottom()) {
-	                    			snapToPage(i + 1);
-	                    		} else {
-	                    			snapToPage(i, BOTTOM);
-	                    		}
-	                    		break;
-	                    	}
-	                    }
+                        for (int i = 0; i < count; i++) {
+                            final View child = getChildAt(i);
+                            if (child.getTop() < getScrollY() && child.getBottom() > getScrollY() + pageHeight) {
+                                // we're inside a page, fling that bitch
+                                mNextPage = i;
+                                mScroller.fling(getScrollX(), getScrollY(), 0, -velocityY, 0, 0, child.getTop(),
+                                        child.getBottom() - getHeight());
+                                invalidate();
+                                break;
+                            } else if (child.getBottom() > getScrollY() && child.getBottom() < getScrollY() + getHeight()) {
+                                // stuck in between pages, oh snap!
+                                if (velocityY < -SNAP_VELOCITY) {
+                                    snapToPage(i + 1);
+                                } else if (velocityY > SNAP_VELOCITY) {
+                                    snapToPage(i, BOTTOM, PAGE_SNAP_DURATION_DEFAULT);
+                                } else if (getScrollY() + pageHeight / 2 > child.getBottom()) {
+                                    snapToPage(i + 1);
+                                } else {
+                                    snapToPage(i, BOTTOM, PAGE_SNAP_DURATION_DEFAULT);
+                                }
+                                break;
+                            }
+                        }
                     }
 
                     if (mVelocityTracker != null) {
@@ -528,7 +566,7 @@ public class VerticalPager extends ViewGroup {
         return true;
     }
 
-    private void snapToPage(final int whichPage, final int where) {
+    private void snapToPage(final int whichPage, final int where, int duration) {
         enableChildrenCache();
 
         boolean changingPages = whichPage != mCurrentPage;
@@ -541,18 +579,36 @@ public class VerticalPager extends ViewGroup {
         }
 
         final int delta;
-        if(getChildAt(whichPage).getHeight() <= pageHeight || where == TOP) {
+        if (getChildAt(whichPage).getHeight() <= pageHeight || where == TOP) {
             delta = getChildAt(whichPage).getTop() - getScrollY();
         } else {
-        	delta = getChildAt(whichPage).getBottom() - pageHeight - getScrollY();
+            delta = getChildAt(whichPage).getBottom() - pageHeight - getScrollY();
         }
 
-        mScroller.startScroll(0, getScrollY(), 0, delta, 400);
+        mScroller.startScroll(0, getScrollY(), 0, delta, duration);
         invalidate();
     }
 
+    /**
+     * Snap pager to the specified page with the default {@link VerticalPager#PAGE_SNAP_DURATION_DEFAULT} duration.
+     *
+     * @param whichPage
+     *            Zero based index of the page.
+     */
     public void snapToPage(final int whichPage) {
-    	snapToPage(whichPage, TOP);
+        snapToPage(whichPage, TOP, PAGE_SNAP_DURATION_DEFAULT);
+    }
+
+    /**
+     * Snap pager to the specified page.
+     *
+     * @param whichPage
+     *            Zero based index of the page.
+     * @param duration
+     *            Duration in milliseconds of scrolling to the chosen page.
+     */
+    public void snapToPage(final int whichPage, int duration) {
+        snapToPage(whichPage, TOP, duration);
     }
 
     @Override
@@ -622,16 +678,15 @@ public class VerticalPager extends ViewGroup {
             out.writeInt(currentScreen);
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR =
-            new Parcelable.Creator<SavedState>() {
-                public SavedState createFromParcel(Parcel in) {
-                    return new SavedState(in);
-                }
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
 
-                public SavedState[] newArray(int size) {
-                    return new SavedState[size];
-                }
-            };
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 
     public void addOnScrollListener(OnScrollListener listener) {
@@ -647,16 +702,20 @@ public class VerticalPager extends ViewGroup {
      */
     public static interface OnScrollListener {
         /**
-         * Receives the current scroll X value.  This value will be adjusted to assume the left edge of the first
-         * page has a scroll position of 0.  Note that values less than 0 and greater than the right edge of the
-         * last page are possible due to touch events scrolling beyond the edges.
-         * @param scrollX Scroll X value
+         * Receives the current scroll X value. This value will be adjusted to assume the left edge of the first page
+         * has a scroll position of 0. Note that values less than 0 and greater than the right edge of the last page are
+         * possible due to touch events scrolling beyond the edges.
+         *
+         * @param scrollX
+         *            Scroll X value
          */
         void onScroll(int scrollX);
 
         /**
          * Invoked when scrolling is finished (settled on a page, centered).
-         * @param currentPage The current page
+         *
+         * @param currentPage
+         *            The current page
          */
         void onViewScrollFinished(int currentPage);
     }

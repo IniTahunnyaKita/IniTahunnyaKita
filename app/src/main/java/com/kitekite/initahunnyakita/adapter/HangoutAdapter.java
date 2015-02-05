@@ -40,11 +40,12 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	    super(context, textViewResourceId);
 	}
 	public HangoutAdapter(Context context, int resource, ArrayList<HangoutPost> list) {
-	    super(context, resource, list);
-	    this.group = list;
+        super(context, resource, list);
+        this.group = list;
         this.mContext = context;
         this.resources = mContext.getResources();
-        gestureDetector = new GestureDetector(mContext,new DoubleTapListener());
+        gestureDetector = new GestureDetector(mContext, new DoubleTapListener());
+    }
 	
 	public Object getChild(int childPosition) {
 		// TODO Auto-generated method stub

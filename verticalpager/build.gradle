@@ -1,13 +1,12 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.grantlandchew.example.verticalpager"
         minSdkVersion 4
-        targetSdkVersion 4
+        targetSdkVersion 21
     }
 
     buildTypes {
