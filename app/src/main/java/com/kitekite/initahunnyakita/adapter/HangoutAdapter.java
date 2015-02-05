@@ -2,17 +2,15 @@ package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,14 +19,13 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import android.graphics.Bitmap.Config;
 
 public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	public final static int TYPE_PROFILE = 0;
@@ -37,6 +34,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	private ArrayList<HangoutPost> group;
     private static Context mContext;
     private static Resources resources;
+    GestureDetector gestureDetector;
 
 	public HangoutAdapter(Context context, int textViewResourceId) {
 	    super(context, textViewResourceId);
@@ -46,6 +44,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
 	    this.group = list;
         this.mContext = context;
         this.resources = mContext.getResources();
+        gestureDetector = new GestureDetector(context, new DoubleTapListener());
 	}
 	
 	public Object getChild(int childPosition) {
@@ -91,7 +90,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             @Override
             public void onClick(View v) {
                 int totalThumbsUp = group.get(position).getThumbsUp();
-                if(!postHolder.thumbsUpState){
+                if (!postHolder.thumbsUpState) {
                     totalThumbsUp++;
                     group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = true;
@@ -113,6 +112,12 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
                 .error(R.drawable.ensa_shop)
                 .tag(mContext)
                 .into(postHolder.postImg);
+        postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
         View.OnClickListener profileClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,5 +185,24 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         LinearLayout pollBtn;
         TextView price;
 	}
+
+    private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.d("kodok","doubletap");
+            ((ActionBarActivity) mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container,new ItemDetailFragment(),"ITEM_DETAIL")
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        }
+    }
 
 }
