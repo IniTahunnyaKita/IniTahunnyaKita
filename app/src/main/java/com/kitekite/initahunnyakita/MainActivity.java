@@ -45,6 +45,7 @@ import com.kitekite.initahunnyakita.util.DebugPostValues;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.ActionBarLayout;
+import com.kitekite.initahunnyakita.widget.NotificationLayout;
 import com.kitekite.initahunnyakita.widget.RevealLayout;
 import com.kitekite.initahunnyakita.widget.RoundedImageView;
 import com.nineoldandroids.animation.Animator;
@@ -75,7 +76,8 @@ public class MainActivity extends ActionBarActivity {
     RelativeLayout holderLayout;
     LinearLayout pollHolder;
     RevealLayout mRevealLayout;
-    View  content;
+    View content;
+    NotificationLayout mNotificationLayout;
     ImageView blurredBg;
     int contentHeight;
     int contentWidth;
@@ -149,19 +151,6 @@ public class MainActivity extends ActionBarActivity {
         mCustomView.setHasRevealLayout(true);
         mActionBar.setCustomView(mCustomView, lp);
 
-        /*mCustomView.findViewById(R.id.action_bar_title).setOnClickListener(notificationToggle);
-        mCustomView.findViewById(R.id.action_bar_watermark).setOnClickListener(notificationToggle);
-        mCustomView.findViewById(R.id.usermode_action_bar_bg).setOnClickListener(notificationToggle);
-        mCustomView.findViewById(R.id.app_logo).setOnClickListener(notificationToggle);
-        mCustomView.findViewById(R.id.action_bar_watermark).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                findViewById(R.id.notification_layout).dispatchTouchEvent(event);
-                return false;
-            }
-        });*/
-
-
     }
 
     private void selectFragment(int position) {
@@ -174,6 +163,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed(){
+        if(mNotificationLayout.isLayoutExpanded()){
+            mNotificationLayout.collapseLayout();
+            return;
+        }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backstackCount>0){
             getSupportFragmentManager().popBackStack();
@@ -306,6 +299,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initNotification(){
+        mNotificationLayout = (NotificationLayout) findViewById(R.id.notification_layout);
         ListView notificationList = (ListView) findViewById(R.id.notif_listview);
         ArrayList<NotificationItem> list = new ArrayList<>();
         for (int i=0;i< DebugPostValues.NotificationItems.fullnames.length;i++){

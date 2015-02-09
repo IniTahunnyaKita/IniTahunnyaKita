@@ -153,7 +153,7 @@ public class ProfileFragment extends Fragment{
             post.setTitle(DebugPostValues.titles[i]);
             post.setOverview(DebugPostValues.overviews[i]);
             post.setItemUrl(DebugPostValues.itemUrls[i]);
-            post.setPrice("Rp",DebugPostValues.prices[i]);
+            post.setPrice(DebugPostValues.prices[i]);
             post.setThumbsUp(DebugPostValues.thumbsUps[i]);
             list.add(post);
         }

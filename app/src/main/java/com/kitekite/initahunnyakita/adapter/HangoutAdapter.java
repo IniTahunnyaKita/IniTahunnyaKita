@@ -2,6 +2,7 @@ package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
@@ -35,6 +37,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
     private static Context mContext;
     private static Resources resources;
     private GestureDetector gestureDetector;
+    private int doubleTappedPos;
 
 	public HangoutAdapter(Context context, int textViewResourceId) {
 	    super(context, textViewResourceId);
@@ -115,7 +118,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("kdok","ontouch");
+                doubleTappedPos = position;
                 return gestureDetector.onTouchEvent(event);
             }
         });
@@ -197,9 +200,14 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d("kodok","doubletap");
+            ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
+            Bundle bundle = new Bundle();
+            Gson gson = new Gson();
+            bundle.putString("ITEM_INFO",gson.toJson(group.get(doubleTappedPos)));
+            itemDetailFragment.setArguments(bundle);
             ((ActionBarActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frame_container,new ItemDetailFragment(),"ITEM_DETAIL")
+                    .replace(R.id.frame_container,itemDetailFragment,"ITEM_DETAIL")
                     .addToBackStack(null)
                     .commit();
             return true;

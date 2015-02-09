@@ -3,11 +3,8 @@ package com.kitekite.initahunnyakita.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +56,7 @@ public class HangoutFragment extends Fragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_profile, mListView,
                 false);
+        final View footer = (View) inflater.inflate(R.layout.list_footer, mListView, false);
         ((ProfileItem)header.findViewById(R.id.profile_item_following)).setItemValue(56);
         ((ProfileItem)header.findViewById(R.id.profile_item_shares)).setItemValue(71);
         ((ProfileItem)header.findViewById(R.id.profile_item_friends)).setItemValue(650);
@@ -86,6 +84,7 @@ public class HangoutFragment extends Fragment {
                     }
                 });
         mListView.addHeaderView(header, null, false);
+        mListView.addFooterView(footer);
         mListView.setDividerHeight(0);
         ArrayList<HangoutPost> list = new ArrayList<HangoutPost>();
 
@@ -96,7 +95,7 @@ public class HangoutFragment extends Fragment {
             post.setTitle(DebugPostValues.titles[i]);
             post.setOverview(DebugPostValues.overviews[i]);
             post.setItemUrl(DebugPostValues.itemUrls[i]);
-            post.setPrice("Rp",DebugPostValues.prices[i]);
+            post.setPrice(DebugPostValues.prices[i]);
             post.setThumbsUp(DebugPostValues.thumbsUps[i]);
             list.add(post);
         }

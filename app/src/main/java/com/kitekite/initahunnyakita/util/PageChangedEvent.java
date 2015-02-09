@@ -1,7 +1,7 @@
 package com.kitekite.initahunnyakita.util;
 
 /**
- * Created by tinklabs on 2/5/2015.
+ * Created by florian on 2/5/2015.
  */
 /**
  * Dispatched when the current selected page of the application navigation changed. E.g. user swipes from the center

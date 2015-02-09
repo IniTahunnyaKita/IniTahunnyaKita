@@ -25,7 +25,7 @@ public class OverviewFragment extends Fragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Picasso.with(getActivity())
-                .load(R.drawable.jerseynesia_item1)
+                .load(getArguments().getString("url"))
                 .into((ImageView) view.findViewById(R.id.overview_img));
     }
 }

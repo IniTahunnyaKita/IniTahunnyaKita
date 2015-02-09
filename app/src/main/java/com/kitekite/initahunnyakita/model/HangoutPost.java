@@ -1,21 +1,25 @@
 package com.kitekite.initahunnyakita.model;
 
-import android.net.Uri;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * Created by Florian on 1/4/2015.
  */
 public class HangoutPost {
-    Uri profileUrl;
+    String profileUrl;
     String fullname;
     String title;
     String overview;
-    Uri itemUrl;
+    String itemUrl;
     int thumbsUp;
     String price;
 
     public void setProfileUrl(String url){
-        profileUrl = Uri.parse(url);
+        profileUrl = url;
     }
 
     public void setFullname(String fullname){
@@ -31,19 +35,21 @@ public class HangoutPost {
     }
 
     public void setItemUrl(String url){
-        this.itemUrl = Uri.parse(url);
+        this.itemUrl = url;
     }
 
     public void setThumbsUp(int value){
         this.thumbsUp = value;
     }
 
-    public void setPrice(String currency, int value){
-        this.price = currency+". "+value;
+    public void setPrice(int value){
+        NumberFormat format = NumberFormat.getCurrencyInstance( new Locale("in", "ID"));
+
+        this.price = format.format(value);
         //this.price = price.
     }
 
-    public Uri getProfileUrl(){
+    public String getProfileUrl(){
         return this.profileUrl;
     }
 
@@ -59,7 +65,7 @@ public class HangoutPost {
         return this.overview;
     }
 
-    public Uri getItemUrl(){
+    public String getItemUrl(){
         return this.itemUrl;
     }
 

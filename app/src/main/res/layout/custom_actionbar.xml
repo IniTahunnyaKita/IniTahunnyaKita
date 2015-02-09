@@ -55,13 +55,6 @@
             android:textColor="@android:color/white"
             alibabi:ttf_name="black_jack.ttf"/>
     </LinearLayout>-->
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_toLeftOf="@+id/app_logo"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_launcher"/>
     <com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"
@@ -84,5 +77,21 @@
         android:textColor="@android:color/white"
         alibabi:ttf_name="roboto/Roboto-Light.ttf"
         android:visibility="gone"/>
+    
+    <ImageButton
+        android:id="@+id/notif_btn"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_notification"
+        android:background="@drawable/actionbar_btn_bg"/>
+
+    <ImageButton
+        android:id="@+id/cart_btn"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_cart"
+        android:background="@drawable/actionbar_btn_bg"/>
 
 </com.kitekite.initahunnyakita.widget.ActionBarLayout>

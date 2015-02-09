@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -18,11 +19,12 @@ import com.kitekite.initahunnyakita.R;
 public class ActionBarLayout extends RelativeLayout{
     private static boolean hasRevealLayout = false;
     private RevealLayout mRevealLayout;
+    private NotificationLayout mNotificationLayout;
     GestureDetector gestureDetector;
 
     public ActionBarLayout(Context context) {
         super(context);
-        initLayout(context);
+        //initLayout(context);
     }
 
     public ActionBarLayout(Context context, AttributeSet attrs) {
@@ -41,16 +43,32 @@ public class ActionBarLayout extends RelativeLayout{
 
     public void initLayout(Context context){
         gestureDetector = new GestureDetector(context, new GestureListener());
-
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        getRootView().findViewById(R.id.notification_layout).dispatchTouchEvent(event);
+        //getRootView().findViewById(R.id.notification_layout).dispatchTouchEvent(event);
         if(hasRevealLayout && mRevealLayout==null){
             mRevealLayout = (RevealLayout) getRootView().findViewById(R.id.reveal_layout);
         }
         return gestureDetector.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        findViewById(R.id.notif_btn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mNotificationLayout == null)
+                    mNotificationLayout = (NotificationLayout) getRootView().findViewById(R.id.notification_layout);
+
+                if(mNotificationLayout.isLayoutExpanded())
+                    mNotificationLayout.collapseLayout();
+                else
+                    mNotificationLayout.expandLayout();
+            }
+        });
+        super.onFinishInflate();
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {

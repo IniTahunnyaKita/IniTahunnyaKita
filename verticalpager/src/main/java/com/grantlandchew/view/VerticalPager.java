@@ -63,6 +63,7 @@ import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -134,6 +135,10 @@ public class VerticalPager extends ViewGroup {
 
     private Set<OnScrollListener> mListeners = new HashSet<OnScrollListener>();
 
+    private boolean isTapDetectorEnabled = false;
+    private OnTapListener onTapListener;
+    private GestureDetector mGestureDetector;
+
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -171,6 +176,12 @@ public class VerticalPager extends ViewGroup {
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        mGestureDetector = new GestureDetector(context, new TapDetector());
+    }
+
+    public void setOnTapListener(OnTapListener onTapListener){
+        this.onTapListener = onTapListener;
+        isTapDetectorEnabled = true;
     }
 
     /**
@@ -351,6 +362,8 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isTapDetectorEnabled)
+            mGestureDetector.onTouchEvent(ev);
         if (!mIsPagingEnabled)
             return false;
 
@@ -472,6 +485,9 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (isTapDetectorEnabled)
+            mGestureDetector.onTouchEvent(ev);
+
         if (!mIsPagingEnabled)
             return false;
 
@@ -562,7 +578,6 @@ public class VerticalPager extends ViewGroup {
             case MotionEvent.ACTION_CANCEL:
                 mTouchState = TOUCH_STATE_REST;
         }
-
         return true;
     }
 
@@ -718,5 +733,17 @@ public class VerticalPager extends ViewGroup {
          *            The current page
          */
         void onViewScrollFinished(int currentPage);
+    }
+
+    private class TapDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            onTapListener.onTap();
+            return super.onSingleTapConfirmed(e);
+        }
+    }
+
+    public interface OnTapListener{
+        public void onTap();
     }
 }

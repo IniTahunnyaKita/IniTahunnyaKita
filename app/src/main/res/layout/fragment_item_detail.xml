@@ -1,26 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.grantlandchew.view.VerticalPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_vertical_pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="?android:attr/windowBackground" >
 
-    <fragment
-        android:id="@+id/main_central_fragment"
+    <com.grantlandchew.view.VerticalPager
+        android:id="@+id/main_vertical_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.kitekite.initahunnyakita.fragment.itemdetail.OverviewCompositeFragment" />
+        android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/main_description_fragment"
+        <fragment
+            android:id="@+id/main_central_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.kitekite.initahunnyakita.fragment.itemdetail.OverviewCompositeFragment" />
+
+        <fragment
+            android:id="@+id/main_description_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.kitekite.initahunnyakita.fragment.itemdetail.DespcriptionFragment" />
+
+        <fragment
+            android:id="@+id/main_review_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.kitekite.initahunnyakita.fragment.itemdetail.ReviewFragment" />
+
+    </com.grantlandchew.view.VerticalPager>
+
+    <RelativeLayout
+        android:id="@+id/short_detail_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.kitekite.initahunnyakita.fragment.itemdetail.DespcriptionFragment" />
+        android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/main_review_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.kitekite.initahunnyakita.fragment.itemdetail.ReviewFragment" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin"
+            android:background="#88FFFFFF">
 
-</com.grantlandchew.view.VerticalPager>
+            <TextView
+                android:id="@+id/overlay_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/overlay_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="@dimen/activity_vertical_margin">
+
+            <Button
+                android:id="@+id/ask_seller_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="ask seller"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                android:background="@drawable/default_btn_bg"/>
+
+            <Button
+                android:id="@+id/add_cart_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="add to cart"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:background="@drawable/red_btn_bg"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
