@@ -11,10 +11,8 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -36,7 +34,7 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
-import com.kitekite.initahunnyakita.fragment.FragmentTab;
+import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
@@ -59,12 +57,12 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
     public static final int HANG_OUT = 1;
     public static final int DISCOVER = 2;
-    public static final int MY_SHOP = 3;
-    public static final int MY_BAG = 4;
+    public static final int DISCUSSION = 3;
+    public static final int THE_BAG = 4;
 
     public static final String TAB_1_TAG = "HANG_OUT";
     public static final String TAB_2_TAG = "DISCOVER";
-    public static final String TAB_3_TAG = "TRENDING";//trending/stories?
+    public static final String TAB_3_TAG = "DISCUSSION";//trending/stories?
     public static final String TAB_4_TAG = "THE BAG";
 
     private String TAG = "taikodok";
@@ -119,13 +117,13 @@ public class MainActivity extends ActionBarActivity {
         content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
 
-        if (savedInstanceState == null &&isLoggedIn ) {
+        if (savedInstanceState == null && isLoggedIn ) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_container, new HangoutFragment())
                     .commit();
         }
-        if(whichFragmentIsShown()==HANG_OUT)
-            showWatermark(R.drawable.hangout_actionbar_watermark,true);
+        //if(whichFragmentIsShown()==HANG_OUT)
+            //showWatermark(R.drawable.hangout_actionbar_watermark,true);
 
         initNotification();
     }
@@ -147,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
         LayoutInflater mInflater = LayoutInflater.from(this);
 
         LayoutParams lp = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        ActionBarLayout mCustomView = (ActionBarLayout) mInflater.inflate(R.layout.custom_actionbar, null);
+        ActionBarLayout mCustomView = (ActionBarLayout) mInflater.inflate(R.layout.custom_actionbar_default, null);
         mCustomView.setHasRevealLayout(true);
         mActionBar.setCustomView(mCustomView, lp);
 
@@ -165,6 +163,10 @@ public class MainActivity extends ActionBarActivity {
     public void onBackPressed(){
         if(mNotificationLayout.isLayoutExpanded()){
             mNotificationLayout.collapseLayout();
+            return;
+        }
+        if(mode == SHOP_MODE){
+            ((ActionBarLayout) findViewById(R.id.actionbar_layout)).switchToUserMode();
             return;
         }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
@@ -188,7 +190,6 @@ public class MainActivity extends ActionBarActivity {
         actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkRed));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
-        actionBar.getCustomView().findViewById(R.id.action_bar_title).setVisibility(View.VISIBLE);
     }
 
     public void doTranslateAnimation(String imgUrl){
@@ -248,14 +249,14 @@ public class MainActivity extends ActionBarActivity {
     public void initTabs(){
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_1_TAG)), FragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), FragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), FragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), FragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_1_TAG)), MainFragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), MainFragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), MainFragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), MainFragmentTab.class, null);
     }
 
     private TabHost.TabSpec setIndicator(Context ctx, TabHost.TabSpec spec) {
-        View v = LayoutInflater.from(ctx).inflate(R.layout.tab_item, null);
+        View v = LayoutInflater.from(ctx).inflate(R.layout.tab_item_main, null);
         //v.setBackgroundResource(R.drawable.tab_indicator);
         ImageView tabImg = (ImageView) v.findViewById(R.id.tab_image);
         TextView tabTitle = (TextView) v.findViewById(R.id.tab_title);

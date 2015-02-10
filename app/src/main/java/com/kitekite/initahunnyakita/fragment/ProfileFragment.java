@@ -166,7 +166,6 @@ public class ProfileFragment extends Fragment{
         actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.GONE);
-        actionBar.getCustomView().findViewById(R.id.action_bar_title).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 

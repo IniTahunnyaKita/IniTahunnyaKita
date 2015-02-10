@@ -29,6 +29,7 @@ public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         mContext = context;
         mPagesClasses = pages;
+        imageUrls.remove(0);
         imageUrls.add(0,itemInfo.getItemUrl());
     }
 

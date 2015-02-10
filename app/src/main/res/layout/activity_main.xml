@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"/>
 
             <include
-                layout="@layout/main_tabs"/>
+                layout="@layout/tabs_main"/>
 
             <include
                 layout="@layout/poll_holder"/>

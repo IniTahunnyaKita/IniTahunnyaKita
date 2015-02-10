@@ -71,6 +71,32 @@ public class ActionBarLayout extends RelativeLayout{
         super.onFinishInflate();
     }
 
+    public void switchToShopMode(){
+        if(hasRevealLayout){
+            mRevealLayout.next();
+        }
+        MainActivity.mode = MainActivity.SHOP_MODE;
+        YoYo.with(Techniques.FadeOut)
+                .duration(500)
+                .playOn(findViewById(R.id.usermode_action_bar_bg));
+        YoYo.with(Techniques.FadeIn)
+                .duration(500)
+                .playOn(findViewById(R.id.shopmode_action_bar_bg));
+    }
+
+    public void switchToUserMode(){
+        if(hasRevealLayout){
+            mRevealLayout.next();
+        }
+        MainActivity.mode = MainActivity.USER_MODE;
+        YoYo.with(Techniques.FadeIn)
+                .duration(500)
+                .playOn(findViewById(R.id.usermode_action_bar_bg));
+        YoYo.with(Techniques.FadeOut)
+                .duration(500)
+                .playOn(findViewById(R.id.shopmode_action_bar_bg));
+    }
+
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
@@ -81,26 +107,11 @@ public class ActionBarLayout extends RelativeLayout{
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d("kodok","doubletap");
-            if(hasRevealLayout){
-                mRevealLayout.next();
-            }
 
             if(MainActivity.mode==MainActivity.USER_MODE) {
-                MainActivity.mode = MainActivity.SHOP_MODE;
-                YoYo.with(Techniques.FadeOut)
-                        .duration(500)
-                        .playOn(findViewById(R.id.usermode_action_bar_bg));
-                YoYo.with(Techniques.FadeIn)
-                        .duration(500)
-                        .playOn(findViewById(R.id.shopmode_action_bar_bg));
+                switchToShopMode();
             }else {
-                MainActivity.mode = MainActivity.USER_MODE;
-                YoYo.with(Techniques.FadeIn)
-                        .duration(500)
-                        .playOn(findViewById(R.id.usermode_action_bar_bg));
-                YoYo.with(Techniques.FadeOut)
-                        .duration(500)
-                        .playOn(findViewById(R.id.shopmode_action_bar_bg));
+                switchToUserMode();
             }
             return true;
         }

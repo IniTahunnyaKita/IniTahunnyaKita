@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.kitekite.initahunnyakita.widget.ActionBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:alibabi="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/actionbar_layout"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_gravity="fill_horizontal" android:orientation="horizontal"
     android:clickable="true" android:focusable="true"
@@ -31,7 +32,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="-50dp"
-        android:visibility="gone"/>
+        android:background="@drawable/hangout_actionbar_watermark"/>
 
     <!--<LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +67,7 @@
         alibabi:ttf_name="black_jack.ttf"/>
 
 
-    <com.kitekite.initahunnyakita.widget.CustomTextView
+    <!--<com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/action_bar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,8 +76,7 @@
         android:layout_alignParentBottom="true"
         android:text="Hang Out"
         android:textColor="@android:color/white"
-        alibabi:ttf_name="roboto/Roboto-Light.ttf"
-        android:visibility="gone"/>
+        alibabi:ttf_name="roboto/Roboto-Light.ttf"/>-->
     
     <ImageButton
         android:id="@+id/notif_btn"
