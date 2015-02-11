@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
 
@@ -27,6 +29,12 @@ public class DiscoverFragmentTab extends Fragment{
     @Override
     public void onResume(){
         super.onResume();
+        /*mainActivity = MainActivity.getMainActivity();
+        ActionBar actionBar = mainActivity.getSupportActionBar();
+        actionBar.hide();
+        YoYo.with(Techniques.SlideOutDown)
+                .duration(800)
+                .playOn(mainActivity.findViewById(android.R.id.tabhost).getRootView());*/
     }
 
     public void setActionBarTitle(String tagName){

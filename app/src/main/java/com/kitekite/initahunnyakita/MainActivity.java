@@ -37,6 +37,7 @@ import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
 import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
@@ -103,6 +104,12 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState == null && isLoggedIn ) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_container, new HangoutFragment(), TAB_1_TAG)
+                    .commit();
+        }
+
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
         mainActivity = this;
 
@@ -116,13 +123,6 @@ public class MainActivity extends ActionBarActivity {
         inflater = LayoutInflater.from(mainActivity);
         content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
-
-        if (savedInstanceState == null && isLoggedIn ) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_container, new HangoutFragment(), TAB_1_TAG)
-                    .addToBackStack(null)
-                    .commit();
-        }
         //if(whichFragmentIsShown()==HANG_OUT)
             //showWatermark(R.drawable.hangout_actionbar_watermark,true);
 
@@ -162,6 +162,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed(){
+        ItemDetailFragment itemDetailFragment = (ItemDetailFragment) getSupportFragmentManager().findFragmentByTag("ITEM_DETAIL");
+        ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
         if(mNotificationLayout.isLayoutExpanded()){
             mNotificationLayout.collapseLayout();
             return;
@@ -172,18 +174,24 @@ public class MainActivity extends ActionBarActivity {
         }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
         if(backstackCount>0){
-            getSupportFragmentManager().popBackStack();
-            if(backstackCount==1) {
-                setActionBarDefault();
-                getSupportActionBar().show();
-                YoYo.with(Techniques.SlideInUp)
-                        .duration(800)
-                        .playOn(mTabHost);
-                showWatermark(R.drawable.hangout_actionbar_watermark, true);
+            if(itemDetailFragment!=null && itemDetailFragment.isVisible()){
+                displayTabs();
             }
+            if(profileFragment!=null && profileFragment.isVisible()){
+                setActionBarDefault();
+            }
+            getSupportFragmentManager().popBackStack();
         }
         else
             super.onBackPressed();
+    }
+
+    public void displayTabs(){
+        getSupportActionBar().show();
+        YoYo.with(Techniques.SlideInUp)
+                .duration(800)
+                .playOn(mTabHost);
+        showWatermark(R.drawable.hangout_actionbar_watermark, true);
     }
 
     public void setActionBarDefault(){

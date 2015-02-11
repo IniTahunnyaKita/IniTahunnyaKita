@@ -16,7 +16,7 @@ import com.kitekite.initahunnyakita.R;
  * Created by Florian on 2/10/2015.
  */
 public class DiscoverFragment extends Fragment{
-    public static final String TAB_1_TAG = "DISCOVER";
+    public static final String TAB_1_TAG = "ITEMS";
     public static final String TAB_2_TAG = "SHOPS";
     public static final String TAB_3_TAG = "CATEGORIES";
     FragmentTabHost mTabHost;
@@ -36,7 +36,7 @@ public class DiscoverFragment extends Fragment{
 
     public void initTabs(View v){
         mTabHost = (FragmentTabHost)v.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getFragmentManager(), android.R.id.tabcontent);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         mTabHost.addTab(setIndicator(getActivity(),mTabHost.newTabSpec(TAB_1_TAG)), DiscoverFragmentTab.class, null);
         mTabHost.addTab(setIndicator(getActivity(),mTabHost.newTabSpec(TAB_2_TAG)), DiscoverFragmentTab.class, null);
         mTabHost.addTab(setIndicator(getActivity(), mTabHost.newTabSpec(TAB_3_TAG)), DiscoverFragmentTab.class, null);
