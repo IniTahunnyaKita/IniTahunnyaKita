@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
+import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
 import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
@@ -56,15 +57,15 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
-    public static final int HANG_OUT = 1;
-    public static final int DISCOVER = 2;
-    public static final int DISCUSSION = 3;
-    public static final int THE_BAG = 4;
+    public static final String HANG_OUT_TAG = "HANG_OUT";
+    public static final String DISCOVER_TAG = "DISCOVER";
+    public static final String DISCUSSION_TAG = "DISCUSSION";
+    public static final String THE_BAG_TAG = "THE_BAG";
 
-    public static final String TAB_1_TAG = "HANG_OUT";
-    public static final String TAB_2_TAG = "DISCOVER";
-    public static final String TAB_3_TAG = "DISCUSSION";//trending/stories?
-    public static final String TAB_4_TAG = "THE BAG";
+    public static final String TAB_1_TAG = "TAB 1";
+    public static final String TAB_2_TAG = "TAB 2";
+    public static final String TAB_3_TAG = "TAB 3";//trending/stories?
+    public static final String TAB_4_TAG = "TAB 4";
 
     private String TAG = "taikodok";
     public static MainActivity mainActivity;
@@ -106,7 +107,8 @@ public class MainActivity extends ActionBarActivity {
 
         if (savedInstanceState == null && isLoggedIn ) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_container, new HangoutFragment(), TAB_1_TAG)
+                    .replace(R.id.frame_container, new HangoutFragment(), HANG_OUT_TAG)
+                    .addToBackStack(null)
                     .commit();
         }
 
@@ -164,6 +166,8 @@ public class MainActivity extends ActionBarActivity {
     public void onBackPressed(){
         ItemDetailFragment itemDetailFragment = (ItemDetailFragment) getSupportFragmentManager().findFragmentByTag("ITEM_DETAIL");
         ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
+        String currentTabTag = mTabHost.getCurrentTabTag();
+        DiscoverFragment discoverFragment = (DiscoverFragment) getSupportFragmentManager().findFragmentByTag("DISCOVER");
         if(mNotificationLayout.isLayoutExpanded()){
             mNotificationLayout.collapseLayout();
             return;
@@ -173,29 +177,41 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
-        if(backstackCount>0){
+        if(backstackCount>1){
             if(itemDetailFragment!=null && itemDetailFragment.isVisible()){
-                displayTabs();
-            }
-            if(profileFragment!=null && profileFragment.isVisible()){
+                getSupportActionBar().show();
+                showTabs();
+                showWatermark(R.drawable.hangout_actionbar_watermark, true);
+            } else if(profileFragment!=null && profileFragment.isVisible()){
+                getSupportActionBar().show();
                 setActionBarDefault();
+            } else if(discoverFragment!=null && discoverFragment.isVisible()){
+                //setActionBarDefault();
+                //getSupportActionBar().show();
+                //showTabs();
             }
             getSupportFragmentManager().popBackStack();
         }
-        else
-            super.onBackPressed();
+        else {
+            finish();
+        }
     }
 
-    public void displayTabs(){
-        getSupportActionBar().show();
+    public void showTabs(){
         YoYo.with(Techniques.SlideInUp)
                 .duration(800)
                 .playOn(mTabHost);
-        showWatermark(R.drawable.hangout_actionbar_watermark, true);
+    }
+
+    public void hideTabs(){
+        YoYo.with(Techniques.SlideOutDown)
+                .duration(800)
+                .playOn(mTabHost);
     }
 
     public void setActionBarDefault(){
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.custom_actionbar_default);
         actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkRed));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
@@ -258,7 +274,7 @@ public class MainActivity extends ActionBarActivity {
     public void initTabs(){
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_1_TAG)), MainFragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), MainFragmentTab.class, null);
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), MainFragmentTab.class, null);
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), MainFragmentTab.class, null);
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), MainFragmentTab.class, null);
@@ -298,14 +314,6 @@ public class MainActivity extends ActionBarActivity {
             actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.VISIBLE);
         } else
             actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
-    }
-
-    private int whichFragmentIsShown(){
-        ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
-        if(profileFragment==null ||!profileFragment.isVisible()){
-            return HANG_OUT;
-        }
-        return -1;
     }
 
     private void initNotification(){

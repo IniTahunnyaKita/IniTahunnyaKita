@@ -4,18 +4,17 @@
 
     <ImageView
         android:id="@+id/tab_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/tab_indicator_selected"/>
+        android:background="@drawable/tab_indicator"/>
 
     <TextView
         android:id="@+id/tab_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tab_image"
         android:layout_centerHorizontal="true"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/black"/>
 
 </RelativeLayout>

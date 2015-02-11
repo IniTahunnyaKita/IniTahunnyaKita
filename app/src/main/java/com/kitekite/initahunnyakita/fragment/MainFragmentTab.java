@@ -1,27 +1,23 @@
 package com.kitekite.initahunnyakita.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.TheBagFragment;
 
 /**
  * Created by Florian on 1/17/2015.
  */
 public class MainFragmentTab extends Fragment {
-    public static final String TAB_1_TAG = "HANG_OUT";
-    public static final String TAB_2_TAG = "DISCOVER";
-    public static final String TAB_3_TAG = "DISCUSSION";
-    public static final String TAB_4_TAG = "THE BAG";
+    public static final String TAB_1_TAG = "TAB 1";
+    public static final String TAB_2_TAG = "TAB 2";
+    public static final String TAB_3_TAG = "TAB 3";//trending/stories?
+    public static final String TAB_4_TAG = "TAB 4";
     public static MainActivity mainActivity;
 
     @Override
@@ -36,18 +32,26 @@ public class MainFragmentTab extends Fragment {
         ActionBar actionBar = mainActivity.getSupportActionBar();
         if(getTag().equals(TAB_1_TAG)){
             actionBar.setCustomView(R.layout.custom_actionbar_default);
-            if(!getFragmentManager().findFragmentByTag(TAB_1_TAG).isVisible()) {
+            if(!getFragmentManager().findFragmentByTag(mainActivity.HANG_OUT_TAG).isVisible()) {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, new HangoutFragment(),TAB_1_TAG)
+                        .replace(R.id.frame_container, new HangoutFragment(),MainActivity.HANG_OUT_TAG)
                         .addToBackStack(null)
                         .commit();
             }
-        }
-        if(getTag().equals(TAB_2_TAG)){
-            actionBar.setCustomView(R.layout.custom_actionbar_discover);
-            if(!getFragmentManager().findFragmentByTag(TAB_2_TAG).isVisible()) {
+        }else if(getTag().equals(TAB_2_TAG)){
+            //actionBar.setCustomView(R.layout.custom_actionbar_discover);
+            DiscoverFragment discoverFragment = (DiscoverFragment) getFragmentManager().findFragmentByTag(mainActivity.DISCOVER_TAG);
+            if(discoverFragment==null || (discoverFragment!=null && !discoverFragment.isVisible())) {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, new DiscoverFragment(),TAB_2_TAG)
+                        .replace(R.id.frame_container, new DiscoverFragment(),MainActivity.DISCOVER_TAG)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        } else if(getTag().equals(TAB_4_TAG)){
+            TheBagFragment theBagFragment = (TheBagFragment) getFragmentManager().findFragmentByTag(mainActivity.THE_BAG_TAG);
+            if(theBagFragment==null || (theBagFragment!=null && !theBagFragment.isVisible())) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, new TheBagFragment(),MainActivity.THE_BAG_TAG)
                         .addToBackStack(null)
                         .commit();
             }
@@ -71,4 +75,10 @@ public class MainFragmentTab extends Fragment {
         else if(tagName.equals(TAB_4_TAG))
             title.setText("The Bag");*/
     }
+
+    /*public void popFragment(){
+        if (getChildFragmentManager().getBackStackEntryCount()>0) {
+            getChildFragmentManager().popBackStack();
+        }
+    }*/
 }
