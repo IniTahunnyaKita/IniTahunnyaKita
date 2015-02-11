@@ -119,7 +119,8 @@ public class MainActivity extends ActionBarActivity {
 
         if (savedInstanceState == null && isLoggedIn ) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_container, new HangoutFragment())
+                    .replace(R.id.frame_container, new HangoutFragment(), TAB_1_TAG)
+                    .addToBackStack(null)
                     .commit();
         }
         //if(whichFragmentIsShown()==HANG_OUT)

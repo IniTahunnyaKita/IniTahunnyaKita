@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/tab_indicator"/>
+        android:background="@drawable/tab_indicator_selected"/>
 
     <TextView
         android:id="@+id/tab_title"

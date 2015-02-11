@@ -24,13 +24,13 @@ public class DiscoverFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_discover, container, false);
+        initTabs(fragmentView);
         return fragmentView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initTabs(view);
 
     }
 
