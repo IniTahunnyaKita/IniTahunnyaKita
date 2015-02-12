@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:padding="5dp"
+            android:padding="6dp"
+            android:singleLine="true"
             android:hint="Search your favorite stuff"
             android:background="@drawable/actionbar_searchbox_bg"/>
         <ImageView

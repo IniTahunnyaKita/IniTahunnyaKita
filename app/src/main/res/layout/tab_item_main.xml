@@ -14,7 +14,7 @@
         xmlns:alibabi="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tab_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="15dp"
         android:layout_below="@+id/tab_image"
         android:layout_centerHorizontal="true"
         android:text="Hang Out"

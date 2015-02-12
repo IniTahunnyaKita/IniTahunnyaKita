@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <ImageView
+            android:id="@+id/category_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/categories_icon_size"
+            android:scaleType="centerCrop"/>
+
+        <com.kitekite.initahunnyakita.widget.CustomTextView
+            xmlns:style="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            style:ttf_name="roboto/Roboto-Light.ttf"/>
+
+
+    </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+    <LinearLayout
+        android:id="@+id/padding"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:orientation="vertical"/>
+</LinearLayout>

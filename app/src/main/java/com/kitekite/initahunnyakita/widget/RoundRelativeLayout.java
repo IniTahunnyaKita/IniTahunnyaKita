@@ -5,21 +5,21 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by florian on 2/9/2015.
  */
-public class RoundLinearLayout extends LinearLayout{
+public class RoundRelativeLayout extends RelativeLayout{
     private Path mPath = new Path();
     private float mRadius = 20f;
 
-    public RoundLinearLayout(Context context) {
+    public RoundRelativeLayout(Context context) {
         super(context);
         setWillNotDraw(false);
     }
 
-    public RoundLinearLayout(Context context, AttributeSet attrs) {
+    public RoundRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
 
