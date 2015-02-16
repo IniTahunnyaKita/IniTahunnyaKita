@@ -66,6 +66,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
             postHolder = new PostViewHolder();
             LayoutInflater vi= LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.list_post, null);
+            postHolder.overview = (TextView) v.findViewById(R.id.post_overview);
             postHolder.postImg = (ImageView) v.findViewById(R.id.post_image);
             postHolder.thumbsUpBtn = (RelativeLayout) v.findViewById(R.id.thumbs_up_btn);
             postHolder.thumbsUpIv = (ImageView) v.findViewById(R.id.thumbs_up_img);
@@ -79,6 +80,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
             postHolder = (PostViewHolder) v.getTag();
 
         Log.d("getview","set values.pos:"+position);
+        postHolder.overview.setText(group.get(position).getOverview());
         postHolder.thumbsUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +165,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
             viewHolder.profilePic = (RoundedImageView) v.findViewById(R.id.profile_picture);
             viewHolder.fullName = (TextView) v.findViewById(R.id.full_name);
             viewHolder.title = (TextView) v.findViewById(R.id.post_title);
-            viewHolder.overview = (TextView) v.findViewById(R.id.post_overview);
             v.setTag(viewHolder);
         } else {
             viewHolder = (HeaderViewHolder) v.getTag();
@@ -176,7 +177,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
                 .into(viewHolder.profilePic);
         viewHolder.fullName.setText(group.get(position).getFullname());
         viewHolder.title.setText(group.get(position).getTitle());
-        viewHolder.overview.setText(group.get(position).getOverview());
         View.OnClickListener profileClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +199,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
     }
 
     static class PostViewHolder{
+        TextView overview;
         ImageView postImg;
         RelativeLayout thumbsUpBtn;
         ImageView thumbsUpIv;
@@ -212,7 +213,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyL
         RoundedImageView profilePic;
         TextView fullName;
         TextView title;
-        TextView overview;
     }
 
     private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
