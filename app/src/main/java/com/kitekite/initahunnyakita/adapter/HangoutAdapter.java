@@ -29,7 +29,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
+public class HangoutAdapter extends ArrayAdapter<HangoutPost> implements StickyListHeadersAdapter {
 	public final static int TYPE_PROFILE = 0;
 	public final static int TYPE_POST = 1;
 	public final static int TYPE_DISCUSS = 2;
@@ -63,10 +65,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             Log.d("getview","v is null. pos:"+position);
             postHolder = new PostViewHolder();
             LayoutInflater vi= LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.list_post, null);postHolder.profilePic = (RoundedImageView) v.findViewById(R.id.profile_picture);
-            postHolder.fullName = (TextView) v.findViewById(R.id.full_name);
-            postHolder.title = (TextView) v.findViewById(R.id.post_title);
-            postHolder.overview = (TextView) v.findViewById(R.id.post_overview);
+            v = vi.inflate(R.layout.list_post, null);
             postHolder.postImg = (ImageView) v.findViewById(R.id.post_image);
             postHolder.thumbsUpBtn = (RelativeLayout) v.findViewById(R.id.thumbs_up_btn);
             postHolder.thumbsUpIv = (ImageView) v.findViewById(R.id.thumbs_up_img);
@@ -80,15 +79,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             postHolder = (PostViewHolder) v.getTag();
 
         Log.d("getview","set values.pos:"+position);
-        Picasso.with(mContext)
-                .load(group.get(position).getProfileUrl())
-                .error(R.drawable.ensa_shop)
-                .resize(80,80)
-                .tag(mContext)
-                .into(postHolder.profilePic);
-        postHolder.fullName.setText(group.get(position).getFullname());
-        postHolder.title.setText(group.get(position).getTitle());
-        postHolder.overview.setText(group.get(position).getOverview());
         postHolder.thumbsUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +103,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         Picasso.with(mContext)
                 .load(group.get(position).getItemUrl())
                 .error(R.drawable.ensa_shop)
-                .tag(mContext)
+                .fit().centerCrop()
                 .into(postHolder.postImg);
         postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -122,19 +112,6 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
                 return gestureDetector.onTouchEvent(event);
             }
         });
-        View.OnClickListener profileClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doTranslateAnimation(postHolder.profilePic,group.get(position).getProfileUrl().toString());
-                ((ActionBarActivity) mContext).getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_container,new ProfileFragment(),"PROFILE")
-                        .addToBackStack(null)
-                        .commit();
-            }
-        };
-        postHolder.fullName.setOnClickListener(profileClickListener);
-        postHolder.profilePic.setOnClickListener(profileClickListener);
         postHolder.pollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,12 +152,53 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         mainActivity.iconDest = dest;
         mainActivity.doTranslateAnimation(imgUrl);
     }
-	
-	static class PostViewHolder{
-		RoundedImageView profilePic;
-        TextView fullName;
-        TextView title;
-        TextView overview;
+
+    @Override
+    public View getHeaderView(final int position, View convertView, ViewGroup viewGroup) {
+        View v = convertView;
+        final HeaderViewHolder viewHolder;
+        if(v == null){
+            v = LayoutInflater.from(mContext).inflate(R.layout.list_post_header, null);
+            viewHolder = new HeaderViewHolder();
+            viewHolder.profilePic = (RoundedImageView) v.findViewById(R.id.profile_picture);
+            viewHolder.fullName = (TextView) v.findViewById(R.id.full_name);
+            viewHolder.title = (TextView) v.findViewById(R.id.post_title);
+            viewHolder.overview = (TextView) v.findViewById(R.id.post_overview);
+            v.setTag(viewHolder);
+        } else {
+            viewHolder = (HeaderViewHolder) v.getTag();
+        }
+        Picasso.with(mContext)
+                .load(group.get(position).getProfileUrl())
+                .error(R.drawable.ensa_shop)
+                .fit().centerCrop()
+                .tag(mContext)
+                .into(viewHolder.profilePic);
+        viewHolder.fullName.setText(group.get(position).getFullname());
+        viewHolder.title.setText(group.get(position).getTitle());
+        viewHolder.overview.setText(group.get(position).getOverview());
+        View.OnClickListener profileClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doTranslateAnimation(viewHolder.profilePic,group.get(position).getProfileUrl().toString());
+                ((ActionBarActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_container,new ProfileFragment(),"PROFILE")
+                        .addToBackStack("PROFILE")
+                        .commit();
+            }
+        };
+        viewHolder.fullName.setOnClickListener(profileClickListener);
+        viewHolder.profilePic.setOnClickListener(profileClickListener);
+        return v;
+    }
+
+    @Override
+    public long getHeaderId(int i) {
+        return i;
+    }
+
+    static class PostViewHolder{
         ImageView postImg;
         RelativeLayout thumbsUpBtn;
         ImageView thumbsUpIv;
@@ -189,6 +207,13 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
         LinearLayout pollBtn;
         TextView price;
 	}
+
+    static class HeaderViewHolder{
+        RoundedImageView profilePic;
+        TextView fullName;
+        TextView title;
+        TextView overview;
+    }
 
     private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
 
@@ -208,7 +233,7 @@ public class HangoutAdapter extends ArrayAdapter<HangoutPost>{
             ((ActionBarActivity) mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_container,itemDetailFragment,"ITEM_DETAIL")
-                    .addToBackStack(null)
+                    .addToBackStack("ITEM_DETAIL")
                     .commit();
             return true;
         }

@@ -41,6 +41,7 @@ public class DiscoverFragment extends Fragment{
         viewPager = (ViewPager) v.findViewById(R.id.pager);
         mAdapter = new DiscoverTabAdapter(getChildFragmentManager());
         viewPager.setAdapter(mAdapter);
+        viewPager.setCurrentItem(1);
         pagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tabstrip);
         //pagerTabStrip.setBackgroundResource(R.drawable.tab_indicator);
         pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_SP,16f);

@@ -25,12 +25,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 
 /**
  * Created by Florian on 1/3/2015.
  */
 public class HangoutFragment extends Fragment {
-    private ListView mListView;
+    private StickyListHeadersListView mListView;
     private Context mContext;
     private SharedPreferences loginCookies;
     private String fullname;
@@ -45,46 +47,14 @@ public class HangoutFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (StickyListHeadersListView) view.findViewById(android.R.id.list);
         initListView();
-
-        fullname = loginCookies.getString(Global.first_name,"Florian")+" "+loginCookies.getString(Global.last_name,"Pranata");
-        ((TextView)view.findViewById(R.id.user_fullname)).setText(fullname);
     }
 
     public void initListView(){
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_profile, mListView,
-                false);
-        final View footer = (View) inflater.inflate(R.layout.list_footer, mListView, false);
-        ((ProfileItem)header.findViewById(R.id.profile_item_following)).setItemValue(56);
-        ((ProfileItem)header.findViewById(R.id.profile_item_shares)).setItemValue(71);
-        ((ProfileItem)header.findViewById(R.id.profile_item_friends)).setItemValue(650);
-        //load image
-        final ImageView profilePicture = (ImageView)header.findViewById(R.id.profile_picture);
-        Picasso.with(mContext)
-                .load(loginCookies.getString(Global.photo_url,"file:///android_asset/prof_pic.jpg"))
-                .error(R.drawable.ensa_shop)
-                .tag(mContext)
-                .into(profilePicture, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        BitmapDrawable ppDrawable = ((BitmapDrawable) profilePicture.getDrawable());
-                        Bitmap blurredImg;
-                        if (ppDrawable != null) {
-                            Bitmap profileBitmap = ppDrawable.getBitmap();
-                            blurredImg = ImageUtil.BlurBitmap(mContext, profileBitmap, 20);
-                            ((ImageView) header.findViewById(R.id.list_bg)).setImageBitmap(blurredImg);
-                        }
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
-        mListView.addHeaderView(header, null, false);
-        mListView.addFooterView(footer);
+        //final View footer = inflater.inflate(R.layout.list_footer, mListView, false);
+        //mListView.addFooterView(footer);
         mListView.setDividerHeight(0);
         ArrayList<HangoutPost> list = new ArrayList<HangoutPost>();
 

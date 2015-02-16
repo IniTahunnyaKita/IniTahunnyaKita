@@ -35,7 +35,7 @@ public class MainFragmentTab extends Fragment {
             if(!getFragmentManager().findFragmentByTag(mainActivity.HANG_OUT_TAG).isVisible()) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new HangoutFragment(),MainActivity.HANG_OUT_TAG)
-                        .addToBackStack(null)
+                        .addToBackStack(MainActivity.HANG_OUT_TAG)
                         .commit();
             }
         }else if(getTag().equals(TAB_2_TAG)){
@@ -44,7 +44,7 @@ public class MainFragmentTab extends Fragment {
             if(discoverFragment==null || (discoverFragment!=null && !discoverFragment.isVisible())) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new DiscoverFragment(),MainActivity.DISCOVER_TAG)
-                        .addToBackStack(null)
+                        .addToBackStack(MainActivity.DISCOVER_TAG)
                         .commit();
             }
         } else if(getTag().equals(TAB_4_TAG)){
@@ -52,7 +52,7 @@ public class MainFragmentTab extends Fragment {
             if(theBagFragment==null || (theBagFragment!=null && !theBagFragment.isVisible())) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new TheBagFragment(),MainActivity.THE_BAG_TAG)
-                        .addToBackStack(null)
+                        .addToBackStack(MainActivity.THE_BAG_TAG)
                         .commit();
             }
         } else {

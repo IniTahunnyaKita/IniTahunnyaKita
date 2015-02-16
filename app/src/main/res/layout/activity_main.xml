@@ -8,15 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <FrameLayout
+            android:id="@+id/shop_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Shop mode ;)"
-            android:background="@color/PowderBlue"
-            android:gravity="center"
-            android:textSize="32sp"
-            android:textColor="#FFF"
-        />
+            android:background="?android:attr/windowBackground"/>
 
         <RelativeLayout
             android:id="@+id/content_view"

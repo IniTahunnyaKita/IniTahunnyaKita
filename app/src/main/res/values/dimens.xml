@@ -7,6 +7,6 @@
     <dimen name="profile_pic_size">40dp</dimen>
     <dimen name="profile_pic_notif_size">30dp</dimen>
     <dimen name="tab_height">56dp</dimen>
-    <dimen name="categories_icon_size">150dp</dimen>
+    <dimen name="categories_icon_size">160dp</dimen>
     <dimen name="poll_holder_item_size">45dp</dimen>
 </resources>

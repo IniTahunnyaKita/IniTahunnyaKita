@@ -7,17 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.adapter.CategoriesAdapter;
+import com.kitekite.initahunnyakita.adapter.DiscoverCategoriesAdapter;
 
 /**
  * Created by Florian on 2/11/2015.
  */
 public class DiscoverCategoriesFragment extends Fragment {
     private GridView gridView;
-    private CategoriesAdapter mAdapter;
+    private DiscoverCategoriesAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,12 +28,11 @@ public class DiscoverCategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //view.setBackgroundColor(getResources().getColor(R.color.Violet));
     }
 
     public void initGridView(View v){
         gridView = (GridView) v.findViewById(R.id.gridview);
-        mAdapter = new CategoriesAdapter(getActivity());
+        mAdapter = new DiscoverCategoriesAdapter(getActivity());
         gridView.setAdapter(mAdapter);
     }
 

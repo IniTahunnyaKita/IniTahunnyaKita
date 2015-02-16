@@ -1,9 +1,6 @@
 package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +10,14 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.Category;
-import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
 /**
  * Created by Florian on 2/12/2015.
  */
-public class CategoriesAdapter extends BaseAdapter{
+public class DiscoverCategoriesAdapter extends BaseAdapter{
     Context mContext;
     ArrayList<Category> categories = new ArrayList<>();
     String [] categoryNames = new String[]{"Fashion","Beauty","Games & Toys","Bags","Kids","Home","Gadgets","Electronics","Sports","Books"};
@@ -30,7 +25,7 @@ public class CategoriesAdapter extends BaseAdapter{
             "file:///android_asset/categories/bags.jpg","file:///android_asset/categories/kids.jpg","file:///android_asset/categories/home.jpg","file:///android_asset/categories/gadgets.jpg",
             "file:///android_asset/categories/electronics.jpg","file:///android_asset/categories/sports.jpg","file:///android_asset/categories/books.jpg"};
 
-    public CategoriesAdapter(Context c){
+    public DiscoverCategoriesAdapter(Context c){
         mContext = c;
         for(int i=0; i<categoryNames.length; i++){
             Category category = new Category();
@@ -57,17 +52,18 @@ public class CategoriesAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v;
-        final ImageView background;
-        if(convertView==null){
-            v = LayoutInflater.from(mContext).inflate(R.layout.item_categories,null);
+        View v = convertView;
+        ImageView background;
+        if(v == null){
+            v = LayoutInflater.from(mContext).inflate(R.layout.child_discover_categories,null);
             background = (ImageView)v.findViewById(R.id.category_bg);
+            v.setTag(background);
         } else {
-            v = convertView;
-            background = (ImageView)v.findViewById(R.id.category_bg);
+            background = (ImageView)v.getTag();
         }
         Picasso.with(mContext)
                 .load(categories.get(position).image)
+                .fit().centerCrop()
                 .into(background);
         ((TextView)v.findViewById(R.id.category_title)).setText(categories.get(position).title);
         return v;

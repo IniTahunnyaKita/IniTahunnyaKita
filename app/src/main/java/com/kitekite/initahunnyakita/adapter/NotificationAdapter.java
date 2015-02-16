@@ -57,14 +57,14 @@ public class NotificationAdapter extends ArrayAdapter<NotificationItem> {
         Picasso.with(mContext)
                 .load(items.get(position).getProfileUrl())
                 .error(R.drawable.ensa_shop)
-                .tag(mContext)
+                .fit().centerCrop()
                 .into(viewHolder.profilePic);
         viewHolder.fullname.setText(items.get(position).getFullname());
         viewHolder.action.setText(items.get(position).getAction());
         Picasso.with(mContext)
                 .load(items.get(position).getItemUrl())
                 .error(R.drawable.ensa_shop)
-                .tag(mContext)
+                .fit().centerCrop()
                 .into(viewHolder.itemPic);
         viewHolder.content.setText(items.get(position).getContent());
         return v;

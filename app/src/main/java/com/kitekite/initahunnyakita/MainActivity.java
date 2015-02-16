@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
@@ -39,6 +40,7 @@ import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.TheBagFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
@@ -108,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
         if (savedInstanceState == null && isLoggedIn ) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_container, new HangoutFragment(), HANG_OUT_TAG)
-                    .addToBackStack(null)
+                    .addToBackStack(HANG_OUT_TAG)
                     .commit();
         }
 
@@ -154,20 +156,8 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    private void selectFragment(int position) {
-        Bundle args;
-        FragmentManager fragmentManager;
-        switch(position){
-
-        }
-    }
-
     @Override
     public void onBackPressed(){
-        ItemDetailFragment itemDetailFragment = (ItemDetailFragment) getSupportFragmentManager().findFragmentByTag("ITEM_DETAIL");
-        ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
-        String currentTabTag = mTabHost.getCurrentTabTag();
-        DiscoverFragment discoverFragment = (DiscoverFragment) getSupportFragmentManager().findFragmentByTag("DISCOVER");
         if(mNotificationLayout.isLayoutExpanded()){
             mNotificationLayout.collapseLayout();
             return;
@@ -177,36 +167,48 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
+        String currentFragmentTag = getSupportFragmentManager().getBackStackEntryAt(backstackCount-1).getName();
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
         if(backstackCount>1){
-            if(itemDetailFragment!=null && itemDetailFragment.isVisible()){
+            if(currentFragment instanceof ItemDetailFragment){
                 getSupportActionBar().show();
-                showTabs();
-                showWatermark(R.drawable.hangout_actionbar_watermark, true);
-            } else if(profileFragment!=null && profileFragment.isVisible()){
+                setImmersiveMode(false);
+                //showWatermark(R.drawable.hangout_actionbar_watermark, true);
+            } else if(currentFragment instanceof ProfileFragment){
                 getSupportActionBar().show();
                 setActionBarDefault();
-            } else if(discoverFragment!=null && discoverFragment.isVisible()){
+            } else if(currentFragment instanceof DiscoverFragment){
                 //setActionBarDefault();
                 //getSupportActionBar().show();
-                //showTabs();
+                //setImmersiveMode();
             }
             getSupportFragmentManager().popBackStack();
+            //update tab selection
+            currentFragmentTag = getSupportFragmentManager().getBackStackEntryAt(backstackCount-2).getName();
+            currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+            if(currentFragment instanceof HangoutFragment){
+                mTabHost.setCurrentTab(0);
+            } else if(currentFragment instanceof DiscoverFragment){
+                mTabHost.setCurrentTab(1);
+            } else if(currentFragment instanceof TheBagFragment){
+                mTabHost.setCurrentTab(3);
+            }
         }
         else {
             finish();
         }
     }
 
-    public void showTabs(){
-        YoYo.with(Techniques.SlideInUp)
-                .duration(800)
-                .playOn(mTabHost);
-    }
-
-    public void hideTabs(){
-        YoYo.with(Techniques.SlideOutDown)
-                .duration(800)
-                .playOn(mTabHost);
+    public void setImmersiveMode(boolean show){
+        if(show) {
+            YoYo.with(Techniques.SlideOutDown)
+                    .duration(800)
+                    .playOn(mTabHost);
+        } else {
+            YoYo.with(Techniques.SlideInUp)
+                    .duration(800)
+                    .playOn(mTabHost);
+        }
     }
 
     public void setActionBarDefault(){
@@ -305,15 +307,6 @@ public class MainActivity extends ActionBarActivity {
 
         }
         return spec.setIndicator(v);
-    }
-
-    private void showWatermark(int resId, boolean show){
-        ActionBar actionBar = getSupportActionBar();
-        if(show) {
-            actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setBackgroundResource(resId);
-            actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.VISIBLE);
-        } else
-            actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
     private void initNotification(){
