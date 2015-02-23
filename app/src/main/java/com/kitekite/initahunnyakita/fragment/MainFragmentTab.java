@@ -8,7 +8,6 @@ import android.util.Log;
 import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
-import com.kitekite.initahunnyakita.fragment.itemdetail.TheBagFragment;
 
 /**
  * Created by Florian on 1/17/2015.

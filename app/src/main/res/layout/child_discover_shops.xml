@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingTop="10dp">
+
+    <com.kitekite.initahunnyakita.widget.RoundedImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="@dimen/profile_pic_size"
+        android:layout_height="@dimen/profile_pic_size"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/shop_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TableRow
+            android:layout_weight="1"
+            android:stretchColumns="*">
+
+        <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:id="@+id/shop_image1"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+        </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+
+        <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp">
+
+            <ImageView
+                android:id="@+id/shop_image2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+        </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+
+        <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/shop_image3"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+        </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+
+        </TableRow>
+
+        </TableLayout>
+
+</LinearLayout>

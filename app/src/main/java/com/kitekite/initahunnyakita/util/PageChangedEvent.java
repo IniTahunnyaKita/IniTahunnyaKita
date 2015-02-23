@@ -18,8 +18,9 @@ public class PageChangedEvent {
      * @param hasVerticalNeighbors
      *            true if the current selected page has vertical (below and/or above) neighbor pages, false - if not.
      */
-    public PageChangedEvent(boolean hasVerticalNeighbors) {
+    public PageChangedEvent(boolean hasVerticalNeighbors, int position) {
         mHasVerticalNeighbors = hasVerticalNeighbors;
+        mPosition = position;
     }
 
     // -----------------------------------------------------------------------
@@ -28,6 +29,7 @@ public class PageChangedEvent {
     //
     // -----------------------------------------------------------------------
     private boolean mHasVerticalNeighbors = true;
+    private int mPosition;
 
     // -----------------------------------------------------------------------
     //
@@ -39,6 +41,10 @@ public class PageChangedEvent {
      */
     public boolean hasVerticalNeighbors() {
         return mHasVerticalNeighbors;
+    }
+
+    public int getPosition(){
+        return mPosition;
     }
 
 }

@@ -6,23 +6,46 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.adapter.DiscoverShopsAdapter;
+import com.kitekite.initahunnyakita.model.DiscoverShops;
+import com.kitekite.initahunnyakita.util.DebugPostValues;
+
+import java.util.ArrayList;
 
 /**
  * Created by Florian on 2/11/2015.
  */
 public class DiscoverShopsFragment extends Fragment{
+    ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.list,container,false);
+        View fragmentView =  inflater.inflate(R.layout.fragment_discover_shops,container,false);
+        listView = (ListView) fragmentView.findViewById(android.R.id.list);
+        initListView();
+        return fragmentView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.setBackgroundColor(getResources().getColor(R.color.LightCoral));
     }
 
+    public void initListView(){
+        ArrayList<DiscoverShops> shops = new ArrayList<>();
+        for(int i=0; i< DebugPostValues.Discovershops.shopNames.length; i++){
+            DiscoverShops shop = new DiscoverShops();
+            shop.shopName = DebugPostValues.Discovershops.shopNames[i];
+            shop.profileUrl = DebugPostValues.Discovershops.profilePictures[i];
+            shop.picture1 = DebugPostValues.Discovershops.picture1[i];
+            shop.picture2 = DebugPostValues.Discovershops.picture2[i];
+            shop.picture3 = DebugPostValues.Discovershops.picture3[i];
+            shops.add(shop);
+        }
+        DiscoverShopsAdapter adapter = new DiscoverShopsAdapter(getActivity(), 0, shops);
+        listView.setAdapter(adapter);
+    }
 }

@@ -18,7 +18,10 @@ import com.kitekite.initahunnyakita.adapter.ItemDetailPagerAdapter;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
 import com.kitekite.initahunnyakita.util.EventBus;
 import com.kitekite.initahunnyakita.util.PageChangedEvent;
+import com.kitekite.initahunnyakita.widget.SmartViewPager;
+import com.kitekite.initahunnyakita.widget.ViewPagerIndicator;
 import com.nineoldandroids.animation.Animator;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -26,12 +29,14 @@ import java.util.ArrayList;
  * Created by Florian on 2/5/2015.
  */
 public class OverviewCompositeFragment extends Fragment{
-    private ViewPager mHorizontalPager;
-    private int mCentralPageIndex = 0;
+    private SmartViewPager mHorizontalPager;
+    private ViewPagerIndicator mViewPagerIndicator;
+    private int mCentralPageIndex = 0, totalPage;
+    public static int position = 0;
     private ViewPager.OnPageChangeListener mPagerChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-            EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
+            EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position, position));
         }
 
         @Override
@@ -43,11 +48,6 @@ public class OverviewCompositeFragment extends Fragment{
         public void onPageScrollStateChanged(int state) {
         }
     };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     // -----------------------------------------------------------------------
     //
@@ -61,8 +61,34 @@ public class OverviewCompositeFragment extends Fragment{
         return fragmentView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getInstance().unregister(this);
+        super.onPause();
+    }
+
+    @Subscribe
+    public void onLocationChanged(PageChangedEvent event) {
+        position = event.getPosition();
+
+        if(ItemDetailFragment.isInZoomMode){
+            OverviewFragment fragment = (OverviewFragment)getChildFragmentManager().getFragments().get(position);
+            if(!fragment.canZoom())
+                fragment.setZoomEnabled(true);
+        }
+
+        mViewPagerIndicator.selectIndicator(position);
+    }
+
     private void findViews(View fragmentView) {
-        mHorizontalPager = (ViewPager) fragmentView.findViewById(R.id.fragment_composite_central_pager);
+        mHorizontalPager = (SmartViewPager) fragmentView.findViewById(R.id.fragment_composite_central_pager);
+        mViewPagerIndicator = (ViewPagerIndicator) fragmentView.findViewById(R.id.viewpager_indicator);
         initViews();
     }
 
@@ -74,9 +100,16 @@ public class OverviewCompositeFragment extends Fragment{
 
     private void populateHorizontalPager() {
         ArrayList<Class<? extends Fragment>> pages = new ArrayList<Class<? extends Fragment>>();
-        for(int i=0;i< DebugPostValues.ItemDetailValues.imageUrls.length;i++)
+
+        totalPage = DebugPostValues.ItemDetailValues.imageUrls.length;
+        for(int i=0;i< totalPage;i++)
             pages.add(OverviewFragment.class);
         mHorizontalPager.setAdapter(new ItemDetailPagerAdapter(getChildFragmentManager(), getActivity(), pages));
+        mViewPagerIndicator.initIndicators(DebugPostValues.ItemDetailValues.imageUrls.length);
+    }
+
+    public void setHorizontalPagingEnabled(boolean enabled){
+        mHorizontalPager.setPagingEnabled(enabled);
     }
 
 }

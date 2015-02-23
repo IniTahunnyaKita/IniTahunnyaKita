@@ -53,10 +53,6 @@ package com.grantlandchew.view;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -72,6 +68,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is a slightly modified version of the vertical pager by Grantland Chew: <br>
@@ -125,6 +125,7 @@ public class VerticalPager extends ViewGroup {
 
     private float mLastMotionY;
     private float mLastMotionX;
+    private float progress;
 
     private final static int TOUCH_STATE_REST = 0;
     private final static int TOUCH_STATE_SCROLLING = 1;
@@ -137,6 +138,7 @@ public class VerticalPager extends ViewGroup {
 
     private boolean isTapDetectorEnabled = false;
     private OnTapListener onTapListener;
+    private OnPullToZoomListener onPullToZoomListener;
     private GestureDetector mGestureDetector;
 
     /**
@@ -182,6 +184,10 @@ public class VerticalPager extends ViewGroup {
     public void setOnTapListener(OnTapListener onTapListener){
         this.onTapListener = onTapListener;
         isTapDetectorEnabled = true;
+    }
+
+    public void setOnPullToZoomListener(OnPullToZoomListener onPullToZoomListener){
+        this.onPullToZoomListener = onPullToZoomListener;
     }
 
     /**
@@ -367,8 +373,6 @@ public class VerticalPager extends ViewGroup {
         if (!mIsPagingEnabled)
             return false;
 
-        // Log.d(TAG, "onInterceptTouchEvent::action=" + ev.getAction());
-
 		/*
 		 * This method JUST determines whether we want to intercept the motion. If we return true, onTouchEvent will be
 		 * called and we do the actual scrolling there.
@@ -415,6 +419,10 @@ public class VerticalPager extends ViewGroup {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 // Release the drag
+                if(onPullToZoomListener!=null && progress>0f){
+                    progress = 0f;
+                    onPullToZoomListener.onCancel();
+                }
                 clearChildrenCache();
                 mTouchState = TOUCH_STATE_REST;
                 break;
@@ -456,6 +464,17 @@ public class VerticalPager extends ViewGroup {
         if (xMoved || yMoved) {
 
             if (yMoved) {
+                //disable out-of-boundary scrolling and send onProgress.
+                if(mLastMotionY - y < 0 && mCurrentPage == 0 && (onPullToZoomListener!=null)) {
+                    float rawProgress = (y - mLastMotionY) / pageHeight * 3;
+                    if(progress != rawProgress){
+                        progress = rawProgress;
+                        onPullToZoomListener.onProgress(progress);
+                    } else {
+                        onPullToZoomListener.onCancel();
+                    }
+                    return;
+                }
                 // Scroll if the user moved far enough along the X axis
                 mTouchState = TOUCH_STATE_SCROLLING;
                 enableChildrenCache();
@@ -745,5 +764,10 @@ public class VerticalPager extends ViewGroup {
 
     public interface OnTapListener{
         public void onTap();
+    }
+
+    public interface OnPullToZoomListener{
+        public void onProgress(float progress);
+        public void onCancel();
     }
 }

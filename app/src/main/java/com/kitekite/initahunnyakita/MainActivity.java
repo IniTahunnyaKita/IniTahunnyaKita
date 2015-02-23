@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
@@ -40,7 +39,7 @@ import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
-import com.kitekite.initahunnyakita.fragment.itemdetail.TheBagFragment;
+import com.kitekite.initahunnyakita.fragment.TheBagFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
 import com.kitekite.initahunnyakita.util.DebugPostValues;
@@ -171,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
         Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
         if(backstackCount>1){
             if(currentFragment instanceof ItemDetailFragment){
-                getSupportActionBar().show();
+                //getSupportActionBar().show();
                 setImmersiveMode(false);
                 //showWatermark(R.drawable.hangout_actionbar_watermark, true);
             } else if(currentFragment instanceof ProfileFragment){
@@ -206,7 +205,28 @@ public class MainActivity extends ActionBarActivity {
                     .playOn(mTabHost);
         } else {
             YoYo.with(Techniques.SlideInUp)
-                    .duration(800)
+                    .duration(400)
+                    .withListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            getSupportActionBar().show();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
                     .playOn(mTabHost);
         }
     }
@@ -413,9 +433,10 @@ public class MainActivity extends ActionBarActivity {
         lp.setMargins(15, 0, 0, 0);
         lp.gravity = Gravity.CENTER_VERTICAL;
         ImageView item = new ImageView(this);
-        item.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        //item.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Picasso.with(this)
                 .load(post.getItemUrl())
+                .fit().centerCrop()
                 .into(item);
         pollHolder.addView(item,lp);
         pollList.add(post);

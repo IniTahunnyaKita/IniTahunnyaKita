@@ -31,6 +31,26 @@ public class DebugPostValues {
         public static final String itemName = "Man United Away Kit 2014/15";
     }
 
+    public static class Discovershops {
+        public static final String [] shopNames = new String[]{"Erigo Store","Regarde Indonesia","Macstuff","Esgotado"};
+        public static final String [] profilePictures = new String[]{"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1538411_782996165117428_429822379_a.jpg",
+        "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10932204_332256553640551_269068030_a.jpg",
+        "https://instagramimages-a.akamaihd.net/profiles/profile_27822695_75sq_1382018194.jpg",
+        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10890886_1041338682549771_840106806_a.jpg"};
+        public static final String [] picture1 = new String[]{"https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963971_1101328693214299_587700827_n.jpg",
+        "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10959189_1585255955043390_1789193071_n.jpg",
+        "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10914370_388017904711735_528259506_n.jpg",
+        "https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10890517_376839342495080_1833002902_n.jpg"};
+        public static final String [] picture2 = new String[]{"https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10983685_697368507042333_1956677590_n.jpg",
+        "https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963756_812540392167301_1586177023_n.jpg",
+        "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xap1/t51.2885-15/10727748_1531567040441591_108475766_n.jpg",
+        "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/10899197_648966531897601_1402372587_n.jpg"};
+        public static final String [] picture3 = new String[]{"https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xpa1/t51.2885-15/10725086_1069479433069656_244790439_n.jpg",
+        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/10983704_928527217177643_364456689_n.jpg",
+        "https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11017569_805144846231341_1482814512_n.jpg",
+        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-15/10534089_1561553380726107_477386836_n.jpg"};
+    }
+
     public final static String [] profileUrls = new String[]{"file:///android_asset/jersenesia.jpg",
             "http://www.quienlovio.com/media/p9.png",
             "file:///android_asset/ensa_shop.jpg",

@@ -6,6 +6,7 @@ package com.kitekite.initahunnyakita.widget;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -42,17 +43,20 @@ public class SmartViewPager extends ViewPager {
     // -----------------------------------------------------------------------
     private GestureDetector mGestureDetector;
     private boolean mIsLockOnHorizontalAxis = false;
+    private boolean mIsPagingEnabled = true;
 
     // -----------------------------------------------------------------------
     //
     // Methods
     //
     // -----------------------------------------------------------------------
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // decide if horizontal axis is locked already or we need to check the scrolling direction
-        if (!mIsLockOnHorizontalAxis)
+        if (!mIsLockOnHorizontalAxis) {
             mIsLockOnHorizontalAxis = mGestureDetector.onTouchEvent(event);
+        }
 
         // release the lock when finger is up
         if (event.getAction() == MotionEvent.ACTION_UP)
@@ -83,4 +87,9 @@ public class SmartViewPager extends ViewPager {
         }
 
     }
+
+    public void setPagingEnabled(boolean enabled){
+        mIsPagingEnabled = enabled;
+    }
+
 }

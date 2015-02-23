@@ -1,4 +1,4 @@
-package com.kitekite.initahunnyakita.fragment.itemdetail;
+package com.kitekite.initahunnyakita.fragment;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
