@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/discussion_child_parent" android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="@dimen/child_discussion_height"
+    android:clickable="true" android:background="?android:attr/selectableItemBackground"
+    android:paddingTop="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <com.kitekite.initahunnyakita.widget.CircleImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        xmlns:font="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/profile_picture"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true">
+
+        <com.kitekite.initahunnyakita.widget.CustomTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="16sp"
+            font:ttf_name="roboto/Roboto-Medium.ttf"/>
+
+        <com.kitekite.initahunnyakita.widget.CustomTextView
+            android:id="@+id/no_of_discussions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 discussions"
+            font:ttf_name="roboto/Roboto-Light.ttf"/>
+
+    </LinearLayout>
+
+    <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+        android:id="@+id/wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:id="@+id/most_recent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
+
+    </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/wrapper"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/divider_with_gradient"/>
+
+</RelativeLayout>

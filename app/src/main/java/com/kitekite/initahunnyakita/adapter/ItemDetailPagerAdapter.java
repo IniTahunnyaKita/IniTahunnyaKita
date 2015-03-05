@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.widget.ArrayAdapter;
 
 import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
-import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +21,7 @@ public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
 
     private List<Class<? extends Fragment>> mPagesClasses;
     private Context mContext;
-    ArrayList<String> imageUrls = new ArrayList<String>(Arrays.asList(DebugPostValues.ItemDetailValues.imageUrls));
+    ArrayList<String> imageUrls = new ArrayList<String>(Arrays.asList(HardcodeValues.ItemDetailValues.imageUrls));
     HangoutPost itemInfo = ItemDetailFragment.getItemInfo();
 
     public ItemDetailPagerAdapter(FragmentManager fm, Context context,List<Class<? extends Fragment>> pages) {

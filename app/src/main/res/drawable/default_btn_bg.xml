@@ -3,8 +3,6 @@
 
     <item android:drawable="@drawable/default_btn_bg_pressed"
           android:state_pressed="true"/>
-    <item android:drawable="@drawable/default_btn_bg_pressed"
-          android:state_focused="true"/>
     <item android:drawable="@drawable/default_btn_bg_normal" />
 
 </selector>

@@ -6,12 +6,9 @@
     android:orientation="vertical">
     <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:layout_height="wrap_content">
 
-        <ImageView
+        <com.kitekite.initahunnyakita.widget.SquareImageView
             android:id="@+id/category_bg"
             android:layout_width="match_parent"
             android:layout_height="@dimen/categories_icon_size"

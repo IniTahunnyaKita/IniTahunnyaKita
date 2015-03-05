@@ -42,13 +42,13 @@ import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.fragment.TheBagFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
-import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.ActionBarLayout;
 import com.kitekite.initahunnyakita.widget.NotificationLayout;
 import com.kitekite.initahunnyakita.widget.RevealLayout;
-import com.kitekite.initahunnyakita.widget.RoundedImageView;
+import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Picasso;
@@ -241,7 +241,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void doTranslateAnimation(String imgUrl){
 
-        final RoundedImageView duplicateImg = new RoundedImageView(this);
+        final CircleImageView duplicateImg = new CircleImageView(this);
         int iconSize = getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(iconSize,iconSize);
         //lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -322,6 +322,7 @@ public class MainActivity extends ActionBarActivity {
 
         }
         else if(tag.equals(TAB_4_TAG)){
+            //v.setBackgroundColor(getResources().getColor(R.color.Chocolate));
             tabImg.setBackgroundResource(R.drawable.ic_thebag_tab);
             tabTitle.setText("The Bag");
 
@@ -333,13 +334,13 @@ public class MainActivity extends ActionBarActivity {
         mNotificationLayout = (NotificationLayout) findViewById(R.id.notification_layout);
         ListView notificationList = (ListView) findViewById(R.id.notif_listview);
         ArrayList<NotificationItem> list = new ArrayList<>();
-        for (int i=0;i< DebugPostValues.NotificationItems.fullnames.length;i++){
+        for (int i=0;i< HardcodeValues.NotificationItems.fullnames.length;i++){
             NotificationItem item = new NotificationItem();
-            item.setFullname(DebugPostValues.NotificationItems.fullnames[i]);
+            item.setFullname(HardcodeValues.NotificationItems.fullnames[i]);
             item.setAction(NotificationItem.ACTION_TYPE_COMMENT);
-            item.setContent(DebugPostValues.NotificationItems.contents[i]);
-            item.setProfileUrl(DebugPostValues.NotificationItems.profileUrls[i]);
-            item.setItemUrl(DebugPostValues.NotificationItems.itemUrls[i]);
+            item.setContent(HardcodeValues.NotificationItems.contents[i]);
+            item.setProfileUrl(HardcodeValues.NotificationItems.profileUrls[i]);
+            item.setItemUrl(HardcodeValues.NotificationItems.itemUrls[i]);
             list.add(item);
         }
         NotificationAdapter adapter = new NotificationAdapter(this, 0, list);

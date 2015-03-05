@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:background="@color/LightGrey"
+    android:paddingLeft="20dp" android:paddingRight="20dp"
+    android:paddingTop="10dp" android:paddingBottom="10dp"
+    android:clickable="true">
+
+    <com.kitekite.initahunnyakita.widget.RoundedImageView
+        android:id="@+id/image"
+        android:layout_width="55dp"
+        android:layout_height="55dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/image"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+
+        <com.kitekite.initahunnyakita.widget.CustomTextView
+            xmlns:font="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MU Away Kit 2014/15"
+            font:ttf_name="roboto/Roboto-Medium.ttf"/>
+
+        <com.kitekite.initahunnyakita.widget.CustomTextView
+            xmlns:font="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gak ah bro"
+            android:maxLines="1"
+            android:ellipsize="end"
+            font:ttf_name="roboto/Roboto-Light.ttf"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

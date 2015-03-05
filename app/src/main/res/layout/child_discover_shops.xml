@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingTop="10dp">
 
-    <com.kitekite.initahunnyakita.widget.RoundedImageView
+    <com.kitekite.initahunnyakita.widget.CircleImageView
         android:id="@+id/profile_picture"
         android:layout_width="@dimen/profile_pic_size"
         android:layout_height="@dimen/profile_pic_size"
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp">
 
-            <ImageView
+            <com.kitekite.initahunnyakita.widget.SquareImageView
                 android:id="@+id/shop_image1"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp">
 
-            <ImageView
+            <com.kitekite.initahunnyakita.widget.SquareImageView
                 android:id="@+id/shop_image2"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageView
+            <com.kitekite.initahunnyakita.widget.SquareImageView
                 android:id="@+id/shop_image3"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />

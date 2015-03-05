@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.DiscoverShopsAdapter;
 import com.kitekite.initahunnyakita.model.DiscoverShops;
-import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 
 import java.util.ArrayList;
 
@@ -36,13 +36,13 @@ public class DiscoverShopsFragment extends Fragment{
 
     public void initListView(){
         ArrayList<DiscoverShops> shops = new ArrayList<>();
-        for(int i=0; i< DebugPostValues.Discovershops.shopNames.length; i++){
+        for(int i=0; i< HardcodeValues.Discovershops.shopNames.length; i++){
             DiscoverShops shop = new DiscoverShops();
-            shop.shopName = DebugPostValues.Discovershops.shopNames[i];
-            shop.profileUrl = DebugPostValues.Discovershops.profilePictures[i];
-            shop.picture1 = DebugPostValues.Discovershops.picture1[i];
-            shop.picture2 = DebugPostValues.Discovershops.picture2[i];
-            shop.picture3 = DebugPostValues.Discovershops.picture3[i];
+            shop.shopName = HardcodeValues.Discovershops.shopNames[i];
+            shop.profileUrl = HardcodeValues.Discovershops.profilePictures[i];
+            shop.picture1 = HardcodeValues.Discovershops.picture1[i];
+            shop.picture2 = HardcodeValues.Discovershops.picture2[i];
+            shop.picture3 = HardcodeValues.Discovershops.picture3[i];
             shops.add(shop);
         }
         DiscoverShopsAdapter adapter = new DiscoverShopsAdapter(getActivity(), 0, shops);

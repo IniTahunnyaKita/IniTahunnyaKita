@@ -46,6 +46,14 @@ public class MainFragmentTab extends Fragment {
                         .addToBackStack(MainActivity.DISCOVER_TAG)
                         .commit();
             }
+        } else if(getTag().equals(TAB_3_TAG)){
+            DiscussionFragment discussionFragment = (DiscussionFragment) getFragmentManager().findFragmentByTag(mainActivity.DISCUSSION_TAG);
+            if(discussionFragment==null || (discussionFragment!=null && !discussionFragment.isVisible())){
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, new DiscussionFragment(),MainActivity.DISCUSSION_TAG)
+                        .addToBackStack(MainActivity.DISCUSSION_TAG)
+                        .commit();
+            }
         } else if(getTag().equals(TAB_4_TAG)){
             TheBagFragment theBagFragment = (TheBagFragment) getFragmentManager().findFragmentByTag(mainActivity.THE_BAG_TAG);
             if(theBagFragment==null || (theBagFragment!=null && !theBagFragment.isVisible())) {

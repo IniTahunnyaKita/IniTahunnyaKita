@@ -16,14 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
-import com.kitekite.initahunnyakita.util.DebugPostValues;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -146,19 +145,19 @@ public class ProfileFragment extends Fragment{
         mListView.setDividerHeight(0);
         ArrayList<HangoutPost> list = new ArrayList<HangoutPost>();
 
-        for(int i=0;i< DebugPostValues.fullnames.length;i++){
+        for(int i=0;i< HardcodeValues.fullnames.length;i++){
             HangoutPost post = new HangoutPost();
-            post.setProfileUrl(DebugPostValues.profileUrls[i]);
-            post.setFullname(DebugPostValues.fullnames[i]);
-            post.setTitle(DebugPostValues.titles[i]);
-            post.setOverview(DebugPostValues.overviews[i]);
-            post.setItemUrl(DebugPostValues.itemUrls[i]);
-            post.setPrice(DebugPostValues.prices[i]);
-            post.setThumbsUp(DebugPostValues.thumbsUps[i]);
+            post.setProfileUrl(HardcodeValues.profileUrls[i]);
+            post.setFullname(HardcodeValues.fullnames[i]);
+            post.setTitle(HardcodeValues.titles[i]);
+            post.setOverview(HardcodeValues.overviews[i]);
+            post.setItemUrl(HardcodeValues.itemUrls[i]);
+            post.setPrice(HardcodeValues.prices[i]);
+            post.setThumbsUp(HardcodeValues.thumbsUps[i]);
             list.add(post);
         }
-        HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),R.layout.list,list);
-        mListView.setAdapter(mAdapter);
+        //HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),R.layout.list,list);
+        //mListView.setAdapter(mAdapter);
     }
 
     public void setActionBarBgTransparent(){

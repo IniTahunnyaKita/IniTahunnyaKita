@@ -11,7 +11,7 @@ android {
     }
     defaultConfig {
         applicationId "com.kitekite.initahunnyakita"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -30,7 +30,13 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.+'
-    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.malinskiy:superrecyclerview:1.1.0'
+    compile 'com.levelupstudio:expandable-recyclerview:1.0.1'
+    compile 'com.eowise:recyclerview-stickyheaders:0.5.0@aar'
+    compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
+    compile 'in.srain.cube:ultra-ptr:1.0.7@aar'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nineoldandroids:library:2.4.0+'
     compile 'com.daimajia.easing:library:1.0.1@aar'

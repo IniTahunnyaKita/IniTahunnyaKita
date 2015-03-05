@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.NotificationItem;
-import com.kitekite.initahunnyakita.widget.RoundedImageView;
+import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class NotificationAdapter extends ArrayAdapter<NotificationItem> {
             viewHolder = new ViewHolder();
             LayoutInflater vi= LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.notification_item, null);
-            viewHolder.profilePic = (RoundedImageView) v.findViewById(R.id.notif_item_profile_picture);
+            viewHolder.profilePic = (CircleImageView) v.findViewById(R.id.notif_item_profile_picture);
             viewHolder.fullname = (TextView) v.findViewById(R.id.notif_item_username);
             viewHolder.action = (TextView) v.findViewById(R.id.notif_item_action);
             viewHolder.itemPic = (ImageView) v.findViewById(R.id.notif_item_item_picture);
@@ -71,7 +71,7 @@ public class NotificationAdapter extends ArrayAdapter<NotificationItem> {
     }
 
     static class ViewHolder{
-        RoundedImageView profilePic;
+        CircleImageView profilePic;
         TextView fullname;
         TextView action;
         ImageView itemPic;
