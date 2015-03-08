@@ -30,9 +30,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.+'
-    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.malinskiy:superrecyclerview:1.1.0'
-    compile 'com.levelupstudio:expandable-recyclerview:1.0.1'
     compile 'com.eowise:recyclerview-stickyheaders:0.5.0@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
     compile 'in.srain.cube:ultra-ptr:1.0.7@aar'

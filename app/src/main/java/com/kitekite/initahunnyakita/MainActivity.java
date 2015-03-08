@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
+import com.kitekite.initahunnyakita.fragment.DiscussionFragment;
 import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
 import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
@@ -189,6 +190,8 @@ public class MainActivity extends ActionBarActivity {
                 mTabHost.setCurrentTab(0);
             } else if(currentFragment instanceof DiscoverFragment){
                 mTabHost.setCurrentTab(1);
+            } else if(currentFragment instanceof DiscussionFragment){
+                mTabHost.setCurrentTab(2);
             } else if(currentFragment instanceof TheBagFragment){
                 mTabHost.setCurrentTab(3);
             }
