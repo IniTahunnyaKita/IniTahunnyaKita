@@ -9,18 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.squareup.picasso.Picasso;
@@ -43,7 +40,7 @@ public class ProfileFragment extends Fragment{
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
     private TypedValue mTypedValue = new TypedValue();
     private static int mFirstTime;
-    private String fullname;
+    public String profileUrl;
     private SharedPreferences loginCookies;
 
     @Override
@@ -52,6 +49,14 @@ public class ProfileFragment extends Fragment{
         mContext = container.getContext();
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.profile_header_height);
         mMinHeaderTranslation = -mHeaderHeight + getActionBarHeight();
+
+        mHeaderLogo = (ImageView) rootView.findViewById(R.id.header_logo);
+        Picasso.with(mContext)
+                .load(profileUrl)
+                .noFade()
+                .error(R.drawable.ensa_shop)
+                .into(mHeaderLogo);
+
         return rootView;
     }
 
@@ -64,32 +69,20 @@ public class ProfileFragment extends Fragment{
 
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mFakeHeader = inflater.inflate(R.layout.fake_profile_header,mListView,false);
-        mHeaderLogo = (ImageView) view.findViewById(R.id.header_logo);
         mFirstTime = 0;
-        mHeaderLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int[] pos = new int[2];
-                mHeaderLogo.getLocationOnScreen(pos);
-                Log.d("kodok","headerposx:"+mHeaderLogo.getMeasuredHeight()+"y:"+pos[1]);
-            }
-        });
         mListView.addHeaderView(mFakeHeader);
         initListView();
+
         //load image
-        Picasso.with(mContext)
-                .load("file:///android_asset/jersenesia.jpg")
-                .error(R.drawable.ensa_shop)
-                .tag(mContext)
-                .into(mHeaderLogo);
+        if(profileUrl==null)
+            profileUrl = "file:///android_asset/jersenesia.jpg";
+
         Picasso.with(mContext)
                 .load("file:///android_asset/jersenesia_cover_photo.jpg")
                 .error(R.drawable.ensa_shop)
-                .tag(mContext)
                 .into((ImageView)view.findViewById(R.id.header_picture));
-        mHeaderLogo.setVisibility(View.INVISIBLE);
 
-        if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
+        /*if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1){
             mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -111,7 +104,7 @@ public class ProfileFragment extends Fragment{
                         mFirstTime++;
                 }
             });
-        }
+        }*/
 
     }
 

@@ -8,9 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.ItemDetailActivity;
 import com.kitekite.initahunnyakita.adapter.ItemDetailPagerAdapter;
-import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.EventBus;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.PageChangedEvent;
 import com.kitekite.initahunnyakita.widget.SmartViewPager;
 import com.kitekite.initahunnyakita.widget.ViewPagerIndicator;
@@ -70,7 +71,7 @@ public class OverviewCompositeFragment extends Fragment{
     public void onLocationChanged(PageChangedEvent event) {
         position = event.getPosition();
 
-        if(ItemDetailFragment.isInZoomMode){
+        if(ItemDetailActivity.isInZoomMode){
             OverviewFragment fragment = (OverviewFragment)getChildFragmentManager().getFragments().get(position);
             if(!fragment.canZoom())
                 fragment.setZoomEnabled(true);
@@ -103,6 +104,11 @@ public class OverviewCompositeFragment extends Fragment{
 
     public void setHorizontalPagingEnabled(boolean enabled){
         mHorizontalPager.setPagingEnabled(enabled);
+    }
+
+    public void setViewPagerIndicatorScale(float scale) {
+        mViewPagerIndicator.setScaleX(scale);
+        mViewPagerIndicator.setScaleY(scale);
     }
 
 }

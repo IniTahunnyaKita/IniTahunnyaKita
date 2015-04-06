@@ -1,11 +1,10 @@
-package com.kitekite.initahunnyakita;
+package com.kitekite.initahunnyakita.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
@@ -16,10 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,23 +28,22 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
 import com.kitekite.initahunnyakita.fragment.DiscussionFragment;
-import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
-import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
+import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
-import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
 import com.kitekite.initahunnyakita.fragment.TheBagFragment;
+import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
-import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.Global;
+import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.ActionBarLayout;
 import com.kitekite.initahunnyakita.widget.NotificationLayout;
 import com.kitekite.initahunnyakita.widget.RevealLayout;
-import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Picasso;
@@ -145,6 +139,8 @@ public class MainActivity extends ActionBarActivity {
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayUseLogoEnabled(false);
         mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setHideOnContentScrollEnabled(true);
+        mActionBar.setHideOffset(50);
         mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         mActionBar.setDisplayShowCustomEnabled(true);
         LayoutInflater mInflater = LayoutInflater.from(this);
@@ -170,17 +166,18 @@ public class MainActivity extends ActionBarActivity {
         String currentFragmentTag = getSupportFragmentManager().getBackStackEntryAt(backstackCount-1).getName();
         Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
         if(backstackCount>1){
-            if(currentFragment instanceof ItemDetailFragment){
-                //getSupportActionBar().show();
-                setImmersiveMode(false);
-                //showWatermark(R.drawable.hangout_actionbar_watermark, true);
-            } else if(currentFragment instanceof ProfileFragment){
+            if(currentFragment instanceof ProfileFragment){
                 getSupportActionBar().show();
                 setActionBarDefault();
             } else if(currentFragment instanceof DiscoverFragment){
                 //setActionBarDefault();
                 //getSupportActionBar().show();
                 //setImmersiveMode();
+            } else if(currentFragment instanceof DiscussionFragment){
+                DiscussionFragment discussionFragment = (DiscussionFragment) currentFragment;
+                if(discussionFragment.onBackPressed()){
+                    return;
+                }
             }
             getSupportFragmentManager().popBackStack();
             //update tab selection
@@ -236,64 +233,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void setActionBarDefault(){
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setHideOnContentScrollEnabled(true);
         actionBar.setCustomView(R.layout.custom_actionbar_default);
         actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkRed));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
-    }
-
-    public void doTranslateAnimation(String imgUrl){
-
-        final CircleImageView duplicateImg = new CircleImageView(this);
-        int iconSize = getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(iconSize,iconSize);
-        //lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        lp.leftMargin = iconPos[0];
-        lp.topMargin = iconPos[1];
-        Picasso.with(this)
-                .load(imgUrl)
-                .into(duplicateImg);
-        final RelativeLayout rootView = (RelativeLayout) findViewById(R.id.root_view);
-        rootView.addView(duplicateImg,lp);
-        duplicateImg.bringToFront();
-
-        //execute animation
-
-        int headerLogoSize = getResources().getDimensionPixelSize(R.dimen.profile_header_logo_size);
-        float ratio = ((float) headerLogoSize/iconSize);
-        AnimationSet animSet = new AnimationSet(true);
-        animSet.setFillAfter(true);
-        animSet.setDuration(800);
-        TranslateAnimation translateAnim = new TranslateAnimation(0, ((float)(iconDest[0] - iconPos[0])/ratio), 0, ((float)(iconDest[1] - iconPos[1])/ratio));
-        animSet.addAnimation(translateAnim);
-        ScaleAnimation scaleAnim = new ScaleAnimation(1f,ratio,1f,ratio, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
-        animSet.addAnimation(scaleAnim);
-        animSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
-                if(profileFragment!=null)
-                    profileFragment.mHeaderLogo.setVisibility(View.VISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rootView.removeView(duplicateImg);
-                    }
-                }, 100);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        animSet.setInterpolator(mSmoothInterpolator);
-        duplicateImg.startAnimation(animSet);
     }
 
     public void initTabs(){

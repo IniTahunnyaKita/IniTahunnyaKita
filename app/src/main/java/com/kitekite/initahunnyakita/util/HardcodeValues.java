@@ -35,14 +35,14 @@ public class HardcodeValues {
 
     public static class Discovershops {
         public static final String [] shopNames = new String[]{"Erigo Store","Regarde Indonesia","Macstuff","Esgotado"};
-        public static final String [] profilePictures = new String[]{"https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xpf1/t51.2885-19/1538411_782996165117428_429822379_a.jpg",
+        public static final String [] profilePictures = new String[]{"https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10955851_971574076188944_784656978_a.jpg",
         "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10932204_332256553640551_269068030_a.jpg",
         "https://instagramimages-a.akamaihd.net/profiles/profile_27822695_75sq_1382018194.jpg",
-        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10890886_1041338682549771_840106806_a.jpg"};
+        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/11005133_914101061974627_628156834_a.jpg"};
         public static final String [] picture1 = new String[]{"https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963971_1101328693214299_587700827_n.jpg",
         "https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10959189_1585255955043390_1789193071_n.jpg",
         "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10914370_388017904711735_528259506_n.jpg",
-        "https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10890517_376839342495080_1833002902_n.jpg"};
+        "https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11007814_733469176767648_1317996416_n.jpg"};
         public static final String [] picture2 = new String[]{"https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10983685_697368507042333_1956677590_n.jpg",
         "https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963756_812540392167301_1586177023_n.jpg",
         "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xap1/t51.2885-15/10727748_1531567040441591_108475766_n.jpg",
@@ -57,27 +57,27 @@ public class HardcodeValues {
         public static final String [] names = new String[]{"Felicia Anggraini","Ardy Agustino","Cynthia Kartika","Jethro Satya"};
         public static final String [] profileUrls = new String[]{"https://instagramimages-a.akamaihd.net/profiles/profile_229439753_75sq_1395937794.jpg",
         "http://i58.tinypic.com/350l9oo.jpg",
-        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/10810072_562205800545827_80181609_a.jpg",
+        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11018353_1118266838188691_987965254_a.jpg",
         "http://i58.tinypic.com/1zeum54.jpg"};;
 
-        public static final Discussion.DiscussionChild[] [] DiscussionChildren = new Discussion.DiscussionChild[][]{
-                new Discussion.DiscussionChild[]{
-                new Discussion.DiscussionChild("Osaka Shirt","https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11007984_1436342359991360_861334287_n.jpg","Dek ini gimana"),
-                new Discussion.DiscussionChild("Erigo Totebag","https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10995082_1565880643672075_1862503812_n.jpg","Ini keren kan"),
-                new Discussion.DiscussionChild("Saka T-shirt","https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963947_1391643634481372_1299161315_n.jpg","You: Boleh juga loh")},
+        public static final Discussion.Conversation[] [] CONVERSATIONS = new Discussion.Conversation[][]{
+                new Discussion.Conversation[]{
+                new Discussion.Conversation("Osaka Shirt","https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11007984_1436342359991360_861334287_n.jpg","Dek ini gimana"),
+                new Discussion.Conversation("Erigo Totebag","https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10995082_1565880643672075_1862503812_n.jpg","Ini keren kan"),
+                new Discussion.Conversation("Saka T-shirt","https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10963947_1391643634481372_1299161315_n.jpg","<b>You:</b> Boleh juga loh")},
 
-                new Discussion.DiscussionChild[]{
-                new Discussion.DiscussionChild("MU Away Kit 2014/15","file:///android_asset/jerseynesia_item1.jpg","Kita kan uda beli bro"),
-                new Discussion.DiscussionChild("Erigo Knitwear","https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10838667_417353058424721_447944128_n.jpg  ","Ini keren bro"),
-                new Discussion.DiscussionChild("Erigo Joggerpants","https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10954414_598652436935414_608066359_n.jpg","gw demen ini men"),
-                new Discussion.DiscussionChild("Playstation 4 - White 32GB","http://o.aolcdn.com/hss/storage/midas/bd3164e8ecdeafd010ee3db1d58a59c/200997415/SW-PS4-CFWHT-2.jpg","You: asik dah maw PS4 juga ni bro??")},
+                new Discussion.Conversation[]{
+                new Discussion.Conversation("MU Away Kit 2014/15","file:///android_asset/jerseynesia_item1.jpg","Kita kan uda beli bro"),
+                new Discussion.Conversation("Erigo Knitwear","https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10838667_417353058424721_447944128_n.jpg  ","Ini keren bro"),
+                new Discussion.Conversation("Erigo Joggerpants","https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10954414_598652436935414_608066359_n.jpg","gw demen ini men"),
+                new Discussion.Conversation("Playstation 4 - White 32GB","http://o.aolcdn.com/hss/storage/midas/bd3164e8ecdeafd010ee3db1d58a59c/200997415/SW-PS4-CFWHT-2.jpg","<b>You:</b> asik dah maw PS4 juga ni bro??")},
 
-                new Discussion.DiscussionChild[]{
-                new Discussion.DiscussionChild("Monopod / Tongsis HIPPIE!","https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/11007869_917729514939189_1858331752_n.jpg","Ko aku mau tongsis ini hehe")},
+                new Discussion.Conversation[]{
+                new Discussion.Conversation("Monopod / Tongsis HIPPIE!","https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/11007869_917729514939189_1858331752_n.jpg","Ko aku mau tongsis ini hehe")},
 
-                new Discussion.DiscussionChild[]{
-                new Discussion.DiscussionChild("Jaket Jerman","https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10955257_1407472306222477_844462301_n.jpg","Jerman brooooo"),
-                new Discussion.DiscussionChild("MU pasang patch/nama","https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10919635_396257727207595_317275256_n.jpg","Jet gw pengen ginian nih haha")}
+                new Discussion.Conversation[]{
+                new Discussion.Conversation("Jaket Jerman","https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10955257_1407472306222477_844462301_n.jpg","Jerman brooooo"),
+                new Discussion.Conversation("MU pasang patch/nama","https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10919635_396257727207595_317275256_n.jpg","<b>You:</b> Jet gw pengen ginian nih haha")}
         };
     }
 

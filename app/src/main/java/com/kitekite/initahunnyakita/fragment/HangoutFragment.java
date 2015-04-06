@@ -2,16 +2,22 @@ package com.kitekite.initahunnyakita.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.eowise.recyclerview.stickyheaders.OnHeaderClickListener;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.kitekite.initahunnyakita.R;
@@ -23,23 +29,25 @@ import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
 import java.util.ArrayList;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
  * Created by Florian on 1/3/2015.
  */
-public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnHeaderClickListener {
     private SuperRecyclerView mRecyclerView;
     private Context mContext;
     private SharedPreferences loginCookies;
     private String fullname;
+    ArrayList<HangoutPost> list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_hangout, container, false);
         mContext = container.getContext();
         loginCookies = mContext.getSharedPreferences(Global.login_cookies, 0);
+
         return rootView;
     }
 
@@ -52,7 +60,7 @@ public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void initRecyclerView(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ArrayList<HangoutPost> list = new ArrayList<HangoutPost>();
+        list = new ArrayList<>();
 
         for(int i=0;i< HardcodeValues.fullnames.length;i++){
             HangoutPost post = new HangoutPost();
@@ -65,14 +73,14 @@ public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRe
             post.setThumbsUp(HardcodeValues.thumbsUps[i]);
             list.add(post);
         }
-        HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),list);
+        HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),list, this);
         mAdapter.setHasStableIds(true);
         HangoutAdapter.HeaderAdapter headerAdapter= new HangoutAdapter.HeaderAdapter(list);
-
         StickyHeadersItemDecoration decoration = new StickyHeadersBuilder()
                 .setAdapter(mAdapter)
                 .setRecyclerView(mRecyclerView.getRecyclerView())
                 .setStickyHeadersAdapter(headerAdapter)
+                .setOnHeaderClickListener(this)
                 .build();
 
         mRecyclerView.setAdapter(mAdapter);
@@ -91,5 +99,32 @@ public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         },3000);
+    }
+
+
+    @Override
+    public void onHeaderClick(View view, long l) {
+        CircleImageView profilePic = (CircleImageView) view.getTag();
+        String transitionTag = getResources().getString(R.string.profile_transition);
+        ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.profileUrl = list.get((int)l).getProfileUrl();
+
+
+        if(profilePic instanceof ImageView){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Log.d("taikodok", "tralalala" + transitionTag);
+                profilePic.setTransitionName(transitionTag);
+                setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
+                //setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+                profileFragment.setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
+                //profileFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
+            }
+        }
+        ((ActionBarActivity) mContext).getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, profileFragment, "PROFILE")
+                .addToBackStack("PROFILE")
+                .addSharedElement(profilePic, transitionTag)
+                .commit();
     }
 }

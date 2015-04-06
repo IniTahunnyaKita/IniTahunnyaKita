@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
+import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.ItemDetailActivity;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 
@@ -22,7 +23,7 @@ public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
     private List<Class<? extends Fragment>> mPagesClasses;
     private Context mContext;
     ArrayList<String> imageUrls = new ArrayList<String>(Arrays.asList(HardcodeValues.ItemDetailValues.imageUrls));
-    HangoutPost itemInfo = ItemDetailFragment.getItemInfo();
+    HangoutPost itemInfo = ItemDetailActivity.getItemInfo();
 
     public ItemDetailPagerAdapter(FragmentManager fm, Context context,List<Class<? extends Fragment>> pages) {
         super(fm);
@@ -36,6 +37,9 @@ public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         bundle.putString("url",imageUrls.get(position));
+        if(position==0)
+            bundle.putString("transitionName", mContext.getResources().getString(R.string.item_detail_transition));
+
         return Fragment.instantiate(mContext, mPagesClasses.get(position).getName(),bundle);
     }
 

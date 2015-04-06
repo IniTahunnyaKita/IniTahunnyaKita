@@ -18,8 +18,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.MainActivity;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;

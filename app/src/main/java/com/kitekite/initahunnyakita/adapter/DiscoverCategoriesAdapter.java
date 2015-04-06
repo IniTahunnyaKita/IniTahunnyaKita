@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
@@ -53,19 +54,93 @@ public class DiscoverCategoriesAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
-        ImageView background;
+        ViewHolder viewHolder;
         if(v == null){
             v = LayoutInflater.from(mContext).inflate(R.layout.child_discover_categories,null);
-            background = (ImageView)v.findViewById(R.id.category_bg);
-            v.setTag(background);
+            viewHolder = new ViewHolder();
+            viewHolder.title = (TextView) v.findViewById(R.id.category_title);
+            viewHolder.background = (ImageView)v.findViewById(R.id.category_bg);
+            viewHolder.icon = (ImageView) v.findViewById(R.id.category_icon);
+            viewHolder.parent = (RelativeLayout) v.findViewById(R.id.category_icon_parent);
+            v.setTag(viewHolder);
         } else {
-            background = (ImageView)v.getTag();
+            viewHolder = (ViewHolder)v.getTag();
         }
         Picasso.with(mContext)
                 .load(categories.get(position).image)
                 .fit().centerCrop()
-                .into(background);
-        ((TextView)v.findViewById(R.id.category_title)).setText(categories.get(position).title);
+                .into(viewHolder.background);
+
+        String title = categories.get(position).title;
+        viewHolder.title.setText(title);
+
+        if(title.equals("Fashion")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_fashion)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Beauty")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_beauty)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Games & Toys")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_toys)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Bags")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_bags)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Kids")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_kids)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Home")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_home)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Gadgets")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_gadgets)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Electronics")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_electronics)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Sports")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_sports)
+                    .fit()
+                    .into(viewHolder.icon);
+        } else if(title.equals("Books")){
+            Picasso.with(mContext)
+                    .load(R.drawable.icon_books)
+                    .fit()
+                    .into(viewHolder.icon);
+        }
+
+        viewHolder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO onclick
+            }
+        });
+
+
         return v;
+    }
+
+    static class ViewHolder {
+        RelativeLayout parent;
+        TextView title;
+        ImageView background;
+        ImageView icon;
     }
 }

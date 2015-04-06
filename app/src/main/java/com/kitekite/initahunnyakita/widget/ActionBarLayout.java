@@ -10,8 +10,8 @@ import android.widget.RelativeLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.MainActivity;
 
 /**
  * Created by florian on 31/1/15.

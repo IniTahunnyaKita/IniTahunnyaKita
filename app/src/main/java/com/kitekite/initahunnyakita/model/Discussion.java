@@ -7,18 +7,18 @@ public class Discussion {
     public String name;
     public String profile_url;
     public int no_of_discussions;
-    public DiscussionChild[] discussions;
+    public Conversation[] discussions;
 
     public String getDiscussionsText(){
         return no_of_discussions+" discussions";
     }
 
-    public static class DiscussionChild extends Discussion{
+    public static class Conversation extends Discussion{
         public String title;
         public String image_url;
         public String last_message;
 
-        public DiscussionChild(String title, String image_url, String last_message){
+        public Conversation(String title, String image_url, String last_message){
             this.title = title;
             this.image_url = image_url;
             this.last_message = last_message;

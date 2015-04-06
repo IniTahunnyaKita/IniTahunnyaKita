@@ -1,9 +1,4 @@
-package com.kitekite.initahunnyakita;
-
-import com.google.gson.Gson;
-import com.kitekite.initahunnyakita.model.LoginData;
-import com.kitekite.initahunnyakita.util.Global;
-import com.kitekite.initahunnyakita.widget.CustomTextView;
+package com.kitekite.initahunnyakita.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,8 +12,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.model.LoginData;
+import com.kitekite.initahunnyakita.util.Global;
+import com.kitekite.initahunnyakita.widget.CustomTextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

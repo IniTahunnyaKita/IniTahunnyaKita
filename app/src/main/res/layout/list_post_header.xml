@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:alibabi="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:paddingTop="@dimen/post_vertical_margin"
@@ -12,11 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="5dp">
-        <com.kitekite.initahunnyakita.widget.CircleImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
             android:layout_width="@dimen/profile_pic_size"
             android:layout_height="@dimen/profile_pic_size"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"/>
         <TextView
             android:id="@+id/full_name"
@@ -29,13 +27,14 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <com.kitekite.initahunnyakita.widget.CustomTextView
+    <TextView
         android:id="@+id/post_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         android:text="Dompet Gaul"
-        alibabi:ttf_name="roboto/Roboto-Medium.ttf"/>
+        android:typeface="serif"
+        android:fontFamily="sans-serif-medium"/>
 
 </LinearLayout>

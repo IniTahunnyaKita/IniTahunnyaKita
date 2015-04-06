@@ -8,4 +8,7 @@
     <string name="user_fullname">Florian Pranata</string>
     <string name="user_location">Jakarta, Indonesia</string>
 
+    <string name="profile_transition">ProfileTransition</string>
+    <string name="item_detail_transition">ItemDetailTransition</string>
+
 </resources>

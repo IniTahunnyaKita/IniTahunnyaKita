@@ -2,7 +2,7 @@ package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +12,23 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.Discussion;
-import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Florian on 2/26/2015.
  */
 public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public static boolean mIsAnItemSelected = false;
     RecyclerView recyclerView;
     Context mContext;
     List<Discussion> list;
     List<Discussion> backupList;
+    boolean mIsAnItemSelected = false;
 
     public DiscussionAdapter(RecyclerView recyclerView, Context context, List<Discussion> list){
         this.recyclerView = recyclerView;
@@ -89,17 +90,21 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         restoreItems();
                 }
             });
-        } else if(holder instanceof ChildViewHolder && discussion instanceof Discussion.DiscussionChild){
+        } else if(holder instanceof ChildViewHolder && discussion instanceof Discussion.Conversation){
             ChildViewHolder childHolder = (ChildViewHolder) holder;
-            Discussion.DiscussionChild discussionChild = (Discussion.DiscussionChild) list.get(position);
-            childHolder.title.setText(discussionChild.title);
+            Discussion.Conversation conversation = (Discussion.Conversation) list.get(position);
+            childHolder.title.setText(conversation.title);
 
             Picasso.with(mContext)
-                    .load(discussionChild.image_url)
+                    .load(conversation.image_url)
                     .into(childHolder.image);
 
-            childHolder.lastMessage.setText(discussionChild.last_message);
+            childHolder.lastMessage.setText(Html.fromHtml(conversation.last_message));
         }
+    }
+
+    public boolean isAnItemSelected(){
+        return mIsAnItemSelected;
     }
 
     public void selectItem(int position){
@@ -126,7 +131,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         //int counter = 0;
         for (Iterator<Discussion> iter = list.listIterator(); iter.hasNext();) {
             Discussion discussion = iter.next();
-            if (discussion instanceof Discussion.DiscussionChild) {
+            if (discussion instanceof Discussion.Conversation) {
                 iter.remove();
                 notifyItemRemoved(1);
                 //Log.d("hehe","count:"+counter);

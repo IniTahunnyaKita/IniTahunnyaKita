@@ -7,14 +7,13 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-    <com.kitekite.initahunnyakita.widget.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_picture"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerVertical="true"/>
 
     <LinearLayout
-        xmlns:font="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -22,20 +21,22 @@
         android:layout_marginLeft="15dp"
         android:layout_centerVertical="true">
 
-        <com.kitekite.initahunnyakita.widget.CustomTextView
+        <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
             android:textSize="16sp"
-            font:ttf_name="roboto/Roboto-Medium.ttf"/>
+            android:typeface="serif"
+            android:fontFamily="sans-serif-medium"/>
 
-        <com.kitekite.initahunnyakita.widget.CustomTextView
+        <TextView
             android:id="@+id/no_of_discussions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5 discussions"
-            font:ttf_name="roboto/Roboto-Light.ttf"/>
+            android:typeface="sans"
+            android:fontFamily="sans-serif-light"/>
 
     </LinearLayout>
 

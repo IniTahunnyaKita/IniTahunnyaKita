@@ -32,7 +32,7 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.malinskiy:superrecyclerview:1.1.0'
-    compile 'com.eowise:recyclerview-stickyheaders:0.5.0@aar'
+    compile 'com.eowise:recyclerview-stickyheaders:0.5.2@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.1.0@aar'
     compile 'in.srain.cube:ultra-ptr:1.0.7@aar'
     compile 'com.squareup.picasso:picasso:2.5.0'
@@ -45,6 +45,8 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.facebook.rebound:rebound:0.3.7'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    compile 'de.hdodenhof:circleimageview:1.2.2'
+    compile 'com.koushikdutta.ion:ion:2.+'
     compile project(':verticalpager')
     compile files('src/main/libs/Header2ActionBar-0.2.1.jar')
 }

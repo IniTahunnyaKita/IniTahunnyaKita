@@ -1,35 +1,36 @@
 package com.kitekite.initahunnyakita.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.eowise.recyclerview.stickyheaders.StickyHeadersAdapter;
 import com.google.gson.Gson;
-import com.kitekite.initahunnyakita.MainActivity;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
-import com.kitekite.initahunnyakita.fragment.ProfileFragment;
+import com.kitekite.initahunnyakita.activities.ItemDetailActivity;
+import com.kitekite.initahunnyakita.activities.MainActivity;
+import com.kitekite.initahunnyakita.fragment.HangoutFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
-import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import com.eowise.recyclerview.stickyheaders.StickyHeadersAdapter;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostViewHolder> {
 	public final static int TYPE_PROFILE = 0;
@@ -40,12 +41,17 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
     private static Resources resources;
     private GestureDetector gestureDetector;
     private int doubleTappedPos;
+    private View doubleTappedView;
+    private String transitionTag;
+    private HangoutFragment hangoutFragment;
 
-	public HangoutAdapter(Context context, ArrayList<HangoutPost> list) {
+	public HangoutAdapter(Context context, ArrayList<HangoutPost> list, HangoutFragment hangoutFragment) {
         this.group = list;
         this.mContext = context;
+        this.hangoutFragment = hangoutFragment;
         this.resources = mContext.getResources();
         gestureDetector = new GestureDetector(mContext, new DoubleTapListener());
+        transitionTag = resources.getString(R.string.item_detail_transition);
     }
 
     @Override
@@ -87,6 +93,9 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 doubleTappedPos = position;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    doubleTappedView = v;
+                }
                 return gestureDetector.onTouchEvent(event);
             }
         });
@@ -141,16 +150,20 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d("kodok","doubletap");
-            ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
-            Bundle bundle = new Bundle();
             Gson gson = new Gson();
-            bundle.putString("ITEM_INFO",gson.toJson(group.get(doubleTappedPos)));
-            itemDetailFragment.setArguments(bundle);
-            ((ActionBarActivity) mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_container,itemDetailFragment,"ITEM_DETAIL")
-                    .addToBackStack("ITEM_DETAIL")
-                    .commit();
+            Intent intent = new Intent(mContext, ItemDetailActivity.class);
+            intent.putExtra("ITEM_INFO", gson.toJson(group.get(doubleTappedPos)));
+
+            if (mContext instanceof Activity) {
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
+                                doubleTappedView,   // The view which starts the transition
+                                mContext.getString(R.string.item_detail_transition)    // The transitionName of the view we’re transitioning to
+                        );
+                ActivityCompat.startActivity((Activity) mContext, intent, options.toBundle());
+            } else {
+                mContext.startActivity(intent);
+            }
             return true;
         }
     }
@@ -175,50 +188,12 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                     .into(viewHolder.profilePic);
             viewHolder.fullName.setText(group.get(position).getFullname());
             viewHolder.title.setText(group.get(position).getTitle());
-            View.OnClickListener profileClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    doTranslateAnimation(viewHolder.profilePic,group.get(position).getProfileUrl().toString());
-                    ((ActionBarActivity) mContext).getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.frame_container,new ProfileFragment(),"PROFILE")
-                            .addToBackStack("PROFILE")
-                            .commit();
-                }
-            };
-            viewHolder.fullName.setOnClickListener(profileClickListener);
-            viewHolder.profilePic.setOnClickListener(profileClickListener);
+            viewHolder.profilePic.getRootView().setTag(viewHolder.profilePic);
         }
 
         @Override
         public long getHeaderId(int i) {
             return i;
-        }
-
-        private void doTranslateAnimation(View v, String imgUrl) {
-            View root = v.getRootView();
-            DisplayMetrics dm = new DisplayMetrics();
-            ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
-            int statusBarOffset = dm.heightPixels - root.getMeasuredHeight();
-            int originalPos[] = new int[2];
-
-            v.getLocationOnScreen(originalPos);
-            originalPos[1] += statusBarOffset/2;
-
-            int dest[] = new int[2];
-            dest[0] = dm.widthPixels / 2;
-            dest[0] -= (v.getMeasuredWidth() / 2);
-            //dest[1] = dm.heightPixels / 2 - (v.getMeasuredHeight() / 2) - statusBarOffset;
-            int mHeaderHeight = mContext.getResources().getDimensionPixelSize(R.dimen.profile_header_height);
-            int headerLogoSize = mContext.getResources().getDimensionPixelSize(R.dimen.profile_header_logo_size);
-            dest[1] = -headerLogoSize / 2 + mHeaderHeight/2+168;
-            dest[1] = 240;
-            Log.d("kodok","status bar offset:"+headerLogoSize+"y pos:"+mHeaderHeight);
-
-            MainActivity mainActivity = MainActivity.getMainActivity();
-            mainActivity.iconPos = originalPos;
-            mainActivity.iconDest = dest;
-            mainActivity.doTranslateAnimation(imgUrl);
         }
 
         static class HeaderViewHolder extends RecyclerView.ViewHolder {

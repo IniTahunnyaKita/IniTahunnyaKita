@@ -3,6 +3,7 @@ package com.kitekite.initahunnyakita.widget;
 /**
  * Created by Florian on 1/27/2015.
  */
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,11 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.kitekite.initahunnyakita.util.BakedBezierInterpolator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
-
-import com.kitekite.initahunnyakita.util.BakedBezierInterpolator;
 
 /**
  * Created by yugy on 14/11/21.

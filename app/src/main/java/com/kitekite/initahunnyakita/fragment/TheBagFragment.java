@@ -3,9 +3,11 @@ package com.kitekite.initahunnyakita.fragment;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,11 @@ public class TheBagFragment extends Fragment{
         View fragmentView = inflater.inflate(R.layout.header_the_bag, container, false);
         loginCookies = getActivity().getSharedPreferences(Global.login_cookies, 0);
         initProfile(fragmentView);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+            setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+        }
         return fragmentView;
     }
 

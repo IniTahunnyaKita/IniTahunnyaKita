@@ -1,4 +1,4 @@
-package com.kitekite.initahunnyakita.fragment.itemdetail;
+package com.kitekite.initahunnyakita.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,13 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,16 +26,19 @@ import com.facebook.rebound.SpringSystem;
 import com.google.gson.Gson;
 import com.grantlandchew.view.VerticalPager;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.fragment.itemdetail.DescriptionFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.OverviewCompositeFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.OverviewFragment;
+import com.kitekite.initahunnyakita.fragment.itemdetail.ReviewFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
-import com.kitekite.initahunnyakita.widget.ViewPagerIndicator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
- * Created by tinklabs on 2/5/2015.
+ * Created by Florian on 4/4/2015.
  */
-public class ItemDetailFragment extends Fragment implements VerticalPager.OnPullToZoomListener{
+public class ItemDetailActivity extends ActionBarActivity implements VerticalPager.OnPullToZoomListener {
 
     private static final int CENTRAL_PAGE_INDEX = 0;
 
@@ -47,15 +49,16 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
     // -----------------------------------------------------------------------
     private VerticalPager mVerticalPager;
     private View overlay;
-    private TextView priceOverlay;
+    private TextView priceOverlay, titleOverlay;
     private ImageView zoomIcon, zoomInBtn, zoomOutBtn;
-    private ViewPagerIndicator viewPagerIndicator;
-    private static HangoutPost itemInfo;
+    public static HangoutPost itemInfo;
     private boolean isZoomIconShown = false;
     public static boolean isOverlayShown = true, isInZoomMode = false;
 
+    private boolean onPause = false;
     private Vibrator haptic;
     private SpringSystem springSystem;
+
 
     private OverviewCompositeFragment overviewCompositeFragment;
 
@@ -65,42 +68,50 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
     //
     // -----------------------------------------------------------------------
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Gson gson = new Gson();
-        itemInfo = gson.fromJson(getArguments().getString("ITEM_INFO"),HangoutPost.class);
-        View fragmentView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-        findViews(fragmentView);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        haptic = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        Gson gson = new Gson();
+        itemInfo = gson.fromJson(getIntent().getStringExtra("ITEM_INFO"),HangoutPost.class);
+        setContentView(R.layout.fragment_item_detail);
+        findViews();
+
+        haptic = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         springSystem = SpringSystem.create();
 
-        ((ActionBarActivity)getActivity()).getSupportActionBar().hide();
-        YoYo.with(Techniques.SlideOutDown)
-                .duration(800)
-                .playOn(container.getRootView().findViewById(android.R.id.tabhost));
-
-        return fragmentView;
+        getSupportActionBar().hide();
     }
 
-    private void findViews(View fragmentView) {
-        mVerticalPager = (VerticalPager) fragmentView.findViewById(R.id.main_vertical_pager);
-        viewPagerIndicator = (ViewPagerIndicator) fragmentView.findViewById(R.id.viewpager_indicator);
+    private void findViews() {
+        mVerticalPager = (VerticalPager) findViewById(R.id.main_vertical_pager);
 
-        zoomIcon = (ImageView) fragmentView.findViewById(R.id.zoom_icon);
-        zoomOutBtn = (ImageView) fragmentView.findViewById(R.id.zoom_out_btn);
-        zoomInBtn = (ImageView) fragmentView.findViewById(R.id.zoom_in_btn);
+        zoomIcon = (ImageView) findViewById(R.id.zoom_icon);
+        zoomOutBtn = (ImageView) findViewById(R.id.zoom_out_btn);
+        zoomInBtn = (ImageView) findViewById(R.id.zoom_in_btn);
 
-        overlay = fragmentView.findViewById(R.id.short_detail_overlay);
-        priceOverlay = (TextView) fragmentView.getRootView().findViewById(R.id.overlay_price);
+        overlay = findViewById(R.id.short_detail_overlay);
+        priceOverlay = (TextView) findViewById(R.id.overlay_price);
         priceOverlay.setText(itemInfo.getPrice());
-
-        overviewCompositeFragment = (OverviewCompositeFragment) getChildFragmentManager().findFragmentById(R.id.main_overview_fragment);
-
+        titleOverlay = (TextView) findViewById(R.id.overlay_title);
         initViews();
     }
 
     private void initViews() {
+        titleOverlay.setText(itemInfo.getTitle());
+
+        overviewCompositeFragment = new OverviewCompositeFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.main_overview_fragment, overviewCompositeFragment);
+
+        Fragment descriptionFragment = new DescriptionFragment();
+        ft.replace(R.id.main_description_fragment, descriptionFragment);
+
+        Fragment reviewFragment = new ReviewFragment();
+        ft.replace(R.id.main_review_fragment, reviewFragment);
+        ft.commit();
+
         //hide zoom icon
         ObjectAnimator hide = ObjectAnimator.ofFloat(zoomIcon, "translationY", 0f, -zoomIcon.getMeasuredHeight()*2);
         hide.setDuration(0);
@@ -195,49 +206,34 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
         });
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        TextView titleOverlay = (TextView) view.findViewById(R.id.overlay_title);
-        titleOverlay.setText(itemInfo.getTitle());
-    }
-
     public static HangoutPost getItemInfo(){
         return itemInfo;
     }
 
     public void hideOverlay(){
-        final View overlay = getActivity().findViewById(R.id.short_detail_overlay);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isOverlayShown){
-                    YoYo.with(Techniques.FadeOut)
-                            .duration(200)
-                            .withListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    isOverlayShown = false;
-                                }
+        final View overlay = findViewById(R.id.short_detail_overlay);
+        YoYo.with(Techniques.FadeOut)
+                .duration(200)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    overlay.setVisibility(View.GONE);
-                                }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        isOverlayShown = false;
+                        overlay.setVisibility(View.GONE);
+                    }
 
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                    }
 
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
-                            })
-                            .playOn(overlay);
-                }
-            }
-        },1000);
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                    }
+                })
+                .playOn(overlay);
     }
 
     @Override
@@ -264,13 +260,22 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
 
         scaleUp.play(scaleUpX).with(scaleUpY);
         scaleUp.start();
-        Log.d("vpager","progress:"+progress);
+        Log.d("vpager", "progress:" + progress);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        hideOverlay();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                overlay.setVisibility(View.VISIBLE);
+                isOverlayShown = true;
+                YoYo.with(Techniques.FadeIn)
+                        .duration(200)
+                        .playOn(overlay);
+            }
+        },1000);
     }
 
     @Override
@@ -333,8 +338,7 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
                 zoomInBtn.setScaleX(scale);
                 zoomInBtn.setScaleY(scale);
 
-                viewPagerIndicator.setScaleX(value);
-                viewPagerIndicator.setScaleY(value);
+                overviewCompositeFragment.setViewPagerIndicatorScale(value);
             }
         });
         //spring.setRestSpeedThreshold()
@@ -380,12 +384,9 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        /*ItemDetailFragment f = (ItemDetailFragment) getFragmentManager().findFragmentByTag("ITEM_DETAIL");
-        if (f != null)
-            getFragmentManager().beginTransaction().remove(f).commit();*/
-        Log.d("sssss","ondestroyview");
+    public void onPause() {
+        super.onPause();
+        onPause = true;
     }
 
     private void goToZoomMode(){
@@ -405,8 +406,8 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
         }
 
         //flip zoom icon
-        final Animation flipStart = AnimationUtils.loadAnimation(getActivity(), R.anim.flip_start);
-        final Animation flipEnd = AnimationUtils.loadAnimation(getActivity(), R.anim.flip_end);
+        final Animation flipStart = AnimationUtils.loadAnimation(this, R.anim.flip_start);
+        final Animation flipEnd = AnimationUtils.loadAnimation(this, R.anim.flip_end);
         Animation.AnimationListener animationListener = new Animation.AnimationListener(){
 
             @Override
@@ -475,6 +476,7 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
                 // state by asking its current value in onSpringUpdate.
                 float value = (float) spring.getCurrentValue();
                 float scale = 1f - value;
+                value = value * value * value;
 
                 zoomOutBtn.setScaleX(value);
                 zoomOutBtn.setScaleY(value);
@@ -482,11 +484,11 @@ public class ItemDetailFragment extends Fragment implements VerticalPager.OnPull
                 zoomInBtn.setScaleX(value);
                 zoomInBtn.setScaleY(value);
 
-                viewPagerIndicator.setScaleX(scale);
-                viewPagerIndicator.setScaleY(scale);
+                overviewCompositeFragment.setViewPagerIndicatorScale(scale);
             }
         });
         //spring.setRestSpeedThreshold()
         spring.setEndValue(1);
     }
+
 }

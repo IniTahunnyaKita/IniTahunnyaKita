@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+        android:id="@+id/category_icon_parent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true">
 
         <com.kitekite.initahunnyakita.widget.SquareImageView
             android:id="@+id/category_bg"
@@ -14,21 +16,46 @@
             android:layout_height="@dimen/categories_icon_size"
             android:scaleType="centerCrop"/>
 
-        <com.kitekite.initahunnyakita.widget.CustomTextView
-            xmlns:style="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/category_title"
+        <com.kitekite.initahunnyakita.widget.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/categories_icon_size"
+            android:src="#88000000"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="24sp"
-            android:textColor="@android:color/white"
-            style:ttf_name="roboto/Roboto-Light.ttf"/>
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
+        <ImageView
+            android:id="@+id/category_icon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"/>
+
+        <TextView
+            android:id="@+id/category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="test"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:typeface="sans"
+            android:fontFamily="sans-serif-light"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/categories_icon_size"
+            android:background="?attr/selectableItemBackground"/>
 
     </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+
     <LinearLayout
         android:id="@+id/padding"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:orientation="vertical"/>
+
 </LinearLayout>

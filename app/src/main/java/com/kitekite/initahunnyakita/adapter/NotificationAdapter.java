@@ -10,10 +10,11 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.NotificationItem;
-import com.kitekite.initahunnyakita.widget.CircleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Florian on 1/30/2015.

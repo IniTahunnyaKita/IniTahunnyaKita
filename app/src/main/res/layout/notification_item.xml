@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.kitekite.initahunnyakita.widget.CircleImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/notif_item_profile_picture"
             android:layout_width="@dimen/profile_pic_notif_size"
             android:layout_height="@dimen/profile_pic_notif_size"

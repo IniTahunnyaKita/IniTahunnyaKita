@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,6 +9,14 @@
         android:layout_height="match_parent"
         android:listSelector="@android:color/transparent"
         android:background="@android:color/white" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/header_logo"
+        android:layout_width="@dimen/profile_header_logo_size"
+        android:layout_height="@dimen/profile_header_logo_size"
+        android:layout_centerInParent="true"
+        android:transitionName="@string/profile_transition"
+        android:src="@color/Gray"/>
 
     <FrameLayout
         android:id="@+id/header"
@@ -21,12 +29,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"/>
 
-        <com.kitekite.initahunnyakita.widget.CircleImageView
-            android:id="@+id/header_logo"
-            android:layout_width="@dimen/profile_header_logo_size"
-            android:layout_height="@dimen/profile_header_logo_size"
-            android:layout_gravity="center"/>
-
     </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>

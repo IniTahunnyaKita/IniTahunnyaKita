@@ -46,27 +46,35 @@ public class DiscussionFragment extends Fragment {
             Discussion discussion = new Discussion();
             discussion.name = HardcodeValues.Discussions.names[i];
             discussion.profile_url = HardcodeValues.Discussions.profileUrls[i];
-            discussion.no_of_discussions = HardcodeValues.Discussions.DiscussionChildren[i].length;
-            discussion.discussions = HardcodeValues.Discussions.DiscussionChildren[i];
+            discussion.no_of_discussions = HardcodeValues.Discussions.CONVERSATIONS[i].length;
+            discussion.discussions = HardcodeValues.Discussions.CONVERSATIONS[i];
             discussions.add(discussion);
         }for(int i=0;i< HardcodeValues.Discussions.names.length;i++){
             Discussion discussion = new Discussion();
             discussion.name = HardcodeValues.Discussions.names[i]+" gg";
             discussion.profile_url = HardcodeValues.Discussions.profileUrls[i];
-            discussion.no_of_discussions = HardcodeValues.Discussions.DiscussionChildren[i].length;
-            discussion.discussions = HardcodeValues.Discussions.DiscussionChildren[i];
+            discussion.no_of_discussions = HardcodeValues.Discussions.CONVERSATIONS[i].length;
+            discussion.discussions = HardcodeValues.Discussions.CONVERSATIONS[i];
             discussions.add(discussion);
         }for(int i=0;i< HardcodeValues.Discussions.names.length;i++){
             Discussion discussion = new Discussion();
             discussion.name = HardcodeValues.Discussions.names[i]+" babi";
             discussion.profile_url = HardcodeValues.Discussions.profileUrls[i];
-            discussion.no_of_discussions = HardcodeValues.Discussions.DiscussionChildren[i].length;
-            discussion.discussions = HardcodeValues.Discussions.DiscussionChildren[i];
+            discussion.no_of_discussions = HardcodeValues.Discussions.CONVERSATIONS[i].length;
+            discussion.discussions = HardcodeValues.Discussions.CONVERSATIONS[i];
             discussions.add(discussion);
         }
 
         mAdapter = new DiscussionAdapter(recyclerView, getActivity(),discussions);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public boolean onBackPressed(){
+        if(mAdapter.isAnItemSelected()){
+            mAdapter.restoreItems();
+            return true;
+        }
+        return false;
     }
 
 }

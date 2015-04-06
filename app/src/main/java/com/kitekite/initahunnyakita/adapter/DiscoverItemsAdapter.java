@@ -1,20 +1,19 @@
 package com.kitekite.initahunnyakita.adapter;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.fragment.itemdetail.ItemDetailFragment;
+import com.kitekite.initahunnyakita.activities.ItemDetailActivity;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.widget.SquareImageView;
@@ -61,20 +60,24 @@ public class DiscoverItemsAdapter extends BaseAdapter {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
-                Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 HangoutPost hangoutPost = new HangoutPost();
                 hangoutPost.setTitle("DiscoverItem");
                 hangoutPost.setPrice(690000);
                 hangoutPost.setItemUrl(HardcodeValues.discoverItems[position]);
-                bundle.putString("ITEM_INFO", gson.toJson(hangoutPost));
-                itemDetailFragment.setArguments(bundle);
-                ((ActionBarActivity) mContext).getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_container, itemDetailFragment, "ITEM_DETAIL")
-                        .addToBackStack("ITEM_DETAIL")
-                        .commit();
+                Intent intent = new Intent(mContext, ItemDetailActivity.class);
+                intent.putExtra("ITEM_INFO", gson.toJson(hangoutPost));
+
+                if (mContext instanceof Activity) {
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
+                                    v,   // The view which starts the transition
+                                    mContext.getString(R.string.item_detail_transition)    // The transitionName of the view we’re transitioning to
+                            );
+                    ActivityCompat.startActivity((Activity) mContext, intent, options.toBundle());
+                } else {
+                    mContext.startActivity(intent);
+                }
             }
         });
 

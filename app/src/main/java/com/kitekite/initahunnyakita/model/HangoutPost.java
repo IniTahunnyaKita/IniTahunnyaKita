@@ -1,9 +1,6 @@
 package com.kitekite.initahunnyakita.model;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.Locale;
 
 /**
