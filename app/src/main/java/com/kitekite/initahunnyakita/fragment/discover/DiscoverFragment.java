@@ -1,5 +1,6 @@
 package com.kitekite.initahunnyakita.fragment.discover;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -9,6 +10,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.DiscoverTabAdapter;
@@ -45,6 +47,14 @@ public class DiscoverFragment extends Fragment{
         pagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_tabstrip);
         //pagerTabStrip.setBackgroundResource(R.drawable.tab_indicator);
         pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_SP,16f);
-        pagerTabStrip.setTabIndicatorColorResource(R.color.DarkRed);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.White);
+
+        for (int i = 0; i < pagerTabStrip.getChildCount(); ++i) {
+            View nextChild = pagerTabStrip.getChildAt(i);
+            if (nextChild instanceof TextView) {
+                TextView textViewToConvert = (TextView) nextChild;
+                textViewToConvert.setTypeface(Typeface.SANS_SERIF);
+            }
+        }
     }
 }

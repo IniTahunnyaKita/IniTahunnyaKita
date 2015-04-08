@@ -3,7 +3,6 @@ package com.kitekite.initahunnyakita.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +23,6 @@ import com.kitekite.initahunnyakita.util.PanningViewAttacher;
 import com.kitekite.initahunnyakita.widget.CustomTextView;
 import com.kitekite.initahunnyakita.widget.PanningView;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -65,7 +63,7 @@ public class LoginActivity extends ActionBarActivity {
 		Animation alphaAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
 		findViewById(R.id.form_container).startAnimation(alphaAnimation);
 		
-		Button loginButton = (Button) findViewById(R.id.login_button);
+		Button loginButton = (Button) findViewById(R.id.login_btn);
 		loginButton.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -85,6 +83,14 @@ public class LoginActivity extends ActionBarActivity {
 			}
 			
 		});
+
+        Button signupButton = (Button) findViewById(R.id.signup_btn);
+        signupButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
 
         viewSwitcher = (ViewSwitcher) findViewById(R.id.view_switcher);
         final PanningView panningView1 = (PanningView) findViewById(R.id.panningView1);

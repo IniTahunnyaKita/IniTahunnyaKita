@@ -39,17 +39,18 @@
         android:id="@+id/form_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:background="#CCFFFFFF">
+        android:background="#DDFFFFFF">
         <EditText
             android:id="@+id/usernameBox"
             android:layout_width="250dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:hint="Username"
+            android:hint="@string/username_form_hint"
             android:background="@drawable/login_box"
             android:imeOptions="actionNext"
             android:singleLine="true"
@@ -68,29 +69,38 @@
             android:background="@drawable/login_box"
             android:ems="10"
             android:imeOptions="actionDone"
-            android:hint="Password"
+            android:hint="@string/password_box_hint"
             android:inputType="textPassword"
             android:fontFamily="sans-serif-light" />
         <requestFocus />
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/login_btn"
             android:layout_width="250dp"
             android:layout_height="40dp"
             android:layout_below="@+id/passwordBox"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/default_btn_bg"
-            android:text="LOGIN"
+            android:text="@string/login"
             android:textColor="@android:color/white"
             android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/signup_btn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/login_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/sign_up"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_button"
+            android:layout_below="@id/signup_btn"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/terms_of_service"
             android:typeface="sans"/>
     </RelativeLayout>

@@ -13,7 +13,7 @@ import com.kitekite.initahunnyakita.fragment.discover.DiscoverShopsFragment;
  */
 public class DiscoverTabAdapter extends FragmentPagerAdapter {
 
-    private String tabtitles[] = new String[] { "Categories", "Items", "Shops" };
+    private String tabtitles[] = new String[] { "CATEGORIES", "ITEMS", "SHOPS" };
 
     public DiscoverTabAdapter(FragmentManager fm){
         super(fm);
