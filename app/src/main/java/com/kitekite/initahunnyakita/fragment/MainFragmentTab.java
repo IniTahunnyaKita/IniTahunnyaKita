@@ -17,7 +17,7 @@ public class MainFragmentTab extends Fragment {
     public static final String TAB_2_TAG = "TAB 2";
     public static final String TAB_3_TAG = "TAB 3";//trending/stories?
     public static final String TAB_4_TAG = "TAB 4";
-    public static MainActivity mainActivity;
+    public MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,11 +27,11 @@ public class MainFragmentTab extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        mainActivity = MainActivity.getMainActivity();
+        mainActivity = (MainActivity) getActivity();
         ActionBar actionBar = mainActivity.getSupportActionBar();
         if(getTag().equals(TAB_1_TAG)){
             actionBar.setCustomView(R.layout.custom_actionbar_default);
-            if(!getFragmentManager().findFragmentByTag(mainActivity.HANG_OUT_TAG).isVisible()) {
+            if(!getFragmentManager().findFragmentByTag(MainActivity.HANG_OUT_TAG).isVisible()) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new HangoutFragment(),MainActivity.HANG_OUT_TAG)
                         .addToBackStack(MainActivity.HANG_OUT_TAG)
@@ -39,7 +39,7 @@ public class MainFragmentTab extends Fragment {
             }
         }else if(getTag().equals(TAB_2_TAG)){
             //actionBar.setCustomView(R.layout.custom_actionbar_discover);
-            DiscoverFragment discoverFragment = (DiscoverFragment) getFragmentManager().findFragmentByTag(mainActivity.DISCOVER_TAG);
+            DiscoverFragment discoverFragment = (DiscoverFragment) getFragmentManager().findFragmentByTag(MainActivity.DISCOVER_TAG);
             if(discoverFragment==null || (discoverFragment!=null && !discoverFragment.isVisible())) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new DiscoverFragment(),MainActivity.DISCOVER_TAG)
@@ -47,7 +47,7 @@ public class MainFragmentTab extends Fragment {
                         .commit();
             }
         } else if(getTag().equals(TAB_3_TAG)){
-            DiscussionFragment discussionFragment = (DiscussionFragment) getFragmentManager().findFragmentByTag(mainActivity.DISCUSSION_TAG);
+            DiscussionFragment discussionFragment = (DiscussionFragment) getFragmentManager().findFragmentByTag(MainActivity.DISCUSSION_TAG);
             if(discussionFragment==null || (discussionFragment!=null && !discussionFragment.isVisible())){
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new DiscussionFragment(),MainActivity.DISCUSSION_TAG)
@@ -55,7 +55,7 @@ public class MainFragmentTab extends Fragment {
                         .commit();
             }
         } else if(getTag().equals(TAB_4_TAG)){
-            TheBagFragment theBagFragment = (TheBagFragment) getFragmentManager().findFragmentByTag(mainActivity.THE_BAG_TAG);
+            TheBagFragment theBagFragment = (TheBagFragment) getFragmentManager().findFragmentByTag(MainActivity.THE_BAG_TAG);
             if(theBagFragment==null || (theBagFragment!=null && !theBagFragment.isVisible())) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame_container, new TheBagFragment(),MainActivity.THE_BAG_TAG)
@@ -66,21 +66,6 @@ public class MainFragmentTab extends Fragment {
             actionBar.setCustomView(R.layout.custom_actionbar_default);
         }
         //setActionBarTitle(this.getTag());
-    }
-
-    public void setActionBarTitle(String tagName){
-        Log.d("taikodok","fragmenttab tag:"+getTag());
-        mainActivity = MainActivity.getMainActivity();
-        ActionBar actionBar = mainActivity.getSupportActionBar();
-        /*TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.action_bar_title);
-        if(tagName.equals(TAB_1_TAG))
-            title.setText("Hang Out");
-        else if(tagName.equals(TAB_2_TAG))
-            title.setText("Discover");
-        else if(tagName.equals(TAB_3_TAG))
-            title.setText("Trending");
-        else if(tagName.equals(TAB_4_TAG))
-            title.setText("The Bag");*/
     }
 
     /*public void popFragment(){

@@ -2,9 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:alibabi="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/DarkRed">
-    
+    android:layout_height="match_parent">
+
+    <ViewSwitcher
+        android:id="@+id/view_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/fade_in"
+        android:outAnimation="@anim/fade_out">
+
+        <com.kitekite.initahunnyakita.widget.PanningView
+            android:id="@+id/panningView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/panning1"/>
+
+        <com.kitekite.initahunnyakita.widget.PanningView
+            android:id="@+id/panningView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/panning2" />
+
+    </ViewSwitcher>
+
     <com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"
@@ -14,49 +34,65 @@
         android:textSize="36sp"
         android:textColor="@android:color/white"
         alibabi:ttf_name="black_jack.ttf" />
-    
-    <EditText
-        android:id="@+id/usernameBox"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="200dp"
-        android:gravity="center"
-        android:hint="Username"
-        android:background="@drawable/login_box"
-        android:imeOptions="actionNext"
-        android:singleLine="true"
-        android:ems="10" >
-    <requestFocus />
-    </EditText>
-    
-    <EditText
-        android:id="@+id/passwordBox"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@+id/usernameBox"
-        android:layout_alignTop="@+id/usernameBox"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:background="@drawable/login_box"
-        android:ems="10"
-        android:imeOptions="actionDone"
-        android:hint="Password"
-        android:inputType="textPassword" />
-    <requestFocus />
-    
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/passwordBox"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/default_btn_bg"
-        android:text="Login" 
-        android:textColor="@android:color/white" />
-        "
-    
+
+    <RelativeLayout
+        android:id="@+id/form_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="#CCFFFFFF">
+        <EditText
+            android:id="@+id/usernameBox"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:hint="Username"
+            android:background="@drawable/login_box"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:ems="10"
+            android:fontFamily="sans-serif-light" >
+        <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/passwordBox"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/usernameBox"
+            android:layout_below="@+id/usernameBox"
+            android:gravity="center"
+            android:background="@drawable/login_box"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif-light" />
+        <requestFocus />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/passwordBox"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/default_btn_bg"
+            android:text="LOGIN"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/terms_of_service"
+            android:typeface="sans"/>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -102,7 +102,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         postHolder.pollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.getMainActivity().addPollItem(group.get(position));
+                ((MainActivity)mContext).addPollItem(group.get(position));
             }
         });
     }

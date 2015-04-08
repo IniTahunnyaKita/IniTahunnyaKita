@@ -46,7 +46,10 @@
                 android:layout_width="75dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:text="Poll!"
+                android:text="POLL"
+                android:textSize="14sp"
+                android:textColor="@color/White"
+                android:typeface="sans"
                 android:background="@drawable/default_btn_bg"/>
 
         </LinearLayout>

@@ -200,7 +200,7 @@ public class NotificationLayout extends RelativeLayout{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mainActivity = MainActivity.getMainActivity();
+                mainActivity = (MainActivity) getContext();
                 TypedValue outValue = new TypedValue();
                 int[] attrs = { android.R.attr.windowBackground };
                 mainActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, outValue, true);

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.MainActivity;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.ProfileItem;
@@ -53,6 +54,12 @@ public class TheBagFragment extends Fragment{
         ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);
         //load image
         final ImageView profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).logOut();
+            }
+        });
         Picasso.with(getActivity())
                 .load(loginCookies.getString(Global.photo_url, "file:///android_asset/prof_pic.jpg"))
                 .error(R.drawable.ensa_shop)

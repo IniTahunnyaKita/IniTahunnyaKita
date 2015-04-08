@@ -2,6 +2,7 @@ package com.kitekite.initahunnyakita.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -64,7 +65,6 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAB_4_TAG = "TAB 4";
 
     private String TAG = "taikodok";
-    public static MainActivity mainActivity;
     public int [] iconPos,iconDest = new int[2];
     List pollList = new ArrayList< HangoutPost>();
     EditText pollCaption;
@@ -109,7 +109,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
-        mainActivity = this;
 
         initActionBar();
 
@@ -117,8 +116,8 @@ public class MainActivity extends ActionBarActivity {
 
         initPollHolder();
 
-        blurredBg = (ImageView)mainActivity.findViewById(R.id.blur_image);
-        inflater = LayoutInflater.from(mainActivity);
+        blurredBg = (ImageView) findViewById(R.id.blur_image);
+        inflater = LayoutInflater.from(this);
         content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
         //if(whichFragmentIsShown()==HANG_OUT)
@@ -126,12 +125,6 @@ public class MainActivity extends ActionBarActivity {
 
         initNotification();
     }
-
-    public static MainActivity getMainActivity(){
-        return mainActivity;
-    }
-
-
 
     public void initActionBar(){
         ActionBar mActionBar = getSupportActionBar();
@@ -297,7 +290,7 @@ public class MainActivity extends ActionBarActivity {
     private void setBlurredBackground(int height){
         blurredBitmap = ImageUtil.drawViewToBitmap(
                 blurredBitmap,content,contentWidth,height,10,windowBackground);
-        blurredBitmap = ImageUtil.BlurBitmap(mainActivity, blurredBitmap, 5);
+        blurredBitmap = ImageUtil.BlurBitmap(this, blurredBitmap, 5);
         blurredBg.setVisibility(View.VISIBLE);
         blurredBg.setImageBitmap(blurredBitmap);
 
@@ -396,6 +389,14 @@ public class MainActivity extends ActionBarActivity {
         InputMethodManager imm = (InputMethodManager)getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
+    }
+
+    public void logOut() {
+        SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
+        editor.putBoolean(Global.is_logged_in, false);
+        editor.commit();
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
 }
