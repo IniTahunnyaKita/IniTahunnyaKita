@@ -6,7 +6,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:background="@color/Teal">
         <EditText
             android:id="@+id/search_box"
@@ -23,8 +25,7 @@
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:layout_alignRight="@+id/search_box"
-            android:layout_centerVertical="true"
-            android:padding="7dp"
+            android:padding="10dp"
             android:src="@mipmap/ic_search"/>
         </RelativeLayout>
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"

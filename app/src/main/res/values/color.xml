@@ -136,6 +136,8 @@
  <color name="DeepSkyBlue">#00BFFF</color>
  <color name="DarkCyan">#008B8B</color>
  <color name="Teal">#008080</color>
+ <color name="DarkTeal">#004C4C</color>
+ <color name="SemiTransparentDarkTeal">#AA004C4C</color>
  <color name="Green">#008000</color>
  <color name="DarkGreen">#006400</color>
  <color name="Blue">#0000FF</color>

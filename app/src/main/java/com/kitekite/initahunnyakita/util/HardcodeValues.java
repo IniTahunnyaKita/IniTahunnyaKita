@@ -35,7 +35,7 @@ public class HardcodeValues {
 
     public static class Discovershops {
         public static final String [] shopNames = new String[]{"Erigo Store","Regarde Indonesia","Macstuff","Esgotado"};
-        public static final String [] profilePictures = new String[]{"https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10955851_971574076188944_784656978_a.jpg",
+        public static final String [] profilePictures = new String[]{"https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/11142827_485736114911623_1415790975_a.jpg",
         "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/10932204_332256553640551_269068030_a.jpg",
         "https://instagramimages-a.akamaihd.net/profiles/profile_27822695_75sq_1382018194.jpg",
         "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/11005133_914101061974627_628156834_a.jpg"};
@@ -57,7 +57,7 @@ public class HardcodeValues {
         public static final String [] names = new String[]{"Felicia Anggraini","Ardy Agustino","Cynthia Kartika","Jethro Satya"};
         public static final String [] profileUrls = new String[]{"https://instagramimages-a.akamaihd.net/profiles/profile_229439753_75sq_1395937794.jpg",
         "http://i58.tinypic.com/350l9oo.jpg",
-        "https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11018353_1118266838188691_987965254_a.jpg",
+        "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11084922_854525801285481_2075853304_a.jpg",
         "http://i58.tinypic.com/1zeum54.jpg"};;
 
         public static final Discussion.Conversation[] [] CONVERSATIONS = new Discussion.Conversation[][]{
@@ -103,7 +103,7 @@ public class HardcodeValues {
         "http://www.nostalgiaco.com/usercontent/images/sofa-57-chev-red.jpg",
         "http://www.jkrowling.com/uploads/images/large/en_US-timeline-image-harry-potter-and-the-order-of-the-phoenix-1333632366.jpg",
         "http://www.indie-mart.com/wp-content/uploads/2014/09/Cardigan-Sweaters-for-Women-1.jpg",
-        "http://www.bestmeetandgreetgatwick.co.uk/jewelrysite/wp-content/uploads/2014/08/diamond-necklace.jpg",
+        "https://s3.amazonaws.com/banglebangle_images/53ab848364199f261ebef9f8",
         "http://content.nordstrom.com/imagegallery/store/product/large/0/_9856940.jpg",
         "http://www.jkrowling.com/uploads/images/large/en_US-timeline-image-harry-potter-and-the-deathly-hallows-1333632499.jpg",
         "http://allsuperdesign.com/wp-content/uploads/2011/07/Leisure-Sofas-226-.jpg",

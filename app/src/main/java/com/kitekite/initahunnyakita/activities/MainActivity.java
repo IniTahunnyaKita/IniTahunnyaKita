@@ -249,21 +249,21 @@ public class MainActivity extends ActionBarActivity {
         TextView tabTitle = (TextView) v.findViewById(R.id.tab_title);
         String tag = spec.getTag();
         if(tag.equals(TAB_1_TAG)) {
-            tabImg.setBackgroundResource(R.drawable.ic_hangout_tab);
+            tabImg.setBackgroundResource(R.drawable.ic_hangout_tab_inactive);
             tabTitle.setText("Hang Out");
         }
         else if(tag.equals(TAB_2_TAG)) {
-            tabImg.setBackgroundResource(R.drawable.ic_discover_tab);
+            tabImg.setBackgroundResource(R.drawable.ic_discover_tab_inactive);
             tabTitle.setText("Discover");
         }
         else if(tag.equals(TAB_3_TAG)){
-            tabImg.setBackgroundResource(R.drawable.ic_discussion_tab);
+            tabImg.setBackgroundResource(R.drawable.ic_discussion_tab_normal);
             tabTitle.setText("Discussion");
 
         }
         else if(tag.equals(TAB_4_TAG)){
             //v.setBackgroundColor(getResources().getColor(R.color.Chocolate));
-            tabImg.setBackgroundResource(R.drawable.ic_thebag_tab);
+            tabImg.setBackgroundResource(R.drawable.ic_thebag_tab_inactive);
             tabTitle.setText("The Bag");
 
         }

@@ -13,8 +13,13 @@
     <string name="terms_of_service">Terms of Service</string>
     <string name="login_form_empty">Username / password cannot be empty.</string>
     <string name="login">LOGIN</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="username_form_hint">Username or email</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="username_form_hint">Username</string>
     <string name="password_box_hint">Password</string>
+    <string name="fullname_form_hint">Full name</string>
+    <string name="email_form_hint">Email address</string>
+    <string name="password_confirmation_form_hint">Confirm password</string>
+    <string name="enter_details">Enter your details</string>
+    <string name="by_signing_up_agree">By signing up, you agree to the terms and conditions.</string>
 
 </resources>

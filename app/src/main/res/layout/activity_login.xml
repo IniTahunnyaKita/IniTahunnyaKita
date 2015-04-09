@@ -84,7 +84,7 @@
             android:background="@drawable/default_btn_bg"
             android:text="@string/login"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/signup_btn"
@@ -93,7 +93,8 @@
             android:layout_below="@id/login_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:text="@string/sign_up"/>
+            android:text="@string/sign_up"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
