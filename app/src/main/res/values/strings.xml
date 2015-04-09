@@ -20,6 +20,12 @@
     <string name="email_form_hint">Email address</string>
     <string name="password_confirmation_form_hint">Confirm password</string>
     <string name="enter_details">Enter your details</string>
-    <string name="by_signing_up_agree">By signing up, you agree to the terms and conditions.</string>
+    <string name="by_signing_up_agree">By signing up, you agree to our terms and conditions.</string>
+    <string name="join_molaja_text">Join Molaja by choosing one of these options below.</string>
+    <string name="sign_up_using_email">SIGN UP USING EMAIL</string>
+
+    <string name="facebook_app_id">444070625767990</string>
+    <string name="logging_you_in">Logging you in...</string>
+    <string name="login_failed">Login Failed.</string>
 
 </resources>

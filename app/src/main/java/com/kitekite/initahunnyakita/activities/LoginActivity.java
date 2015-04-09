@@ -16,12 +16,15 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.LoginData;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.PanningViewAttacher;
 import com.kitekite.initahunnyakita.widget.CustomTextView;
 import com.kitekite.initahunnyakita.widget.PanningView;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Callback;
 
 import org.apache.http.HttpEntity;
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoginActivity extends ActionBarActivity {
+    private final static String LOGIN_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/sessions";
     EditText usernameBox;
     EditText passwordBox;
     String [] drawablePaths;
@@ -78,7 +82,51 @@ public class LoginActivity extends ActionBarActivity {
                 else if (usernameBox.getText().toString().isEmpty() || passwordBox.getText().toString().isEmpty()) {
                     Toast.makeText(LoginActivity.this,R.string.login_form_empty, Toast.LENGTH_SHORT).show();
                 } else {
-                    new LoginTask().execute();
+                    JsonObject json = new JsonObject();
+                    JsonObject user = new JsonObject();
+                    user.addProperty("username", usernameBox.getText().toString());
+                    user.addProperty("password", passwordBox.getText().toString());
+                    json.add("user", user);
+
+                    final ProgressDialog pDialog = new ProgressDialog(LoginActivity.this);
+                    pDialog.setIndeterminate(true);
+                    pDialog.setCancelable(false);
+                    pDialog.setMessage(getString(R.string.logging_you_in));
+                    pDialog.show();
+
+                    Ion.with(LoginActivity.this)
+                            .load(LOGIN_API_ENDPOINT_URL)
+                            .addHeader("Accept", "application/json")
+                            .addHeader("Content-Type", "application/json")
+                            .setJsonObjectBody(json)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    pDialog.dismiss();
+
+                                    if(e != null) {
+                                        e.printStackTrace();
+                                        Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        boolean success = Boolean.parseBoolean(result.get("success").getAsString());
+                                        if (success) {
+                                            SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
+                                            editor.putBoolean(Global.is_logged_in, true);
+                                            editor.putString(Global.username, result.getAsJsonObject("data").get("username").getAsString());
+                                            editor.putString(Global.name, result.getAsJsonObject("data").get("name").getAsString());
+                                            editor.putString(Global.token, result.getAsJsonObject("data").get(Global.token).getAsString());
+                                            editor.commit();
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            });
+                    //new LoginTask().execute();
+
                 }
 			}
 			
@@ -160,67 +208,10 @@ public class LoginActivity extends ActionBarActivity {
     private void saveLoginData(LoginData loginData){
         SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies,0).edit();
         editor.putString(Global.username,loginData.username);
-        editor.putString(Global.first_name,loginData.first_name);
-        editor.putString(Global.last_name,loginData.last_name);
+        editor.putString(Global.name,loginData.first_name);
         editor.putString(Global.email,loginData.email);
         editor.putString(Global.photo_url,loginData.photo_url);
         editor.commit();
-    }
-
-    private class LoginTask extends AsyncTask<Void,Void,Void>{
-        ProgressDialog pDialog;
-        LoginData loginData;
-        String strResponse;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(LoginActivity.this);
-            pDialog.setMessage("Logging you in...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.123.120/SocialNetworkProject/index.php");
-
-            try {
-                // Add your data
-                List<NameValuePair> nameValuePairs = new ArrayList();
-                nameValuePairs.add(new BasicNameValuePair("user_login", usernameBox.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("password_login", passwordBox.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("login","Sign in"));
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity e = response.getEntity();
-                strResponse = EntityUtils.toString(e);
-                Gson gson = new Gson();
-                loginData = gson.fromJson(strResponse,LoginData.class);
-
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            pDialog.dismiss();
-            if(loginData!=null){
-                saveLoginData(loginData);SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
-                editor.putBoolean(Global.is_logged_in, true);
-                editor.commit();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            }
-        }
     }
 	
 }

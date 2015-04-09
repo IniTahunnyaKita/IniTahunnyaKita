@@ -47,8 +47,8 @@ public class TheBagFragment extends Fragment{
     }
 
     public void initProfile(final View v){
-        String fullname = loginCookies.getString(Global.first_name,"Florian")+" "+loginCookies.getString(Global.last_name,"Pranata");
-        ((TextView)v.findViewById(R.id.user_fullname)).setText(fullname);
+        String name = loginCookies.getString(Global.name,"Florian Pranata");
+        ((TextView)v.findViewById(R.id.user_fullname)).setText(name);
         ((ProfileItem)v.findViewById(R.id.profile_item_following)).setItemValue(56);
         ((ProfileItem)v.findViewById(R.id.profile_item_shares)).setItemValue(71);
         ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);

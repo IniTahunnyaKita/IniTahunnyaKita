@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/enter_details"
+        android:textColor="@color/DarkTeal"
+        android:textSize="26sp"
+        android:typeface="sans"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_user"/>
+
+        <EditText
+            android:id="@+id/username_form"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:hint="@string/username_form_hint"
+            android:typeface="sans"
+            android:background="@drawable/login_box"
+            android:singleLine="true"
+            android:imeOptions="actionNext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_name"/>
+
+        <EditText
+            android:id="@+id/name_form"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:hint="@string/fullname_form_hint"
+            android:typeface="sans"
+            android:background="@drawable/login_box"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_email"/>
+
+        <EditText
+            android:id="@+id/email_form"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:hint="@string/email_form_hint"
+            android:typeface="sans"
+            android:background="@drawable/login_box"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:imeOptions="actionNext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_password"/>
+
+        <EditText
+            android:id="@+id/password_form"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:hint="@string/password_box_hint"
+            android:typeface="sans"
+            android:fontFamily="sans-serif-light"
+            android:background="@drawable/login_box"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:imeOptions="actionNext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_password"/>
+
+        <EditText
+            android:id="@+id/password_confirmation_form"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:hint="@string/password_confirmation_form_hint"
+            android:typeface="sans"
+            android:fontFamily="sans-serif-light"
+            android:background="@drawable/login_box"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:imeOptions="actionDone" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/signup_btn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/sign_up"
+        android:textColor="@color/White"
+        android:background="@drawable/btn_bg_teal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/by_signing_up_agree"
+        android:textColor="@color/DarkTeal"
+        android:textSize="12sp"/>
+
+</LinearLayout>

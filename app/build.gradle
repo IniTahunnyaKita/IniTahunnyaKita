@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
@@ -49,4 +49,6 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:2.+'
     compile project(':verticalpager')
     compile files('src/main/libs/Header2ActionBar-0.2.1.jar')
+    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
 }

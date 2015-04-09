@@ -94,7 +94,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="@string/sign_up"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:typeface="sans"/>
 
         <TextView
             android:layout_width="wrap_content"
