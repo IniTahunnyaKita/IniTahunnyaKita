@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.activities.MainActivity;
+import com.kitekite.initahunnyakita.util.BackendHelper;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.widget.ProfileItem;
@@ -57,7 +58,7 @@ public class TheBagFragment extends Fragment{
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).logOut();
+                BackendHelper.logOut(getActivity());
             }
         });
         Picasso.with(getActivity())

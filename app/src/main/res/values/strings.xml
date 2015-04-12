@@ -26,6 +26,8 @@
 
     <string name="facebook_app_id">444070625767990</string>
     <string name="logging_you_in">Logging you in...</string>
-    <string name="login_failed">Login Failed.</string>
+    <string name="login_failed">Login failed, please try again.</string>
+    <string name="log_out">Logging out...</string>
+    <string name="logout_failed">Log out failed.</string>
 
 </resources>

@@ -27,7 +27,7 @@ import com.koushikdutta.ion.Ion;
  * Created by florianhidayat on 9/4/15.
  */
 public class EnterDetailsFragment extends Fragment {
-    private final static String SIGN_UP_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/registrations";
+    private final static String SIGN_UP_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/registrations.json";
     View fragmentView;
     EditText usernameForm;
     EditText nameForm;
@@ -206,6 +206,7 @@ public class EnterDetailsFragment extends Fragment {
 
         Ion.with(getActivity())
                 .load(SIGN_UP_API_ENDPOINT_URL)
+                .noCache()
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
@@ -223,9 +224,13 @@ public class EnterDetailsFragment extends Fragment {
                                 editor.putBoolean(Global.is_logged_in, true);
                                 editor.putString(Global.username, result.getAsJsonObject("data").getAsJsonObject("user").get("username").getAsString());
                                 editor.putString(Global.name, result.getAsJsonObject("data").getAsJsonObject("user").get("name").getAsString());
-                                editor.putString(Global.token, result.getAsJsonObject("data").getAsJsonObject("user").get(Global.token).getAsString());
+                                editor.putString(Global.token, result.getAsJsonObject("data").getAsJsonObject("user").get("authentication_token").getAsString());
                                 editor.commit();
-                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                //getActivity().getIntent().
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                                 getActivity().finish();
                             } else {
                                 Toast.makeText(getActivity(), result.getAsJsonObject("info").toString(), Toast.LENGTH_SHORT).show();

@@ -17,13 +17,8 @@
         <RelativeLayout
             android:id="@+id/content_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/frame_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?android:attr/windowBackground"/>
+            android:layout_height="match_parent"
+            android:background="?android:attr/windowBackground">
 
             <include
                 layout="@layout/tabs_main"/>

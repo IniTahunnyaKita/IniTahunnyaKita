@@ -1,11 +1,10 @@
 package com.kitekite.initahunnyakita.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -15,35 +14,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.model.LoginData;
+import com.kitekite.initahunnyakita.util.BackendHelper;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.PanningViewAttacher;
 import com.kitekite.initahunnyakita.widget.CustomTextView;
 import com.kitekite.initahunnyakita.widget.PanningView;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Callback;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class LoginActivity extends ActionBarActivity {
-    private final static String LOGIN_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/sessions";
     EditText usernameBox;
     EditText passwordBox;
     String [] drawablePaths;
@@ -57,6 +38,7 @@ public class LoginActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		getSupportActionBar().hide();
+        Ion.getDefault(this).configure().setLogging("IonLogs", Log.DEBUG);
 		
 		CustomTextView appLogo = (CustomTextView) findViewById(R.id.app_logo);
 		Animation logoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.app_logo_anim);
@@ -82,51 +64,7 @@ public class LoginActivity extends ActionBarActivity {
                 else if (usernameBox.getText().toString().isEmpty() || passwordBox.getText().toString().isEmpty()) {
                     Toast.makeText(LoginActivity.this,R.string.login_form_empty, Toast.LENGTH_SHORT).show();
                 } else {
-                    JsonObject json = new JsonObject();
-                    JsonObject user = new JsonObject();
-                    user.addProperty("username", usernameBox.getText().toString());
-                    user.addProperty("password", passwordBox.getText().toString());
-                    json.add("user", user);
-
-                    final ProgressDialog pDialog = new ProgressDialog(LoginActivity.this);
-                    pDialog.setIndeterminate(true);
-                    pDialog.setCancelable(false);
-                    pDialog.setMessage(getString(R.string.logging_you_in));
-                    pDialog.show();
-
-                    Ion.with(LoginActivity.this)
-                            .load(LOGIN_API_ENDPOINT_URL)
-                            .addHeader("Accept", "application/json")
-                            .addHeader("Content-Type", "application/json")
-                            .setJsonObjectBody(json)
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    pDialog.dismiss();
-
-                                    if(e != null) {
-                                        e.printStackTrace();
-                                        Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        boolean success = Boolean.parseBoolean(result.get("success").getAsString());
-                                        if (success) {
-                                            SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
-                                            editor.putBoolean(Global.is_logged_in, true);
-                                            editor.putString(Global.username, result.getAsJsonObject("data").get("username").getAsString());
-                                            editor.putString(Global.name, result.getAsJsonObject("data").get("name").getAsString());
-                                            editor.putString(Global.token, result.getAsJsonObject("data").get(Global.token).getAsString());
-                                            editor.commit();
-                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                            finish();
-                                        } else {
-                                            Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                            });
-                    //new LoginTask().execute();
-
+                    BackendHelper.login(LoginActivity.this, usernameBox.getText().toString(), passwordBox.getText().toString());
                 }
 			}
 			

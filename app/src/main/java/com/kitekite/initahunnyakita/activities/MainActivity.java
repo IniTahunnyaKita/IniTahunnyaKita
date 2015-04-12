@@ -2,7 +2,6 @@ package com.kitekite.initahunnyakita.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
 import com.kitekite.initahunnyakita.fragment.DiscussionFragment;
 import com.kitekite.initahunnyakita.fragment.HangoutFragment;
-import com.kitekite.initahunnyakita.fragment.MainFragmentTab;
 import com.kitekite.initahunnyakita.fragment.ProfileFragment;
 import com.kitekite.initahunnyakita.fragment.TheBagFragment;
 import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
@@ -42,6 +40,7 @@ import com.kitekite.initahunnyakita.model.NotificationItem;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.ImageUtil;
+import com.kitekite.initahunnyakita.util.MainTabStack;
 import com.kitekite.initahunnyakita.widget.ActionBarLayout;
 import com.kitekite.initahunnyakita.widget.NotificationLayout;
 import com.kitekite.initahunnyakita.widget.RevealLayout;
@@ -101,13 +100,6 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null && isLoggedIn ) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_container, new HangoutFragment(), HANG_OUT_TAG)
-                    .addToBackStack(HANG_OUT_TAG)
-                    .commit();
-        }
-
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
 
         initActionBar();
@@ -156,71 +148,32 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
         int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
-        String currentFragmentTag = getSupportFragmentManager().getBackStackEntryAt(backstackCount-1).getName();
-        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-        if(backstackCount>1){
-            if(currentFragment instanceof ProfileFragment){
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(android.R.id.tabcontent);
+        if (backstackCount>0) {
+            if (currentFragment instanceof ProfileFragment) {
                 getSupportActionBar().show();
                 setActionBarDefault();
-            } else if(currentFragment instanceof DiscoverFragment){
-                //setActionBarDefault();
-                //getSupportActionBar().show();
-                //setImmersiveMode();
-            } else if(currentFragment instanceof DiscussionFragment){
+            } else if(currentFragment instanceof DiscussionFragment) {
                 DiscussionFragment discussionFragment = (DiscussionFragment) currentFragment;
                 if(discussionFragment.onBackPressed()){
                     return;
                 }
             }
             getSupportFragmentManager().popBackStack();
-            //update tab selection
-            currentFragmentTag = getSupportFragmentManager().getBackStackEntryAt(backstackCount-2).getName();
-            currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-            if(currentFragment instanceof HangoutFragment){
-                mTabHost.setCurrentTab(0);
-            } else if(currentFragment instanceof DiscoverFragment){
-                mTabHost.setCurrentTab(1);
-            } else if(currentFragment instanceof DiscussionFragment){
-                mTabHost.setCurrentTab(2);
-            } else if(currentFragment instanceof TheBagFragment){
-                mTabHost.setCurrentTab(3);
-            }
-        }
-        else {
-            finish();
+        } else if (getSupportFragmentManager().findFragmentById(android.R.id.tabcontent) instanceof DiscussionFragment) {
+            if (!(((DiscussionFragment) getSupportFragmentManager().findFragmentById(android.R.id.tabcontent)).onBackPressed()))
+                handleTabNavigation();
+        } else {
+            handleTabNavigation();
         }
     }
 
-    public void setImmersiveMode(boolean show){
-        if(show) {
-            YoYo.with(Techniques.SlideOutDown)
-                    .duration(800)
-                    .playOn(mTabHost);
+    public void handleTabNavigation() {
+        int index = MainTabStack.pop();
+        if (index == MainTabStack.SHOULD_FINISH_ACTIVITY) {
+            finish();
         } else {
-            YoYo.with(Techniques.SlideInUp)
-                    .duration(400)
-                    .withListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            getSupportActionBar().show();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    })
-                    .playOn(mTabHost);
+            mTabHost.setCurrentTab(index);
         }
     }
 
@@ -228,18 +181,47 @@ public class MainActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHideOnContentScrollEnabled(true);
         actionBar.setCustomView(R.layout.custom_actionbar_default);
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkRed));
+        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkTeal));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
     }
 
+    public Fragment getFragment(Class className) {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (className.isInstance(f)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
     public void initTabs(){
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+
+        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                if (tabId.equals(TAB_1_TAG)) {
+                    MainTabStack.push(0);
+                } else if (tabId.equals(TAB_2_TAG)) {
+                    MainTabStack.push(1);
+                } else if (tabId.equals(TAB_3_TAG)) {
+                    MainTabStack.push(2);
+                } else if (tabId.equals(TAB_4_TAG)) {
+                    MainTabStack.push(3);
+                }
+            }
+        });
+
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), MainFragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), MainFragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), MainFragmentTab.class, null);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), MainFragmentTab.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), HangoutFragment.class, null);
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), DiscoverFragment.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), DiscussionFragment.class, null);
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), TheBagFragment.class, null);
+        /*mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)));
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)));
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)));
+        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)));*/
     }
 
     private TabHost.TabSpec setIndicator(Context ctx, TabHost.TabSpec spec) {
@@ -299,13 +281,14 @@ public class MainActivity extends ActionBarActivity {
     private void blurBackground(final View slidingLayout){
         runOnUiThread(new Runnable() {
             int yPos = -1;
-            int [] pos = new int[2];
+            int[] pos = new int[2];
+
             @Override
             public void run() {
                 slidingLayout.getLocationInWindow(pos);
-                while(yPos!=pos[1]){
+                while (yPos != pos[1]) {
                     yPos = pos[1];
-                    setBlurredBackground(yPos+contentHeight);
+                    setBlurredBackground(yPos + contentHeight);
                     slidingLayout.getLocationInWindow(pos);
                 }
             }
@@ -389,14 +372,6 @@ public class MainActivity extends ActionBarActivity {
         InputMethodManager imm = (InputMethodManager)getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
-    }
-
-    public void logOut() {
-        SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
-        editor.putBoolean(Global.is_logged_in, false);
-        editor.commit();
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
     }
 
 }

@@ -5,6 +5,7 @@ package com.kitekite.initahunnyakita.util;
  */
 public class Global {
     public final static String login_cookies = "login_cookies";
+    public final static String ion_cookies = "ion-cookies";
     public final static String is_logged_in = "is_logged_in";
     public final static String username = "username";
     public final static String name = "name";

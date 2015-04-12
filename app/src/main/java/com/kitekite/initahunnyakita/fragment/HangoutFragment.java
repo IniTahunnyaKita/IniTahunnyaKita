@@ -122,7 +122,7 @@ public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         ((ActionBarActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frame_container, profileFragment, "PROFILE")
+                .replace(android.R.id.tabcontent, profileFragment, "PROFILE")
                 .addToBackStack("PROFILE")
                 .addSharedElement(profilePic, transitionTag)
                 .commit();

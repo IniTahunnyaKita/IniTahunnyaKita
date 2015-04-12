@@ -82,7 +82,7 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"
-                android:background="@drawable/red_btn_bg"/>
+                android:background="@drawable/btn_bg_teal"/>
 
         </LinearLayout>
 
