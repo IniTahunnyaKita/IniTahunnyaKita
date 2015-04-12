@@ -29,5 +29,14 @@
     <string name="login_failed">Login failed, please try again.</string>
     <string name="log_out">Logging out...</string>
     <string name="logout_failed">Log out failed.</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="choose">Choose</string>
+
+    <string-array name="change_profile_picture_options">
+        <item>Select from library</item>
+        <item>Import from Facebook</item>
+        <item>Take a photo</item>
+        <item>Remove current photo</item>
+    </string-array>
 
 </resources>

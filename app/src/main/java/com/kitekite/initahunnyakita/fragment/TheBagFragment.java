@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.activities.MainActivity;
 import com.kitekite.initahunnyakita.util.BackendHelper;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
@@ -53,12 +53,35 @@ public class TheBagFragment extends Fragment{
         ((ProfileItem)v.findViewById(R.id.profile_item_following)).setItemValue(56);
         ((ProfileItem)v.findViewById(R.id.profile_item_shares)).setItemValue(71);
         ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);
+
+        v.findViewById(R.id.profile_item_friends).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BackendHelper.logOut(getActivity());
+            }
+        });
+
         //load image
         final ImageView profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BackendHelper.logOut(getActivity());
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.change_profile_picture)
+                        .items(R.array.change_profile_picture_options)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                /**
+                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                                 * returning false here won't allow the newly selected radio button to actually be selected.
+                                 **/
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.choose)
+                        .show();
+                //startActivity(new Intent(getActivity(), UploadImageActivity.class));
             }
         });
         Picasso.with(getActivity())

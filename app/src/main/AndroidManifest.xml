@@ -27,6 +27,7 @@
             android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.ItemDetailActivity"/>
         <activity android:name=".activities.SignUpActivity" />
+        <activity android:name=".activities.UploadImageActivity" />
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
