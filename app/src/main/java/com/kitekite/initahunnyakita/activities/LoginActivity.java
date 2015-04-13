@@ -3,6 +3,10 @@ package com.kitekite.initahunnyakita.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -22,11 +27,24 @@ import com.kitekite.initahunnyakita.util.PanningViewAttacher;
 import com.kitekite.initahunnyakita.widget.CustomTextView;
 import com.kitekite.initahunnyakita.widget.PanningView;
 import com.koushikdutta.ion.Ion;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 import com.squareup.picasso.Callback;
 
 public class LoginActivity extends ActionBarActivity {
+    public CustomTextView appLogo;
+    ShimmerTextView logInTv;
     EditText usernameBox;
     EditText passwordBox;
+
+    Shimmer shimmer;
+
+    public Animation fadeIn;
+    Animation fadeOut;
+    Animation logoAnimation;
+    Animation slideUp;
+    Animation slideDown;
+
     String [] drawablePaths;
     int [] drawables;
     int backgroundIndex;
@@ -39,15 +57,17 @@ public class LoginActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_login);
 		getSupportActionBar().hide();
         Ion.getDefault(this).configure().setLogging("IonLogs", Log.DEBUG);
-		
-		CustomTextView appLogo = (CustomTextView) findViewById(R.id.app_logo);
-		Animation logoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.app_logo_anim);
+
+        setupAnimations();
+
+        findViewById(R.id.form_container).setVisibility(View.GONE);
+
+		appLogo = (CustomTextView) findViewById(R.id.app_logo);
+        logInTv = (ShimmerTextView) findViewById(R.id.log_in_text);
 		appLogo.startAnimation(logoAnimation);
 		
 		usernameBox = (EditText) findViewById(R.id.usernameBox);
 		passwordBox = (EditText) findViewById(R.id.passwordBox);
-		Animation alphaAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
-		findViewById(R.id.form_container).startAnimation(alphaAnimation);
 		
 		Button loginButton = (Button) findViewById(R.id.login_btn);
 		loginButton.setOnClickListener(new OnClickListener(){
@@ -64,7 +84,7 @@ public class LoginActivity extends ActionBarActivity {
                 else if (usernameBox.getText().toString().isEmpty() || passwordBox.getText().toString().isEmpty()) {
                     Toast.makeText(LoginActivity.this,R.string.login_form_empty, Toast.LENGTH_SHORT).show();
                 } else {
-                    BackendHelper.login(LoginActivity.this, usernameBox.getText().toString(), passwordBox.getText().toString());
+                    startShimmerAnimation();
                 }
 			}
 			
@@ -110,38 +130,130 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
         panningView1.startPanning();
-        /*backgroundCallback = new Callback() {
-            @Override
-            public void onSuccess() {
-                panningView.init(new PanningViewAttacher.OnPanningEndListener() {
-                    @Override
-                    public void onPanningEnd() {
-                        if (backgroundIndex == drawablePaths.length)
-                            backgroundIndex = 0;
-                        Picasso.with(LoginActivity.this)
-                                .load(drawablePaths[backgroundIndex++])
-                                .into(panningView, backgroundCallback);
-                    }
-                });
-                panningView.startPanning();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        };
-        Picasso.with(this)
-                .load(drawablePaths[backgroundIndex++])
-                .into(panningView, backgroundCallback);*/
 
     }
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		moveTaskToBack(true);
-	}
+    private void setupAnimations() {
+        logoAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.app_logo_anim_start);
+        slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.app_logo_anim_slide_down);
+        slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.app_logo_anim_slide_up);
+        fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
+        logoAnimation.setStartOffset(1000);
+
+        Animation.AnimationListener listener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                fadeIn(findViewById(R.id.form_container));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+        logoAnimation.setAnimationListener(listener);
+        slideUp.setAnimationListener(listener);
+
+        slideDown.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                fadeOut(findViewById(R.id.form_container));
+                BackendHelper.login(LoginActivity.this, usernameBox.getText().toString(), passwordBox.getText().toString());
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void doAfterLoginAnimation() {
+        final View welcomeBg = findViewById(R.id.welcome_bg);
+        TextView welcomeText = (TextView) findViewById(R.id.welcome_user);
+        welcomeText.setText(getSharedPreferences(Global.login_cookies,0).getString(Global.name, ""));
+        fadeIn(findViewById(R.id.welcome_layout));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(LoginActivity.this,
+                                Pair.create(welcomeBg, getString(R.string.actionbar_background_transition)),
+                                Pair.create((View) appLogo, getString(R.string.app_logo_transition))
+                        );
+                ActivityCompat.startActivity(LoginActivity.this, new Intent(LoginActivity.this, MainActivity.class),
+                        options.toBundle());
+                finish();
+            }
+        },2000);
+    }
+
+    public void fadeIn(final View v) {
+        fadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                v.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        v.startAnimation(fadeIn);
+    }
+
+    public void fadeOut(final View v) {
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        v.startAnimation(fadeOut);
+    }
+
+    public void startShimmerAnimation() {
+        appLogo.startAnimation(slideDown);
+        logInTv.setVisibility(View.VISIBLE);
+        fadeIn(logInTv);
+        shimmer = new Shimmer();
+        shimmer.start(logInTv);
+    }
+
+    public void stopShimmerAnimation() {
+        appLogo.startAnimation(slideUp);
+        fadeOut(logInTv);
+        shimmer.cancel();
+    }
 
     private void saveLoginData(LoginData loginData){
         SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies,0).edit();

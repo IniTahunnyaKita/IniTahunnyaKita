@@ -25,6 +25,63 @@
 
     </ViewSwitcher>
 
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/log_in_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_logo"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:typeface="sans"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/logging_you_in"
+        android:textColor="@color/Gray"
+        android:textSize="24sp"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/welcome_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/welcome_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="@string/actionbar_background_transition"
+            android:src="@color/Teal"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_text"
+                android:textSize="28sp"
+                android:textColor="@color/White"
+                android:typeface="sans"/>
+
+            <TextView
+                android:id="@+id/welcome_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_text"
+                android:textColor="@color/White"
+                android:textSize="24sp"
+                android:typeface="sans"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
     <com.kitekite.initahunnyakita.widget.CustomTextView
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"

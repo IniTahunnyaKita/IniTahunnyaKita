@@ -26,8 +26,6 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
 import com.kitekite.initahunnyakita.fragment.DiscussionFragment;
@@ -181,7 +179,7 @@ public class MainActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHideOnContentScrollEnabled(true);
         actionBar.setCustomView(R.layout.custom_actionbar_default);
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.DarkTeal));
+        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.Teal));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
     }

@@ -10,6 +10,8 @@
 
     <string name="profile_transition">ProfileTransition</string>
     <string name="item_detail_transition">ItemDetailTransition</string>
+    <string name="app_logo_transition">AppLogoTransition</string>
+    <string name="actionbar_background_transition">ActionBarTransition</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="login_form_empty">Username / password cannot be empty.</string>
     <string name="login">LOGIN</string>
@@ -31,6 +33,7 @@
     <string name="logout_failed">Log out failed.</string>
     <string name="change_profile_picture">Change profile picture</string>
     <string name="choose">Choose</string>
+    <string name="welcome_text">Welcome back,</string>
 
     <string-array name="change_profile_picture_options">
         <item>Select from library</item>
