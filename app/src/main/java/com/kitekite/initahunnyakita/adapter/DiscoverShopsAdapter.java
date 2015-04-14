@@ -3,6 +3,7 @@ package com.kitekite.initahunnyakita.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
@@ -68,6 +69,7 @@ public class DiscoverShopsAdapter extends ArrayAdapter<DiscoverShops> implements
         Picasso.with(mContext)
                 .load(items.get(position).profileUrl)
                 .fit().centerCrop()
+                .placeholder(new ColorDrawable(mContext.getResources().getColor(R.color.LightGrey)))
                 .into(viewHolder.profilePicture);
 
         viewHolder.shopName.setText(items.get(position).shopName);

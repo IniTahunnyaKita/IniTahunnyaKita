@@ -1,11 +1,15 @@
 package com.kitekite.initahunnyakita.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.UploadImageActivity;
 import com.kitekite.initahunnyakita.util.BackendHelper;
 import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
@@ -24,11 +29,18 @@ import com.kitekite.initahunnyakita.widget.ProfileItem;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Florian on 2/12/2015.
  */
 public class TheBagFragment extends Fragment{
+    public final int PICK_IMAGE_REQUEST_CODE = 1;
+    public final int TAKE_PHOTO_REQUEST_CODE = 2;
+
     private SharedPreferences loginCookies;
+    String mCurrentPhotoPath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +93,15 @@ public class TheBagFragment extends Fragment{
                                     case 0:
                                         sendPickImageIntent();
                                         break;
+                                    case 1:
+                                        //TODO import from facebook
+                                        break;
+                                    case 2:
+                                        sendTakePhotoIntent();
+                                        break;
+                                    case 3:
+                                        //TODO delete current photo
+                                        break;
                                 }
 
                                 return true;
@@ -88,7 +109,6 @@ public class TheBagFragment extends Fragment{
                         })
                         .positiveText(R.string.choose)
                         .show();
-                //startActivity(new Intent(getActivity(), UploadImageActivity.class));
             }
         });
         Picasso.with(getActivity())
@@ -117,6 +137,64 @@ public class TheBagFragment extends Fragment{
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_image)), 1);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_image)), PICK_IMAGE_REQUEST_CODE);
+    }
+
+    public void sendTakePhotoIntent() {
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //startActivityForResult(takePicture, TAKE_PHOTO_REQUEST_CODE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePicture.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+                return;
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePicture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePicture, TAKE_PHOTO_REQUEST_CODE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName = "temp";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //cancel if not result ok
+        if(resultCode != Activity.RESULT_OK)
+            return;
+
+        if (requestCode == PICK_IMAGE_REQUEST_CODE) {
+            Uri selectedImage = data.getData();
+            Intent intent = new Intent(getActivity(), UploadImageActivity.class);
+            intent.putExtra("URI", selectedImage);
+            startActivity(intent);
+        } else if (requestCode == TAKE_PHOTO_REQUEST_CODE) {
+            Intent intent = new Intent(getActivity(), UploadImageActivity.class);
+            intent.putExtra("URI", Uri.parse(mCurrentPhotoPath));
+            startActivity(intent);
+        }
     }
 }

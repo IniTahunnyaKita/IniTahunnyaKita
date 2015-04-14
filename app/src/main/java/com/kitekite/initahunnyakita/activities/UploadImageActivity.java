@@ -1,10 +1,13 @@
 package com.kitekite.initahunnyakita.activities;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.edmodo.cropper.CropImageView;
@@ -13,10 +16,12 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
 import com.kitekite.initahunnyakita.R;
 
+import java.io.IOException;
+
 /**
  * Created by florianhidayat on 12/4/15.
  */
-public class UploadImageActivity extends ActionBarActivity {
+public class UploadImageActivity extends ActionBarActivity implements View.OnClickListener {
     final int ANIMATION_DELAY = 1000;
     View cancelBtn, rotateLeftBtn, rotateRightBtn, finishBtn;
     CropImageView cropImageView;
@@ -36,7 +41,21 @@ public class UploadImageActivity extends ActionBarActivity {
 
         bindViews();
 
-        cropImageView.setImageResource(R.drawable.jerseynesia_item1);
+        //resize cropimageview
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        cropImageView.getLayoutParams().height = displayMetrics.widthPixels;
+
+        try {
+            if(getIntent().getParcelableExtra("URI") != null) {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        this.getContentResolver(), (android.net.Uri) getIntent().getParcelableExtra("URI"));
+                cropImageView.setImageBitmap(bitmap);
+            } else {
+                cropImageView.setImageBitmap((Bitmap) getIntent().getExtras().get("data"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         onSpringFinished = new OnSpringFinished() {
             @Override
@@ -66,6 +85,24 @@ public class UploadImageActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.cancel_btn:
+                finish();
+                break;
+            case R.id.rotate_left_btn:
+                cropImageView.rotateImage(-90);
+                break;
+            case R.id.rotate_right_btn:
+                cropImageView.rotateImage(90);
+                break;
+            case R.id.finish_btn:
+                cropImageView.setImageBitmap(cropImageView.getCroppedImage());
+                break;
+        }
+    }
+
     private void initAnimation() {
         cancelBtn.setScaleX(0);
         cancelBtn.setScaleY(0);
@@ -83,6 +120,11 @@ public class UploadImageActivity extends ActionBarActivity {
         rotateRightBtn = findViewById(R.id.rotate_right_btn);
         finishBtn = findViewById(R.id.finish_btn);
         cropImageView = (CropImageView) findViewById(R.id.crop_image_view);
+
+        cancelBtn.setOnClickListener(this);
+        rotateLeftBtn.setOnClickListener(this);
+        rotateRightBtn.setOnClickListener(this);
+        finishBtn.setOnClickListener(this);
     }
 
     private void playAnimation(final View v) {

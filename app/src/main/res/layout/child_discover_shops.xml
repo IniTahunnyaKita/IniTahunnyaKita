@@ -9,13 +9,15 @@
         android:id="@+id/profile_picture"
         android:layout_width="@dimen/profile_pic_size"
         android:layout_height="@dimen/profile_pic_size"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:src="@color/LightGrey"/>
 
     <TextView
         android:id="@+id/shop_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:typeface="sans"/>
 
     <TableLayout
         android:layout_width="match_parent"
