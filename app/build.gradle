@@ -5,6 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     repositories {
+        mavenCentral()
         maven {
             url 'http://r.jakewharton.com/maven/release';
         }

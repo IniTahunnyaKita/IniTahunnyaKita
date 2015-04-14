@@ -1,5 +1,6 @@
 package com.kitekite.initahunnyakita.fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -76,6 +77,12 @@ public class TheBagFragment extends Fragment{
                                  * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                                  * returning false here won't allow the newly selected radio button to actually be selected.
                                  **/
+                                switch (which) {
+                                    case 0:
+                                        sendPickImageIntent();
+                                        break;
+                                }
+
                                 return true;
                             }
                         })
@@ -104,5 +111,12 @@ public class TheBagFragment extends Fragment{
 
                     }
                 });
+    }
+
+    public void sendPickImageIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_image)), 1);
     }
 }

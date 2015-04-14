@@ -34,6 +34,7 @@
     <string name="change_profile_picture">Change profile picture</string>
     <string name="choose">Choose</string>
     <string name="welcome_text">Welcome back,</string>
+    <string name="pick_image">Pick image</string>
 
     <string-array name="change_profile_picture_options">
         <item>Select from library</item>
