@@ -1,91 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/Black">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/Black">
 
-t    <com.edmodo.cropper.CropImageView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/crop_image_view"
+    <ImageView
+        android:id="@+id/blurred_bg"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        custom:guidelines="off"
-        custom:fixAspectRatio="true"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.edmodo.cropper.CropImageView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/crop_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            custom:guidelines="off"
+            custom:fixAspectRatio="true"/>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/cancel_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="5dp"
-                android:clickable="true"
-                android:src="@drawable/ic_action_cancel"
-                android:background="@drawable/circle_btn_bg"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_action_cancel"
+                    android:background="@drawable/circle_btn_bg"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/rotate_left_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:src="@drawable/rotate_left"
+                    android:background="@drawable/circle_btn_teal_bg"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/rotate_right_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:src="@drawable/rotate_right"
+                    android:background="@drawable/circle_btn_teal_bg"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/finish_btn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_action_accept"
+                    android:background="@drawable/circle_btn_bg"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/rotate_left_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="10dp"
-                android:clickable="true"
-                android:src="@drawable/rotate_left"
-                android:background="@drawable/circle_btn_teal_bg"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/rotate_right_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="10dp"
-                android:clickable="true"
-                android:src="@drawable/rotate_right"
-                android:background="@drawable/circle_btn_teal_bg"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/finish_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="5dp"
-                android:clickable="true"
-                android:src="@drawable/ic_action_accept"
-                android:background="@drawable/circle_btn_bg"/>
-
-        </LinearLayout>
-
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
