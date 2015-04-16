@@ -25,12 +25,15 @@ public class ItemDetailPagerAdapter extends FragmentPagerAdapter {
     ArrayList<String> imageUrls = new ArrayList<String>(Arrays.asList(HardcodeValues.ItemDetailValues.imageUrls));
     HangoutPost itemInfo = ItemDetailActivity.getItemInfo();
 
-    public ItemDetailPagerAdapter(FragmentManager fm, Context context,List<Class<? extends Fragment>> pages) {
+    public ItemDetailPagerAdapter(FragmentManager fm, Context context,List<Class<? extends Fragment>> pages, HangoutPost itemInfo) {
         super(fm);
         mContext = context;
         mPagesClasses = pages;
-        imageUrls.remove(0);
-        imageUrls.add(0,itemInfo.getItemUrl());
+
+        if (itemInfo != null) {
+            imageUrls.remove(0);
+            imageUrls.add(0, itemInfo.getItemUrl());
+        }
     }
 
     @Override

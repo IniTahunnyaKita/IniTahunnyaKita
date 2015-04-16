@@ -1,6 +1,7 @@
 package com.kitekite.initahunnyakita.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kitekite.initahunnyakita.R;
+import com.kitekite.initahunnyakita.activities.ChatActivity;
 import com.kitekite.initahunnyakita.model.Discussion;
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +30,8 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Context mContext;
     List<Discussion> list;
     List<Discussion> backupList;
+
+    Discussion selectedDiscussion;
     boolean mIsAnItemSelected = false;
 
     public DiscussionAdapter(RecyclerView recyclerView, Context context, List<Discussion> list){
@@ -100,6 +104,16 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     .into(childHolder.image);
 
             childHolder.lastMessage.setText(Html.fromHtml(conversation.last_message));
+
+            childHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ChatActivity.class);
+                    intent.putExtra("NAME",selectedDiscussion.name);
+                    intent.putExtra("PROFILE_PICTURE", selectedDiscussion.profile_url);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -108,7 +122,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void selectItem(int position){
-        final Discussion discussion = list.get(position);
+        final Discussion discussion = selectedDiscussion = list.get(position);
 
         mIsAnItemSelected = true;
         String identifier = list.get(position).name;

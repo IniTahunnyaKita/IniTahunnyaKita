@@ -14,4 +14,5 @@
     <dimen name="viewpager_indicator_size">10dp</dimen>
     <dimen name="viewpager_indicator_spacing">10dp</dimen>
     <dimen name="child_discussion_height">71dp</dimen>
+    <dimen name="profile_bar_height">80dp</dimen>
 </resources>

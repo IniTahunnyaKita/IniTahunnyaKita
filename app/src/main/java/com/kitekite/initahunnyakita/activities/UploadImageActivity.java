@@ -22,6 +22,7 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.util.ImageUtil;
+import com.kitekite.initahunnyakita.util.PicassoBlurRequestHandler;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Request;
@@ -104,7 +105,7 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
     }
 
     private void setBlurredBackground() {
-        Picasso picasso  = new Picasso.Builder(this).addRequestHandler(new BlurImageHandler()).build();
+        Picasso picasso  = new Picasso.Builder(this).addRequestHandler(new PicassoBlurRequestHandler(this)).build();
         picasso.load(imageUri).fit().centerCrop().into(blurredBg, new Callback() {
             @Override
             public void onSuccess() {
@@ -186,21 +187,5 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
         });
         spring.setEndValue(1);
 
-    }
-
-    private class BlurImageHandler extends RequestHandler {
-        @Override
-        public boolean canHandleRequest(Request data) {
-            return true;
-        }
-
-        @Override
-        public Result load(Request request, int networkPolicy) throws IOException {
-            Bitmap b = MediaStore.Images.Media.getBitmap(UploadImageActivity.this.getContentResolver(), request.uri);
-            /*Paint p = new Paint();
-            Canvas canvas = new Canvas(b);
-            ColorFilter new ColorFilter()*/
-            return new Result(ImageUtil.BlurBitmap(UploadImageActivity.this, b, 20), Picasso.LoadedFrom.DISK);
-        }
     }
 }

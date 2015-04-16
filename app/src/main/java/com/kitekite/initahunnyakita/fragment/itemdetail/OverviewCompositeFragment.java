@@ -98,7 +98,9 @@ public class OverviewCompositeFragment extends Fragment{
         totalPage = HardcodeValues.ItemDetailValues.imageUrls.length;
         for(int i=0;i< totalPage;i++)
             pages.add(OverviewFragment.class);
-        mHorizontalPager.setAdapter(new ItemDetailPagerAdapter(getChildFragmentManager(), getActivity(), pages));
+
+        //TODO change this
+        mHorizontalPager.setAdapter(new ItemDetailPagerAdapter(getChildFragmentManager(), getActivity(), pages, ItemDetailActivity.getItemInfo()));
         mViewPagerIndicator.initIndicators(HardcodeValues.ItemDetailValues.imageUrls.length);
     }
 
