@@ -2,7 +2,6 @@ package com.kitekite.initahunnyakita.fragment.signup;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.grantlandchew.view.VerticalPager;
+import com.kitekite.initahunnyakita.MolajaApplication;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.activities.MainActivity;
-import com.kitekite.initahunnyakita.util.Global;
+import com.kitekite.initahunnyakita.model.User;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -220,13 +220,12 @@ public class EnterDetailsFragment extends Fragment {
                         } else {
                             boolean success = Boolean.parseBoolean(result.get("success").getAsString());
                             if (success) {
-                                SharedPreferences.Editor editor = getActivity().getSharedPreferences(Global.login_cookies, 0).edit();
-                                editor.putBoolean(Global.is_logged_in, true);
-                                editor.putString(Global.username, result.getAsJsonObject("data").getAsJsonObject("user").get("username").getAsString());
-                                editor.putString(Global.name, result.getAsJsonObject("data").getAsJsonObject("user").get("name").getAsString());
-                                editor.putString(Global.token, result.getAsJsonObject("data").getAsJsonObject("user").get("authentication_token").getAsString());
-                                editor.commit();
-                                //getActivity().getIntent().
+                                Gson gson = new Gson();
+                                User user = gson.fromJson(result.get("data"), User.class);
+                                user.save(getActivity());
+
+                                MolajaApplication.changeLoginStatus(getActivity(), true);
+
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

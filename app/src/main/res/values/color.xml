@@ -137,6 +137,7 @@
  <color name="DarkCyan">#008B8B</color>
  <color name="Teal">#008080</color>
  <color name="DarkTeal">#004C4C</color>
+ <color name="VeryDarkTeal">#003333</color>
  <color name="SemiTransparentDarkTeal">#AA004C4C</color>
  <color name="Green">#008000</color>
  <color name="DarkGreen">#006400</color>

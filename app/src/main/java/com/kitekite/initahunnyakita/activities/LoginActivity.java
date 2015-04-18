@@ -1,7 +1,6 @@
 package com.kitekite.initahunnyakita.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -19,10 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.kitekite.initahunnyakita.MolajaApplication;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.model.LoginData;
+import com.kitekite.initahunnyakita.model.User;
 import com.kitekite.initahunnyakita.util.BackendHelper;
-import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.PanningViewAttacher;
 import com.kitekite.initahunnyakita.widget.CustomTextView;
 import com.kitekite.initahunnyakita.widget.PanningView;
@@ -75,9 +74,7 @@ public class LoginActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View arg0) {
 				if (usernameBox.getText().toString().contentEquals("admin") && passwordBox.getText().toString().contentEquals("admin")) {
-					SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies, 0).edit();
-					editor.putBoolean(Global.is_logged_in, true);
-					editor.commit();
+                    MolajaApplication.changeLoginStatus(LoginActivity.this, true);
 					startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
 				}
@@ -183,7 +180,7 @@ public class LoginActivity extends ActionBarActivity {
     public void doAfterLoginAnimation() {
         final View welcomeBg = findViewById(R.id.welcome_bg);
         TextView welcomeText = (TextView) findViewById(R.id.welcome_user);
-        welcomeText.setText(getSharedPreferences(Global.login_cookies,0).getString(Global.name, ""));
+        welcomeText.setText(User.getCurrentUser(this).name);
         fadeIn(findViewById(R.id.welcome_layout));
 
         new Handler().postDelayed(new Runnable() {
@@ -254,14 +251,4 @@ public class LoginActivity extends ActionBarActivity {
         fadeOut(logInTv);
         shimmer.cancel();
     }
-
-    private void saveLoginData(LoginData loginData){
-        SharedPreferences.Editor editor = getSharedPreferences(Global.login_cookies,0).edit();
-        editor.putString(Global.username,loginData.username);
-        editor.putString(Global.name,loginData.first_name);
-        editor.putString(Global.email,loginData.email);
-        editor.putString(Global.photo_url,loginData.photo_url);
-        editor.commit();
-    }
-	
 }

@@ -8,10 +8,14 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.kitekite.initahunnyakita.MolajaApplication;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.activities.LoginActivity;
 import com.kitekite.initahunnyakita.activities.MainActivity;
+import com.kitekite.initahunnyakita.model.User;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -30,12 +34,6 @@ public class BackendHelper {
         user.addProperty("username", username);
         user.addProperty("password", password);
         json.add("user", user);
-
-        /*final ProgressDialog pDialog = new ProgressDialog(context);
-        pDialog.setIndeterminate(true);
-        pDialog.setCancelable(false);
-        pDialog.setMessage(context.getString(R.string.logging_you_in));
-        pDialog.show();*/
 
         Ion.with(context)
                 .load(LOGIN_API_ENDPOINT_URL)
@@ -58,23 +56,11 @@ public class BackendHelper {
                         } else {
                             Log.i(TAG, result.toString());
                             boolean success = result.get("success").getAsBoolean();
-                            if (success) {
-                                SharedPreferences.Editor editor = context.getSharedPreferences(Global.login_cookies, 0).edit();
-                                editor.putBoolean(Global.is_logged_in, true);
-                                editor.putString(Global.username, result.getAsJsonObject("data").get("username").getAsString());
-                                editor.putString(Global.name, result.getAsJsonObject("data").get("name").getAsString());
-                                try {
-                                    editor.putString(Global.token, result.getAsJsonObject("data").get(Global.token).getAsString());
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
-                                    Toast.makeText(context, context.getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-
-                                    //stop animation
-                                    if (context instanceof LoginActivity)
-                                        ((LoginActivity)context).stopShimmerAnimation();
-                                    return;
-                                }
-                                editor.apply();
+                            if (success && !isTokenNil(result)) {
+                                Gson gson = new Gson();
+                                User user = gson.fromJson(result.get("data"), User.class);
+                                user.save(context);
+                                MolajaApplication.changeLoginStatus(context, true);
 
                                 if (context instanceof LoginActivity) {
                                     final LoginActivity loginActivity = (LoginActivity) context;
@@ -94,10 +80,10 @@ public class BackendHelper {
     }
 
     public static void logOut(final Context context) {
+        Gson gson = new Gson();
+
         JsonObject json = new JsonObject();
-        JsonObject user = new JsonObject();
-        user.addProperty("username", context.getSharedPreferences(Global.login_cookies, 0).getString(Global.username, ""));
-        json.add("user", user);
+        json.add("user", new JsonObject().getAsJsonObject(gson.toJson(User.getCurrentUser(context))));
 
         final ProgressDialog pDialog = new ProgressDialog(context);
         pDialog.setIndeterminate(true);
@@ -125,7 +111,7 @@ public class BackendHelper {
                             boolean success = Boolean.parseBoolean(result.get("success").getAsString());
                             if (success) {
                                 //clear own shared prefs
-                                SharedPreferences.Editor editor = context.getSharedPreferences(Global.login_cookies, Context.MODE_PRIVATE).edit();
+                                SharedPreferences.Editor editor = MolajaApplication.getLoginCookies(context).edit();
                                 editor.clear();
                                 editor.commit();
                                 context.startActivity(new Intent(context, LoginActivity.class));
@@ -139,8 +125,12 @@ public class BackendHelper {
                 });
     }
 
+    public static boolean isTokenNil(JsonObject json) {
+        return json.getAsJsonObject("data").get("authentication_token") instanceof JsonNull;
+    }
+
     public static void clearIonCookies(Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(Global.ion_cookies, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(MolajaApplication.ion_cookies, Context.MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();
     }

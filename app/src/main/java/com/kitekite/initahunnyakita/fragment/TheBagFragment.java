@@ -1,11 +1,12 @@
 package com.kitekite.initahunnyakita.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,23 +14,33 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.JsonObject;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.activities.UploadImageActivity;
+import com.kitekite.initahunnyakita.model.User;
 import com.kitekite.initahunnyakita.util.BackendHelper;
-import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.ImageUtil;
+import com.kitekite.initahunnyakita.util.Validations;
 import com.kitekite.initahunnyakita.widget.ProfileItem;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -38,14 +49,18 @@ import java.io.IOException;
 public class TheBagFragment extends Fragment{
     public final int PICK_IMAGE_REQUEST_CODE = 1;
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
+    public final int EDIT_IMAGE_REQUEST_CODE = 3;
 
-    private SharedPreferences loginCookies;
+    ImageView profilePicture;
+    ImageView blurredBg;
+
+    User currentUser;
+    UploadImageTask uploadImageTask;
     String mCurrentPhotoPath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.header_the_bag, container, false);
-        loginCookies = getActivity().getSharedPreferences(Global.login_cookies, 0);
         initProfile(fragmentView);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -61,8 +76,9 @@ public class TheBagFragment extends Fragment{
     }
 
     public void initProfile(final View v){
-        String name = loginCookies.getString(Global.name,"Florian Pranata");
-        ((TextView)v.findViewById(R.id.user_fullname)).setText(name);
+        currentUser = User.getCurrentUser(getActivity());
+        blurredBg = (ImageView) v.findViewById(R.id.blurred_bg);
+        ((TextView)v.findViewById(R.id.user_fullname)).setText(currentUser.name);
         ((ProfileItem)v.findViewById(R.id.profile_item_following)).setItemValue(56);
         ((ProfileItem)v.findViewById(R.id.profile_item_shares)).setItemValue(71);
         ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);
@@ -75,7 +91,7 @@ public class TheBagFragment extends Fragment{
         });
 
         //load image
-        final ImageView profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
+        profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,9 +127,14 @@ public class TheBagFragment extends Fragment{
                         .show();
             }
         });
+
+        String image = Validations.isEmptyOrNull(currentUser.image)? "file:///android_asset/default_profile_picture.jpg" : currentUser.image;
+        setProfilePicture(image);
+    }
+
+    public void setProfilePicture(String imagePath) {
         Picasso.with(getActivity())
-                .load(loginCookies.getString(Global.photo_url, "file:///android_asset/prof_pic.jpg"))
-                .error(R.drawable.ensa_shop)
+                .load(imagePath)
                 .into(profilePicture, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -122,7 +143,7 @@ public class TheBagFragment extends Fragment{
                         if (ppDrawable != null) {
                             Bitmap profileBitmap = ppDrawable.getBitmap();
                             blurredImg = ImageUtil.BlurBitmap(getActivity(), profileBitmap, 20);
-                            ((ImageView) v.findViewById(R.id.list_bg)).setImageBitmap(blurredImg);
+                            blurredBg.setImageBitmap(blurredImg);
                         }
                     }
 
@@ -142,7 +163,7 @@ public class TheBagFragment extends Fragment{
 
     public void sendTakePhotoIntent() {
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //startActivityForResult(takePicture, TAKE_PHOTO_REQUEST_CODE);
+
         // Ensure that there's a camera activity to handle the intent
         if (takePicture.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -165,8 +186,13 @@ public class TheBagFragment extends Fragment{
     private File createImageFile() throws IOException {
         // Create an image file name
         String imageFileName = "temp";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
+        File picturesDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(picturesDir.getAbsolutePath() + "/Molaja");
+
+        if (!storageDir.exists())
+            storageDir.mkdir();
+
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -190,11 +216,89 @@ public class TheBagFragment extends Fragment{
             Uri selectedImage = data.getData();
             Intent intent = new Intent(getActivity(), UploadImageActivity.class);
             intent.putExtra("URI", selectedImage);
-            startActivity(intent);
+            startActivityForResult(intent, EDIT_IMAGE_REQUEST_CODE);
         } else if (requestCode == TAKE_PHOTO_REQUEST_CODE) {
             Intent intent = new Intent(getActivity(), UploadImageActivity.class);
             intent.putExtra("URI", Uri.parse(mCurrentPhotoPath));
-            startActivity(intent);
+            startActivityForResult(intent, EDIT_IMAGE_REQUEST_CODE);
+        } else if (requestCode == EDIT_IMAGE_REQUEST_CODE) {
+
+            if(uploadImageTask == null) {
+                uploadImageTask = new UploadImageTask(getActivity().getApplicationContext());
+                uploadImageTask.execute(data.getStringExtra("image_path"));
+            } else {
+                uploadImageTask.cancel(true);
+            }
+        }
+    }
+
+    private class UploadImageTask extends AsyncTask<String, Void, Void> {
+        Context context;
+        final String UPLOAD_URL = "http://molaja-backend.herokuapp.com/api/v1/picture_uploader.json";
+        final String CONTENT_TYPE_PREFIX = "data:image/jpg;base64,";
+
+        public UploadImageTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            AlphaAnimation animation = new AlphaAnimation(0.25f,1f);
+            animation.setRepeatMode(Animation.REVERSE);
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setDuration(1000);
+            profilePicture.setAnimation(animation);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                //upload to database
+                JsonObject json = new JsonObject();
+                JsonObject user = new JsonObject();
+                user.addProperty("authentication_token", currentUser.authentication_token);
+                user.addProperty("image", CONTENT_TYPE_PREFIX +
+                        Base64.encodeToString(getBytesFromFile(params[0]), Base64.DEFAULT));
+                json.add("user", user);
+
+                Ion.with(context)
+                        .load(UPLOAD_URL)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json")
+                        .noCache()
+                        .setJsonObjectBody(json)
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject jsonObject) {
+                                profilePicture.clearAnimation();
+
+                                if (e != null) {
+                                    Toast.makeText(context, getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    currentUser.image = jsonObject.getAsJsonObject("image").get("url").getAsString();
+                                    currentUser.save(context);
+
+                                    setProfilePicture(currentUser.image);
+                                }
+                            }
+                        });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private byte[] getBytesFromFile(String path) throws IOException {
+            File file = new File(path);
+            int size = (int) file.length();
+            byte[] bytes = new byte[size];
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+            return bytes;
         }
     }
 }

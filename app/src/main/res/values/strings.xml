@@ -35,6 +35,7 @@
     <string name="choose">Choose</string>
     <string name="welcome_text">Welcome back,</string>
     <string name="pick_image">Pick image</string>
+    <string name="upload_failed">Upload failed.</string>
 
     <string-array name="change_profile_picture_options">
         <item>Select from library</item>

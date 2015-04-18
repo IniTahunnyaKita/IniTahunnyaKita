@@ -1,9 +1,11 @@
 package com.kitekite.initahunnyakita.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Florian on 2/26/2015.
  */
-public class Discussion {
+public class Discussion implements Serializable{
     public String name;
     public String profile_url;
     public int no_of_discussions;

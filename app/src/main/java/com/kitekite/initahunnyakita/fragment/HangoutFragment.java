@@ -1,7 +1,6 @@
 package com.kitekite.initahunnyakita.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +22,6 @@ import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.HangoutAdapter;
 import com.kitekite.initahunnyakita.model.HangoutPost;
-import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
@@ -38,15 +36,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnHeaderClickListener {
     private SuperRecyclerView mRecyclerView;
     private Context mContext;
-    private SharedPreferences loginCookies;
-    private String fullname;
     ArrayList<HangoutPost> list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_hangout, container, false);
         mContext = container.getContext();
-        loginCookies = mContext.getSharedPreferences(Global.login_cookies, 0);
 
         return rootView;
     }

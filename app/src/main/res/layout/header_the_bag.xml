@@ -6,7 +6,7 @@
     android:background="@color/White">
 
     <ImageView
-        android:id="@+id/list_bg"
+        android:id="@+id/blurred_bg"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:scaleType="centerCrop"/>
@@ -23,7 +23,7 @@
         android:id="@+id/user_fullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_bg"
+        android:layout_below="@id/blurred_bg"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textSize="16sp"/>

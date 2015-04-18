@@ -96,7 +96,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         } else if(holder instanceof ChildViewHolder && discussion instanceof Discussion.Conversation){
             ChildViewHolder childHolder = (ChildViewHolder) holder;
-            Discussion.Conversation conversation = (Discussion.Conversation) list.get(position);
+            final Discussion.Conversation conversation = (Discussion.Conversation) list.get(position);
             childHolder.title.setText(conversation.title);
 
             Picasso.with(mContext)
@@ -111,6 +111,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Intent intent = new Intent(mContext, ChatActivity.class);
                     intent.putExtra("NAME",selectedDiscussion.name);
                     intent.putExtra("PROFILE_PICTURE", selectedDiscussion.profile_url);
+                    intent.putExtra("CONVERSATION", conversation);
                     mContext.startActivity(intent);
                 }
             });

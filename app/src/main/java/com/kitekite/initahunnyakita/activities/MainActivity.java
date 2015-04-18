@@ -26,6 +26,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kitekite.initahunnyakita.MolajaApplication;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.NotificationAdapter;
 import com.kitekite.initahunnyakita.fragment.DiscussionFragment;
@@ -35,7 +36,6 @@ import com.kitekite.initahunnyakita.fragment.TheBagFragment;
 import com.kitekite.initahunnyakita.fragment.discover.DiscoverFragment;
 import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.model.NotificationItem;
-import com.kitekite.initahunnyakita.util.Global;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.util.MainTabStack;
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         //go to login activity if user's not logged in
-        isLoggedIn = getSharedPreferences(Global.login_cookies,0).getBoolean(Global.is_logged_in,false);
+        isLoggedIn = MolajaApplication.isLoggedIn(this);
         if(!isLoggedIn) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();

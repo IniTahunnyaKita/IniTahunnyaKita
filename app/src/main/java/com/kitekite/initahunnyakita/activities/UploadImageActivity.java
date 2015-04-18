@@ -1,14 +1,14 @@
 package com.kitekite.initahunnyakita.activities;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -21,13 +21,12 @@ import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
 import com.kitekite.initahunnyakita.R;
-import com.kitekite.initahunnyakita.util.ImageUtil;
 import com.kitekite.initahunnyakita.util.PicassoBlurRequestHandler;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
-import com.squareup.picasso.RequestHandler;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -35,6 +34,7 @@ import java.io.IOException;
  */
 public class UploadImageActivity extends ActionBarActivity implements View.OnClickListener {
     final int ANIMATION_DELAY = 1000;
+
     View cancelBtn, rotateLeftBtn, rotateRightBtn, finishBtn;
     ImageView blurredBg;
     CropImageView cropImageView;
@@ -123,6 +123,7 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cancel_btn:
+                setResult(Activity.RESULT_CANCELED);
                 finish();
                 break;
             case R.id.rotate_left_btn:
@@ -132,7 +133,14 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
                 cropImageView.rotateImage(90);
                 break;
             case R.id.finish_btn:
-                cropImageView.setImageBitmap(cropImageView.getCroppedImage());
+                Intent intent = new Intent();
+                try {
+                    intent.putExtra("image_path",saveBitmapToFile(cropImageView.getCroppedImage()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                setResult(Activity.RESULT_OK, intent);
+                finish();
                 break;
         }
     }
@@ -187,5 +195,29 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
         });
         spring.setEndValue(1);
 
+    }
+
+    private String saveBitmapToFile(Bitmap bitmap) throws IOException {
+        String imageFileName = "profile_picture";
+        File picturesDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(picturesDir.getAbsolutePath() + "/Molaja");
+
+        if (!storageDir.exists())
+            storageDir.mkdir();
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        FileOutputStream fOut = new FileOutputStream(image);
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+        fOut.flush();
+        fOut.close();
+
+        return image.getAbsolutePath();
     }
 }

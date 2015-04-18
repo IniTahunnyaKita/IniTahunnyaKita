@@ -23,7 +23,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -95,6 +95,166 @@
 
             </LinearLayout>
 
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="3dp">
+
+                <com.kitekite.initahunnyakita.widget.SquareImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/LightCoral"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="B"
+                        android:typeface="sans"
+                        android:textSize="36sp"
+                        android:textColor="@color/White"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:typeface="sans"
+                        android:text="Brightness"
+                        android:textSize="12sp"
+                        android:textColor="@color/White"/>
+
+                </LinearLayout>
+
+            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+
+            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="3dp">
+
+                <com.kitekite.initahunnyakita.widget.SquareImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/LightGrey"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BW"
+                        android:typeface="sans"
+                        android:textSize="36sp"
+                        android:textColor="@color/White"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:typeface="sans"
+                        android:text="Black &amp; White"
+                        android:textSize="12sp"
+                        android:textColor="@color/White"/>
+
+                </LinearLayout>
+
+            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+
+            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="3dp">
+
+                <com.kitekite.initahunnyakita.widget.SquareImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/LightSeaGreen"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="F"
+                        android:typeface="sans"
+                        android:textSize="36sp"
+                        android:textColor="@color/White"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:typeface="sans"
+                        android:text="Fish Eye"
+                        android:textSize="12sp"
+                        android:textColor="@color/White"/>
+
+                </LinearLayout>
+
+            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+
+            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_margin="3dp">
+
+                <com.kitekite.initahunnyakita.widget.SquareImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/LightBlue"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="V"
+                        android:typeface="sans"
+                        android:textSize="36sp"
+                        android:textColor="@color/White"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:typeface="sans"
+                        android:text="Vignette"
+                        android:textSize="12sp"
+                        android:textColor="@color/White"/>
+
+                </LinearLayout>
+
+            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
 
         </LinearLayout>
 

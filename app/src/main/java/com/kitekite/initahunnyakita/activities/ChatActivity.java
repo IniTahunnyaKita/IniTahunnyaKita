@@ -1,7 +1,6 @@
 package com.kitekite.initahunnyakita.activities;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,14 +14,12 @@ import android.widget.TextView;
 import com.kitekite.initahunnyakita.R;
 import com.kitekite.initahunnyakita.adapter.ItemDetailPagerAdapter;
 import com.kitekite.initahunnyakita.fragment.itemdetail.OverviewFragment;
-import com.kitekite.initahunnyakita.util.EventBus;
+import com.kitekite.initahunnyakita.model.Discussion;
+import com.kitekite.initahunnyakita.model.HangoutPost;
 import com.kitekite.initahunnyakita.util.HardcodeValues;
 import com.kitekite.initahunnyakita.util.ImageUtil;
-import com.kitekite.initahunnyakita.util.PageChangedEvent;
-import com.kitekite.initahunnyakita.util.PicassoBlurRequestHandler;
 import com.kitekite.initahunnyakita.widget.ViewPagerIndicator;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -36,12 +33,15 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
     private ViewPagerIndicator mViewPagerIndicator;
     ImageView profileBarBg;
     View profileBar;
+    Discussion.Conversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_chat);
+
+        conversation = (Discussion.Conversation) getIntent().getSerializableExtra("CONVERSATION");
 
         setupViews();
     }
@@ -52,7 +52,9 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.viewpager_indicator);
         profileBarBg = (ImageView) findViewById(R.id.profile_bar_background);
         ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        ImageView itemImage = (ImageView) findViewById(R.id.chat_item_image);
         TextView name = (TextView) findViewById(R.id.name);
+        TextView itemName = (TextView) findViewById(R.id.item_name);
 
         Picasso.with(this)
                 .load(getIntent().getStringExtra("PROFILE_PICTURE"))
@@ -63,7 +65,13 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
                 .load(getIntent().getStringExtra("PROFILE_PICTURE"))
                 .into(this);
 
+        Picasso.with(this)
+                .load(conversation.image_url)
+                .fit()
+                .into(itemImage);
+
         name.setText(getIntent().getStringExtra("NAME"));
+        itemName.setText(conversation.title);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -73,7 +81,11 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
         for(int i=0;i< totalPage;i++)
             pages.add(OverviewFragment.class);
 
-        viewPager.setAdapter(new ItemDetailPagerAdapter(getSupportFragmentManager(), this, pages, null));
+        HangoutPost post = new HangoutPost();
+        post.setItemUrl(conversation.image_url);
+        post.setTitle(conversation.title);
+        post.setPrice(210000);
+        viewPager.setAdapter(new ItemDetailPagerAdapter(getSupportFragmentManager(), this, pages, post));
         viewPager.setOnPageChangeListener(this);
 
         slidingLayout.setDragView(profileBar);
