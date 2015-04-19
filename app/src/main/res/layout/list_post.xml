@@ -16,12 +16,12 @@
         android:typeface="sans"
         android:fontFamily="sans-serif-light"/>
 
-    <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+    <com.molaja.android.widget.RoundLinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="5dp">
-    <com.kitekite.initahunnyakita.widget.SquareImageView
+    <com.molaja.android.widget.SquareImageView
         android:id="@+id/post_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -125,7 +125,7 @@
             android:textColor="@color/Black"
             android:textStyle="bold"
             android:background="@color/LightGrey"/>
-    </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+    </com.molaja.android.widget.RoundLinearLayout>
 
 
 </LinearLayout>

@@ -28,13 +28,13 @@
             android:layout_weight="1"
             android:stretchColumns="*">
 
-        <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+        <com.molaja.android.widget.RoundRelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="10dp">
 
-            <com.kitekite.initahunnyakita.widget.SquareImageView
+            <com.molaja.android.widget.SquareImageView
                 android:id="@+id/shop_image1"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -49,15 +49,15 @@
                 android:layout_alignBottom="@id/shop_image1"
                 android:background="?attr/selectableItemBackground"/>
 
-        </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+        </com.molaja.android.widget.RoundRelativeLayout>
 
-        <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+        <com.molaja.android.widget.RoundRelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="10dp">
 
-            <com.kitekite.initahunnyakita.widget.SquareImageView
+            <com.molaja.android.widget.SquareImageView
                 android:id="@+id/shop_image2"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -72,14 +72,14 @@
                 android:layout_alignBottom="@id/shop_image2"
                 android:background="?attr/selectableItemBackground"/>
 
-        </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+        </com.molaja.android.widget.RoundRelativeLayout>
 
-        <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+        <com.molaja.android.widget.RoundRelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.kitekite.initahunnyakita.widget.SquareImageView
+            <com.molaja.android.widget.SquareImageView
                 android:id="@+id/shop_image3"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -94,7 +94,7 @@
                 android:layout_alignBottom="@id/shop_image3"
                 android:background="?attr/selectableItemBackground"/>
 
-        </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+        </com.molaja.android.widget.RoundRelativeLayout>
 
         </TableRow>
 

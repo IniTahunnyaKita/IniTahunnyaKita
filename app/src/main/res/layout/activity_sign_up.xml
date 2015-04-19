@@ -6,12 +6,12 @@
     android:layout_height="match_parent">
 
     <fragment
-        class="com.kitekite.initahunnyakita.fragment.signup.MainSignupFragment"
+        class="com.molaja.android.fragment.signup.MainSignupFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <fragment
-        class="com.kitekite.initahunnyakita.fragment.signup.EnterDetailsFragment"
+        class="com.molaja.android.fragment.signup.EnterDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

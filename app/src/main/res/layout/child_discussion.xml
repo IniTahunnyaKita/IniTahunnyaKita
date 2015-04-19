@@ -40,7 +40,7 @@
 
     </LinearLayout>
 
-    <com.kitekite.initahunnyakita.widget.RoundLinearLayout
+    <com.molaja.android.widget.RoundLinearLayout
         android:id="@+id/wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"/>
 
-    </com.kitekite.initahunnyakita.widget.RoundLinearLayout>
+    </com.molaja.android.widget.RoundLinearLayout>
 
     <ImageView
         android:id="@+id/divider"

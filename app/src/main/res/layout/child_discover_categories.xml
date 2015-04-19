@@ -4,19 +4,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+    <com.molaja.android.widget.RoundRelativeLayout
         android:id="@+id/category_icon_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true">
 
-        <com.kitekite.initahunnyakita.widget.SquareImageView
+        <com.molaja.android.widget.SquareImageView
             android:id="@+id/category_bg"
             android:layout_width="match_parent"
             android:layout_height="@dimen/categories_icon_size"
             android:scaleType="centerCrop"/>
 
-        <com.kitekite.initahunnyakita.widget.SquareImageView
+        <com.molaja.android.widget.SquareImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/categories_icon_size"
             android:src="#88000000"/>
@@ -50,7 +50,7 @@
             android:layout_height="@dimen/categories_icon_size"
             android:background="?attr/selectableItemBackground"/>
 
-    </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+    </com.molaja.android.widget.RoundRelativeLayout>
 
     <LinearLayout
         android:id="@+id/padding"

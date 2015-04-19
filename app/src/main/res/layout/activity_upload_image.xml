@@ -104,13 +104,13 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+            <com.molaja.android.widget.RoundRelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:layout_margin="3dp">
 
-                <com.kitekite.initahunnyakita.widget.SquareImageView
+                <com.molaja.android.widget.SquareImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@color/LightCoral"/>
@@ -140,15 +140,15 @@
 
                 </LinearLayout>
 
-            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+            </com.molaja.android.widget.RoundRelativeLayout>
 
-            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+            <com.molaja.android.widget.RoundRelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:layout_margin="3dp">
 
-                <com.kitekite.initahunnyakita.widget.SquareImageView
+                <com.molaja.android.widget.SquareImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@color/LightGrey"/>
@@ -178,15 +178,15 @@
 
                 </LinearLayout>
 
-            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+            </com.molaja.android.widget.RoundRelativeLayout>
 
-            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+            <com.molaja.android.widget.RoundRelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:layout_margin="3dp">
 
-                <com.kitekite.initahunnyakita.widget.SquareImageView
+                <com.molaja.android.widget.SquareImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@color/LightSeaGreen"/>
@@ -216,15 +216,15 @@
 
                 </LinearLayout>
 
-            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+            </com.molaja.android.widget.RoundRelativeLayout>
 
-            <com.kitekite.initahunnyakita.widget.RoundRelativeLayout
+            <com.molaja.android.widget.RoundRelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_weight="1"
                 android:layout_margin="3dp">
 
-                <com.kitekite.initahunnyakita.widget.SquareImageView
+                <com.molaja.android.widget.SquareImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@color/LightBlue"/>
@@ -254,7 +254,7 @@
 
                 </LinearLayout>
 
-            </com.kitekite.initahunnyakita.widget.RoundRelativeLayout>
+            </com.molaja.android.widget.RoundRelativeLayout>
 
         </LinearLayout>
 

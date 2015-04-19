@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:gravity="center"/>
 
-        <com.kitekite.initahunnyakita.widget.ViewPagerIndicator
+        <com.molaja.android.widget.ViewPagerIndicator
             android:id="@+id/viewpager_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
 
                     </LinearLayout>
 
-                <com.kitekite.initahunnyakita.widget.RoundedImageView
+                <com.molaja.android.widget.RoundedImageView
                     android:id="@+id/chat_item_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

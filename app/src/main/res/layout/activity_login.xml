@@ -11,13 +11,13 @@
         android:inAnimation="@anim/fade_in"
         android:outAnimation="@anim/fade_out">
 
-        <com.kitekite.initahunnyakita.widget.PanningView
+        <com.molaja.android.widget.PanningView
             android:id="@+id/panningView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/panning1"/>
 
-        <com.kitekite.initahunnyakita.widget.PanningView
+        <com.molaja.android.widget.PanningView
             android:id="@+id/panningView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -82,7 +82,7 @@
     </RelativeLayout>
 
 
-    <com.kitekite.initahunnyakita.widget.CustomTextView
+    <com.molaja.android.widget.CustomTextView
         android:id="@+id/app_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

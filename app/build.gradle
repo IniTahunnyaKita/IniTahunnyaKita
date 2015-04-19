@@ -11,7 +11,7 @@ android {
         }
     }
     defaultConfig {
-        applicationId "com.kitekite.initahunnyakita"
+        applicationId "com.molaja.android"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
