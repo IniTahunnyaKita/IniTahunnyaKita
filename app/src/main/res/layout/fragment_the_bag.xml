@@ -1,69 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:item="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="290dp"
-    android:background="@color/White">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/blurred_bg"
+    <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerCrop"/>
+        android:layout_height="290dp"
+        android:background="@color/White">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="90dp"
-        android:scaleType="centerCrop"
-        android:src="@color/Gray"/>
-    <TextView
-        android:id="@+id/user_fullname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/blurred_bg"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_fullname"
-        android:layout_centerHorizontal="true"
-        android:text="Username"
-        android:textSize="10sp"/>
-    <com.molaja.android.widget.ProfileItem
-        android:id="@+id/profile_item_friends"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/username"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="50dp"
-        item:item_title="buddies"/>
-    <com.molaja.android.widget.ProfileItem
-        android:id="@+id/profile_item_shares"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/username"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        item:item_title="activities"/>
-    <com.molaja.android.widget.ProfileItem
-        android:id="@+id/profile_item_following"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/username"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp"
-        item:item_title="following"/>
-    <ImageView
+        <ImageView
+            android:id="@+id/blurred_bg"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="90dp"
+            android:scaleType="centerCrop"
+            android:src="@color/Gray"/>
+
+        <TextView
+            android:id="@+id/user_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/blurred_bg"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_fullname"
+            android:layout_centerHorizontal="true"
+            android:text="Username"
+            android:textSize="10sp"/>
+
+        <com.molaja.android.widget.ProfileItem
+            android:id="@+id/profile_item_friends"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/username"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="50dp"
+            item:item_title="buddies"/>
+
+        <com.molaja.android.widget.ProfileItem
+            android:id="@+id/profile_item_shares"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/username"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            item:item_title="activities"/>
+
+        <com.molaja.android.widget.ProfileItem
+            android:id="@+id/profile_item_following"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/username"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            item:item_title="following"/>
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/viewpager_tab"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:stl_indicatorAlwaysInCenter="false"
+            app:stl_indicatorInFront="false"
+            app:stl_indicatorInterpolation="smart"
+            app:stl_indicatorColor="#44000000"
+            app:stl_indicatorThickness="40dp"
+            app:stl_indicatorCornerRadius="10dp"
+            app:stl_underlineThickness="0dp"
+            app:stl_dividerColor="@android:color/transparent"
+            app:stl_dividerThickness="0dp"
+            app:stl_customTabTextLayoutId="@layout/simple_roboto_textview"
+            app:stl_customTabTextViewId="@+id/text_view"
+            app:stl_defaultTabTextAllCaps="true"
+            app:stl_defaultTabTextHorizontalPadding="16dp"
+            app:stl_defaultTabTextMinWidth="0dp"
+            app:stl_distributeEvenly="true" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/Silver"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/Silver"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </RelativeLayout>

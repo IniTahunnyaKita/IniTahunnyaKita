@@ -19,56 +19,66 @@
             android:layout_centerHorizontal="true"
             android:padding="6dp"
             android:singleLine="true"
-            android:hint="Search your favorite stuff"
+            android:hint="@string/search"
             android:textSize="16sp"
             android:typeface="sans"
             android:background="@drawable/actionbar_searchbox_bg"/>
         <ImageView
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
-            android:layout_alignRight="@+id/search_box"
+            android:layout_alignRight="@id/search_box"
             android:padding="10dp"
             android:src="@mipmap/ic_search"/>
     </RelativeLayout>
 
-    <com.ogaclejapan.smarttablayout.SmartTabLayout
-        android:id="@+id/viewpager_tab"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:background="@color/Teal"
-        app:stl_indicatorAlwaysInCenter="false"
-        app:stl_indicatorInFront="false"
-        app:stl_indicatorInterpolation="smart"
-        app:stl_indicatorColor="#44000000"
-        app:stl_indicatorThickness="40dp"
-        app:stl_indicatorCornerRadius="10dp"
-        app:stl_underlineColor="@color/DarkTeal"
-        app:stl_underlineThickness="0dp"
-        app:stl_dividerColor="@android:color/transparent"
-        app:stl_dividerThickness="0dp"
-        app:stl_customTabTextLayoutId="@layout/simple_roboto_textview"
-        app:stl_customTabTextViewId="@+id/text_view"
-        app:stl_defaultTabTextAllCaps="true"
-        app:stl_defaultTabTextHorizontalPadding="16dp"
-        app:stl_defaultTabTextMinWidth="0dp"
-        app:stl_distributeEvenly="true" />
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
+    <com.molaja.android.widget.RevealLayout
+        android:id="@+id/discover_reveal_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<android.support.v4.view.PagerTabStrip
-            android:id="@+id/pager_tabstrip"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:textColor="#FFFFFF"
-            android:background="@color/Teal"/>-->
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:background="@color/White"/>
 
-    </android.support.v4.view.ViewPager>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/viewpager_tab"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@color/Teal"
+                app:stl_indicatorAlwaysInCenter="false"
+                app:stl_indicatorInFront="false"
+                app:stl_indicatorInterpolation="smart"
+                app:stl_indicatorColor="#44000000"
+                app:stl_indicatorThickness="40dp"
+                app:stl_indicatorCornerRadius="10dp"
+                app:stl_underlineColor="@color/DarkTeal"
+                app:stl_underlineThickness="0dp"
+                app:stl_dividerColor="@android:color/transparent"
+                app:stl_dividerThickness="0dp"
+                app:stl_customTabTextLayoutId="@layout/simple_roboto_textview"
+                app:stl_customTabTextViewId="@+id/text_view"
+                app:stl_defaultTabTextAllCaps="true"
+                app:stl_defaultTabTextHorizontalPadding="16dp"
+                app:stl_defaultTabTextMinWidth="0dp"
+                app:stl_distributeEvenly="true" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </com.molaja.android.widget.RevealLayout>
 
 </LinearLayout>
