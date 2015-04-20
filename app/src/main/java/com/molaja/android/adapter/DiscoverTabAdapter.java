@@ -13,7 +13,7 @@ import com.molaja.android.fragment.discover.DiscoverShopsFragment;
  */
 public class DiscoverTabAdapter extends FragmentPagerAdapter {
 
-    private String tabtitles[] = new String[] { "CATEGORIES", "ITEMS", "SHOPS" };
+    private String tabTitles[] = new String[] { "CATEGORIES", "ITEMS", "SHOPS" };
 
     public DiscoverTabAdapter(FragmentManager fm){
         super(fm);
@@ -21,7 +21,7 @@ public class DiscoverTabAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return tabTitles.length;
     }
 
     @Override
@@ -39,6 +39,6 @@ public class DiscoverTabAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabtitles[position];
+        return tabTitles[position];
     }
 }

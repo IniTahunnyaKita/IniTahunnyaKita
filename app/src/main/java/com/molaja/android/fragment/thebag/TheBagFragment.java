@@ -1,10 +1,11 @@
-package com.molaja.android.fragment;
+package com.molaja.android.fragment.thebag;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -32,13 +34,16 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.molaja.android.R;
 import com.molaja.android.activities.UploadImageActivity;
+import com.molaja.android.adapter.TheBagTabAdapter;
 import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.util.ImageUtil;
 import com.molaja.android.util.Validations;
 import com.molaja.android.widget.ProfileItem;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -48,7 +53,7 @@ import java.io.IOException;
 /**
  * Created by Florian on 2/12/2015.
  */
-public class TheBagFragment extends Fragment{
+public class TheBagFragment extends Fragment implements Target {
     public final int PICK_IMAGE_REQUEST_CODE = 1;
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
@@ -56,6 +61,7 @@ public class TheBagFragment extends Fragment{
     ViewPager mViewPager;
     ImageView profilePicture;
     ImageView blurredBg;
+    View mHeader;
 
     User currentUser;
     UploadImageTask uploadImageTask;
@@ -81,7 +87,10 @@ public class TheBagFragment extends Fragment{
 
     public void initProfile(final View v){
         currentUser = User.getCurrentUser(getActivity());
+
+        mViewPager = (ViewPager) v.findViewById(R.id.the_bag_pager);
         blurredBg = (ImageView) v.findViewById(R.id.blurred_bg);
+        mHeader = v.findViewById(R.id.header);
         ((TextView)v.findViewById(R.id.user_fullname)).setText(currentUser.name);
         ((TextView)v.findViewById(R.id.username)).setText(currentUser.username);
         ((ProfileItem)v.findViewById(R.id.profile_item_following)).setItemValue(56);
@@ -135,22 +144,43 @@ public class TheBagFragment extends Fragment{
 
         String image = Validations.isEmptyOrNull(currentUser.image)? "file:///android_asset/default_profile_picture.jpg" : currentUser.image;
         setProfilePicture(image);
+
+        //init pager
+        initPager(v);
+    }
+
+    private void initPager(View v) {
+        mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager()));
+        SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
+        viewPagerTab.setCustomTabView(new SmartTabLayout.TabProvider() {
+
+            @Override
+            public View createTabView(ViewGroup viewGroup, int position, PagerAdapter pagerAdapter) {
+                ImageView icon = (ImageView) LayoutInflater.from(getActivity()).inflate(R.layout.child_thebag_tab, viewGroup, false);
+                switch (position) {
+                    case 0:
+                        icon.setImageResource(R.drawable.ic_activities_tab);
+                        break;
+                    case 1:
+                        icon.setImageResource(R.drawable.ic_buddies_tab);
+                        break;
+                    case 2:
+                        icon.setImageResource(R.drawable.ic_settings_tab);
+                        break;
+                }
+                return icon;
+            }
+        });
+        viewPagerTab.setViewPager(mViewPager);
     }
 
     public void setProfilePicture(String imagePath) {
         Picasso.with(getActivity())
                 .load(imagePath)
+                .placeholder(new ColorDrawable(getResources().getColor(R.color.Gray)))
                 .into(profilePicture, new Callback() {
                     @Override
                     public void onSuccess() {
-                        BitmapDrawable ppDrawable = ((BitmapDrawable) profilePicture.getDrawable());
-                        Bitmap blurredImg;
-                        if (ppDrawable != null) {
-                            Bitmap profileBitmap = ppDrawable.getBitmap();
-                            blurredImg = ImageUtil.BlurBitmap(getActivity(), profileBitmap, 20);
-                            blurredBg.setImageBitmap(blurredImg);
-                        }
-
                         //do a beautiful spring animation
                         SpringSystem springSystem = SpringSystem.create();
                         Spring spring = springSystem.createSpring();
@@ -171,6 +201,10 @@ public class TheBagFragment extends Fragment{
 
                     }
                 });
+        Picasso.with(getActivity())
+                .load(imagePath)
+                .placeholder(new ColorDrawable(getResources().getColor(R.color.LightGrey)))
+                .into(this);
     }
 
     public void sendPickImageIntent() {
@@ -248,6 +282,21 @@ public class TheBagFragment extends Fragment{
             uploadImageTask = new UploadImageTask(getActivity().getApplicationContext());
             uploadImageTask.execute(data.getStringExtra("image_path"));
         }
+    }
+
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+        blurredBg.setImageBitmap(ImageUtil.BlurBitmap(getActivity(),bitmap, 20));
+    }
+
+    @Override
+    public void onBitmapFailed(Drawable errorDrawable) {
+
+    }
+
+    @Override
+    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
     }
 
     private class UploadImageTask extends AsyncTask<String, Void, Void> {
