@@ -57,18 +57,45 @@
             android:textColor="@android:color/white"
             alibabi:ttf_name="black_jack.ttf"/>
     </LinearLayout>-->
-    <com.molaja.android.widget.CustomTextView
-        android:id="@+id/app_logo"
+    <ViewSwitcher
+        android:id="@+id/actiobar_view_switcher"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:transitionName="@string/app_logo_transition"
-        android:text="@string/app_name"
-        android:textSize="28sp"
-        android:textColor="@android:color/white"
-        alibabi:ttf_name="black_jack.ttf"/>
+        android:layout_height="wrap_content">
 
+        <com.molaja.android.widget.CustomTextView
+            android:id="@+id/app_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:transitionName="@string/app_logo_transition"
+            android:text="@string/app_name"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/Black"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            alibabi:ttf_name="black_jack.ttf"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/action_bar_profile_picture"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:id="@+id/action_bar_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"/>
+        </LinearLayout>
+
+    </ViewSwitcher>
     <!--<com.molaja.android.widget.CustomTextView
         android:id="@+id/action_bar_title"
         android:layout_width="wrap_content"

@@ -3,6 +3,7 @@ package com.molaja.android.fragment.thebag;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
@@ -38,8 +38,11 @@ import com.molaja.android.adapter.TheBagTabAdapter;
 import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.util.ImageUtil;
+import com.molaja.android.util.Scroller;
 import com.molaja.android.util.Validations;
+import com.molaja.android.widget.BaseFragment;
 import com.molaja.android.widget.ProfileItem;
+import com.nineoldandroids.view.ViewHelper;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -53,10 +56,13 @@ import java.io.IOException;
 /**
  * Created by Florian on 2/12/2015.
  */
-public class TheBagFragment extends Fragment implements Target {
+public class TheBagFragment extends BaseFragment implements Target, Scroller {
     public final int PICK_IMAGE_REQUEST_CODE = 1;
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
+
+    public static final int DEFAULT_ACTIONBAR_SHOWN = 5;
+    public static final int PROFILE_ACTIONBAR_SHOWN = 6;
 
     ViewPager mViewPager;
     ImageView profilePicture;
@@ -67,10 +73,19 @@ public class TheBagFragment extends Fragment implements Target {
     UploadImageTask uploadImageTask;
     String mCurrentPhotoPath;
 
+    private int mMinHeaderHeight;
+    private int mHeaderHeight;
+    private int mMinHeaderTranslation;
+    private int actionBarStatus = DEFAULT_ACTIONBAR_SHOWN;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
         initProfile(fragmentView);
+
+        mMinHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_profile_header_height);
+        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.profile_header_height);
+        mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
@@ -78,6 +93,14 @@ public class TheBagFragment extends Fragment implements Target {
         }*/
         //mViewPager.setonp
         return fragmentView;
+    }
+
+    private int getActionBarHeight() {
+        final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
+                new int[] { android.R.attr.actionBarSize });
+        int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+        return mActionBarSize;
     }
 
     @Override
@@ -150,7 +173,7 @@ public class TheBagFragment extends Fragment implements Target {
     }
 
     private void initPager(View v) {
-        mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager()));
+        mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this));
         SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
         viewPagerTab.setCustomTabView(new SmartTabLayout.TabProvider() {
 
@@ -172,6 +195,10 @@ public class TheBagFragment extends Fragment implements Target {
             }
         });
         viewPagerTab.setViewPager(mViewPager);
+    }
+
+    public static float clamp(float value, float max, float min) {
+        return Math.max(Math.min(value, min), max);
     }
 
     public void setProfilePicture(String imagePath) {
@@ -296,6 +323,15 @@ public class TheBagFragment extends Fragment implements Target {
 
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+    }
+
+    @Override
+    public void onYScroll(int totalScroll) {
+        ViewHelper.setTranslationY(mHeader, Math.max(-totalScroll, mMinHeaderTranslation));
+        mViewPager.getChildAt(1);
+        float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
+        setTitleAlpha(ratio);
 
     }
 

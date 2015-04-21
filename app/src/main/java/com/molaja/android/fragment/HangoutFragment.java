@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import com.molaja.android.R;
 import com.molaja.android.adapter.HangoutAdapter;
 import com.molaja.android.model.HangoutPost;
 import com.molaja.android.util.HardcodeValues;
+import com.molaja.android.widget.BaseFragment;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Florian on 1/3/2015.
  */
-public class HangoutFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnHeaderClickListener {
+public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnHeaderClickListener {
     private SuperRecyclerView mRecyclerView;
     private Context mContext;
     ArrayList<HangoutPost> list;

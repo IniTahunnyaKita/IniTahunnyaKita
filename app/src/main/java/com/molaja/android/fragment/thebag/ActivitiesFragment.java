@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.ActivitiesAdapter;
+import com.molaja.android.util.Scroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,12 @@ import java.util.List;
 public class ActivitiesFragment extends Fragment {
     View fragmentView;
     RecyclerView recyclerView;
+    Scroller scroller;
+
+    public ActivitiesFragment setScroller(Scroller scroller) {
+        this.scroller = scroller;
+        return this;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,7 +48,8 @@ public class ActivitiesFragment extends Fragment {
             list.add("position "+i);
         }
         recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list));
-
+        llm.scrollToPosition(0);
+        Log.d("elf","scrolltoppos");
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             int scrolledY = 0;
@@ -51,7 +59,13 @@ public class ActivitiesFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 scrolledY += dy;
                 Log.d("onscrolled"," y:"+scrolledY);
+
+                if (scroller != null) {
+                    scroller.onYScroll(scrolledY);
+                }
             }
+
         });
+
     }
 }

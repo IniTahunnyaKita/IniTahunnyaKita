@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
@@ -175,13 +176,34 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void setActionBarDefault(){
+    public void setActionBarDefault() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHideOnContentScrollEnabled(true);
         actionBar.setCustomView(R.layout.custom_actionbar_default);
         actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.Teal));
         actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
         actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
+    }
+
+    public void setActionBarTransparent() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
+        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
+        actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
+    }
+
+    public void setActionBarAlpha(float alpha) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
+        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);
+    }
+
+    public void switchToProfileActionBar(boolean b) {
+        ActionBar actionBar = getSupportActionBar();
+        if (b)
+            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.view_switcher)).showNext();
+        else
+            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.view_switcher)).showPrevious();
+
     }
 
     public Fragment getFragment(Class className) {

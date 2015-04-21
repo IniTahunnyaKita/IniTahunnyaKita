@@ -1,27 +1,24 @@
 package com.molaja.android.fragment.discover;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.DiscoverTabAdapter;
+import com.molaja.android.widget.BaseFragment;
 import com.molaja.android.widget.RevealLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 /**
  * Created by Florian on 2/10/2015.
  */
-public class DiscoverFragment extends Fragment {
+public class DiscoverFragment extends BaseFragment {
     public static final String TAB_1_TAG = "ITEMS";
     public static final String TAB_2_TAG = "SHOPS";
     public static final String TAB_3_TAG = "CATEGORIES";

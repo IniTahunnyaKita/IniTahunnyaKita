@@ -2,7 +2,6 @@ package com.molaja.android.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import com.molaja.android.R;
 import com.molaja.android.adapter.DiscussionAdapter;
 import com.molaja.android.model.Discussion;
 import com.molaja.android.util.HardcodeValues;
+import com.molaja.android.widget.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 /**
  * Created by Florian on 2/25/2015.
  */
-public class DiscussionFragment extends Fragment {
+public class DiscussionFragment extends BaseFragment {
     RecyclerView recyclerView;
     DiscussionAdapter mAdapter;
 

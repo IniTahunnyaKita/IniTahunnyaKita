@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.ActivitiesAdapter;
+import com.molaja.android.util.Scroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,12 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
     View fragmentView;
     RecyclerView recyclerView;
+    Scroller scroller;
+
+    public SettingsFragment setScroller(Scroller scroller) {
+        this.scroller = scroller;
+        return this;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +58,9 @@ public class SettingsFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 scrolledY += dy;
                 Log.d("onscrolled"," y:"+scrolledY);
+
+                if (scroller != null)
+                    scroller.onYScroll(scrolledY);
             }
         });
     }
