@@ -9,6 +9,10 @@ import com.molaja.android.fragment.thebag.TheBagFragment;
  * Created by florianhidayat on 22/4/15.
  */
 public class BaseFragment extends Fragment {
+    public static final int MODE_ACTIONBAR_DEFAULT = 1;
+    public static final int MODE_ACTIONBAR_PROFILE = 2;
+
+    public int actionBarMode = MODE_ACTIONBAR_DEFAULT;
 
     @Override
     public void onResume() {
@@ -30,6 +34,16 @@ public class BaseFragment extends Fragment {
             ((MainActivity)getActivity()).setActionBarAlpha(alpha);
         }
 
+    }
+
+    public void switchActionBarMode(int mode) {
+        if (actionBarMode == mode)
+            return;
+
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity)getActivity()).switchToProfileActionBar(mode == MODE_ACTIONBAR_PROFILE);
+            actionBarMode = mode;
+        }
     }
 
 }

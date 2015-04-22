@@ -200,10 +200,18 @@ public class MainActivity extends ActionBarActivity {
     public void switchToProfileActionBar(boolean b) {
         ActionBar actionBar = getSupportActionBar();
         if (b)
-            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.view_switcher)).showNext();
+            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showNext();
         else
-            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.view_switcher)).showPrevious();
+            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showPrevious();
+    }
 
+    public void initProfileActionBar(String profileName, String image) {
+        ActionBar actionBar = getSupportActionBar();
+        ((TextView)actionBar.getCustomView().findViewById(R.id.action_bar_profile_name)).setText(profileName);
+        Picasso.with(this)
+                .load(image)
+                .fit()
+                .into((ImageView)actionBar.getCustomView().findViewById(R.id.action_bar_profile_picture));
     }
 
     public Fragment getFragment(Class className) {

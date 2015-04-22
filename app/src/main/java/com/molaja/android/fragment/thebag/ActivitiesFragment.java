@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.molaja.android.R;
 import com.molaja.android.adapter.ActivitiesAdapter;
 import com.molaja.android.util.Scroller;
+import com.molaja.android.util.Synchronizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,23 @@ import java.util.List;
 /**
  * Created by florianhidayat on 20/4/15.
  */
-public class ActivitiesFragment extends Fragment {
+public class ActivitiesFragment extends Fragment implements Synchronizer.Synchronizable{
     View fragmentView;
     RecyclerView recyclerView;
+    LinearLayoutManager llm;
     Scroller scroller;
+
+    int scrolledY = 0;
 
     public ActivitiesFragment setScroller(Scroller scroller) {
         this.scroller = scroller;
         return this;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Synchronizer.getInstance().registerSynchronizable(this);
     }
 
     @Override
@@ -39,25 +49,32 @@ public class ActivitiesFragment extends Fragment {
         return fragmentView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("soosos", "onpause");
+        //llm.scrollToPosition(0);
+        //recyclerView.scrollToPosition(0);
+    }
+
     private void initRecyclerView() {
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         List<String> list = new ArrayList<>();
-        for (int i=0;i<20;i++) {
+        for (int i=0;i<80;i++) {
             list.add("position "+i);
         }
         recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list));
-        llm.scrollToPosition(0);
         Log.d("elf","scrolltoppos");
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            int scrolledY = 0;
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 scrolledY += dy;
+                Synchronizer.getInstance().update(ActivitiesFragment.this, scrolledY);
                 Log.d("onscrolled"," y:"+scrolledY);
 
                 if (scroller != null) {
@@ -67,5 +84,15 @@ public class ActivitiesFragment extends Fragment {
 
         });
 
+    }
+
+    private boolean isScrolling() {
+        return recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE;
+    }
+
+    @Override
+    public void onUpdate(int update) {
+        if (!isScrolling()  && update < 600)
+            recyclerView.smoothScrollBy(0, update);
     }
 }

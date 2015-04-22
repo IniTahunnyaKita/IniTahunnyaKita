@@ -60,13 +60,16 @@
     <ViewSwitcher
         android:id="@+id/actiobar_view_switcher"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:inAnimation="@anim/fade_in"
+        android:outAnimation="@anim/fade_out">
 
         <com.molaja.android.widget.CustomTextView
             android:id="@+id/app_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:transitionName="@string/app_logo_transition"
             android:text="@string/app_name"
             android:textSize="28sp"
@@ -92,6 +95,7 @@
                 android:id="@+id/action_bar_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_small_margin"
                 android:textColor="@color/White"/>
         </LinearLayout>
 

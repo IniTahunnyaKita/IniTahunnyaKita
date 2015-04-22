@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.molaja.android.R;
+import com.molaja.android.activities.MainActivity;
 import com.molaja.android.activities.UploadImageActivity;
 import com.molaja.android.adapter.TheBagTabAdapter;
 import com.molaja.android.model.User;
@@ -61,9 +63,6 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
 
-    public static final int DEFAULT_ACTIONBAR_SHOWN = 5;
-    public static final int PROFILE_ACTIONBAR_SHOWN = 6;
-
     ViewPager mViewPager;
     ImageView profilePicture;
     ImageView blurredBg;
@@ -76,7 +75,6 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
     private int mMinHeaderHeight;
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
-    private int actionBarStatus = DEFAULT_ACTIONBAR_SHOWN;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -167,6 +165,10 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
 
         String image = Validations.isEmptyOrNull(currentUser.image)? "file:///android_asset/default_profile_picture.jpg" : currentUser.image;
         setProfilePicture(image);
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).initProfileActionBar(currentUser.name, currentUser.image);
+        }
 
         //init pager
         initPager(v);
@@ -333,6 +335,19 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
         float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
         setTitleAlpha(ratio);
 
+        switch (actionBarMode) {
+            case MODE_ACTIONBAR_DEFAULT:
+                if (totalScroll > Math.abs(mMinHeaderTranslation)) {
+                    Log.d ("basdl", "mminheadertr:"+mMinHeaderTranslation);
+                    switchActionBarMode(MODE_ACTIONBAR_PROFILE);
+                }
+                break;
+            case MODE_ACTIONBAR_PROFILE:
+                if (totalScroll < Math.abs(mMinHeaderTranslation)) {
+                    Log.d ("basdls", "mminheadertr:"+mMinHeaderTranslation);
+                    switchActionBarMode(MODE_ACTIONBAR_DEFAULT);
+                }
+        }
     }
 
     private class UploadImageTask extends AsyncTask<String, Void, Void> {
