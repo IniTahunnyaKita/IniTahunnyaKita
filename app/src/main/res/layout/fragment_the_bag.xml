@@ -81,7 +81,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
-                app:item_title="following"/>
+                app:item_title="subscriptions"/>
 
         </LinearLayout>
 

@@ -176,6 +176,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
 
     private void initPager(View v) {
         mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this));
+        mViewPager.setOffscreenPageLimit(3);
         SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
         viewPagerTab.setCustomTabView(new SmartTabLayout.TabProvider() {
 

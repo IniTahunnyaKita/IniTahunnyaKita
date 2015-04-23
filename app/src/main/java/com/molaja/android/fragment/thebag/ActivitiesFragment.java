@@ -2,7 +2,6 @@ package com.molaja.android.fragment.thebag;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +11,7 @@ import android.view.ViewGroup;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.ActivitiesAdapter;
-import com.molaja.android.util.Scroller;
-import com.molaja.android.util.Synchronizer;
+import com.molaja.android.widget.TheBagPagerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,24 +19,10 @@ import java.util.List;
 /**
  * Created by florianhidayat on 20/4/15.
  */
-public class ActivitiesFragment extends Fragment implements Synchronizer.Synchronizable{
+public class ActivitiesFragment extends TheBagPagerFragment{
     View fragmentView;
     RecyclerView recyclerView;
     LinearLayoutManager llm;
-    Scroller scroller;
-
-    int scrolledY = 0;
-
-    public ActivitiesFragment setScroller(Scroller scroller) {
-        this.scroller = scroller;
-        return this;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Synchronizer.getInstance().registerSynchronizable(this);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,9 +36,7 @@ public class ActivitiesFragment extends Fragment implements Synchronizer.Synchro
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("soosos", "onpause");
-        //llm.scrollToPosition(0);
-        //recyclerView.scrollToPosition(0);
+        recyclerView.scrollBy(0, -scrolledY);
     }
 
     private void initRecyclerView() {
@@ -62,37 +44,19 @@ public class ActivitiesFragment extends Fragment implements Synchronizer.Synchro
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         List<String> list = new ArrayList<>();
-        for (int i=0;i<80;i++) {
+        for (int i=0; i<80; i++) {
             list.add("position "+i);
         }
         recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list));
         Log.d("elf","scrolltoppos");
 
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.setOnScrollListener(onScrollListener);
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                scrolledY += dy;
-                Synchronizer.getInstance().update(ActivitiesFragment.this, scrolledY);
-                Log.d("onscrolled"," y:"+scrolledY);
-
-                if (scroller != null) {
-                    scroller.onYScroll(scrolledY);
-                }
-            }
-
-        });
-
-    }
-
-    private boolean isScrolling() {
-        return recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE;
     }
 
     @Override
     public void onUpdate(int update) {
-        if (!isScrolling()  && update < 600)
-            recyclerView.smoothScrollBy(0, update);
+        super.onUpdate(update);
+        recyclerView.scrollBy(0, update - scrolledY);
     }
 }

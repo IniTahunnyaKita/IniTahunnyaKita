@@ -14,6 +14,7 @@ public class MolajaApplication extends Application {
     public final static String ion_cookies = "ion-cookies";
     public final static String is_logged_in = "is_logged_in";
 
+
     @Override
     public void onCreate() {
         super.onCreate();
