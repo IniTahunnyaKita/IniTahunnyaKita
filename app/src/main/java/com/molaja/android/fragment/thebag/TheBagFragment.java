@@ -118,13 +118,6 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
         ((ProfileItem)v.findViewById(R.id.profile_item_shares)).setItemValue(71);
         ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);
 
-        v.findViewById(R.id.profile_item_friends).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BackendHelper.logOut(getActivity());
-            }
-        });
-
         //load image
         profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
         profilePicture.setOnClickListener(new View.OnClickListener() {

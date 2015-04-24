@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.ActivitiesAdapter;
+import com.molaja.android.adapter.SettingsAdapter;
 import com.molaja.android.widget.TheBagPagerFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,12 +44,12 @@ public class SettingsFragment extends TheBagPagerFragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        List<String> list = new ArrayList<>();
-        for (int i=0;i<20;i++) {
-            list.add("position "+i);
-        }
-        recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list));
 
+        List<String> list = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.settings_options)));
+        //for dummy view
+        list.add(0,"");
+
+        recyclerView.setAdapter(new SettingsAdapter(getActivity().getApplicationContext(), list));
         recyclerView.setOnScrollListener(onScrollListener);
     }
 

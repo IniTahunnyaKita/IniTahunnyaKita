@@ -45,8 +45,10 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
         for (int i=0;i<80;i++) {
             list.add(Integer.toString(i));
         }
-        recyclerView.setAdapter(new ShowBuddiesAdapter(getActivity(), list));
+        //for dummy view
+        list.add(0,"");
 
+        recyclerView.setAdapter(new ShowBuddiesAdapter(getActivity().getApplicationContext(), list));
 
         recyclerView.setOnScrollListener(onScrollListener);
     }

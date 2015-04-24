@@ -357,7 +357,7 @@ public class MainActivity extends ActionBarActivity {
                     pollHolder.removeAllViews();
                     pollList.clear();
                     pollCaption.setText("");
-                    hideKeyboard(pollCaption);
+                    showKeyboard(pollCaption, false);
                 }
             }
 
@@ -396,10 +396,13 @@ public class MainActivity extends ActionBarActivity {
             showPollHolder(true);
     }
 
-    public void hideKeyboard(View bindedView){
+    public void showKeyboard(View bindedView, boolean show){
         InputMethodManager imm = (InputMethodManager)getSystemService(
                 Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
+        if (show)
+            imm.showSoftInput(bindedView, 0);
+        else
+            imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
     }
 
 }

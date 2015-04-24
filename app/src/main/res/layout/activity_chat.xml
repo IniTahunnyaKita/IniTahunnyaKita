@@ -121,7 +121,8 @@
             android:padding="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@color/White">
+            android:background="@color/White"
+            android:focusableInTouchMode="true">
 
             <ImageView
                 android:layout_width="40dp"
