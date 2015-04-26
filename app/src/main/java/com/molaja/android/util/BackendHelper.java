@@ -1,7 +1,6 @@
 package com.molaja.android.util;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -85,11 +84,12 @@ public class BackendHelper {
         JsonObject json = new JsonObject();
         json.add("user", new JsonObject().getAsJsonObject(gson.toJson(User.getCurrentUser(context))));
 
-        final ProgressDialog pDialog = new ProgressDialog(context);
-        pDialog.setIndeterminate(true);
-        pDialog.setCancelable(false);
-        pDialog.setMessage(context.getString(R.string.log_out));
-        pDialog.show();
+        //broadcast this to main activity
+        Intent intent = new Intent(MainActivity.SHOW_DIALOG);
+        intent.putExtra("MESSAGE",context.getString(R.string.log_out));
+        intent.putExtra("INDETERMINATE", true);
+        intent.putExtra("CANCELABLE", false);
+        context.sendBroadcast(intent);
 
         Ion.with(context)
                 .load("DELETE", LOGIN_API_ENDPOINT_URL)
@@ -101,7 +101,7 @@ public class BackendHelper {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        pDialog.dismiss();
+                        context.sendBroadcast(new Intent(MainActivity.DISMISS_DIALOG));
 
                         if (e != null) {
                             e.printStackTrace();
@@ -114,7 +114,10 @@ public class BackendHelper {
                                 SharedPreferences.Editor editor = MolajaApplication.getLoginCookies(context).edit();
                                 editor.clear();
                                 editor.commit();
-                                context.startActivity(new Intent(context, LoginActivity.class));
+
+                                Intent loginIntent = new Intent(context, LoginActivity.class);
+                                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(loginIntent);
                                 if (context instanceof Activity)
                                     ((Activity) context).finish();
                             } else {

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.molaja.android.R;
-import com.molaja.android.adapter.ActivitiesAdapter;
 import com.molaja.android.adapter.SettingsAdapter;
 import com.molaja.android.widget.TheBagPagerFragment;
 
@@ -49,7 +48,7 @@ public class SettingsFragment extends TheBagPagerFragment {
         //for dummy view
         list.add(0,"");
 
-        recyclerView.setAdapter(new SettingsAdapter(getActivity().getApplicationContext(), list));
+        recyclerView.setAdapter(new SettingsAdapter(getActivity(), list));
         recyclerView.setOnScrollListener(onScrollListener);
     }
 

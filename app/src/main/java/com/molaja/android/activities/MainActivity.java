@@ -1,7 +1,10 @@
 package com.molaja.android.activities;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -85,6 +88,29 @@ public class MainActivity extends ActionBarActivity {
     public static int mode  = USER_MODE;
     Drawable windowBackground;
 
+    public static final String SHOW_DIALOG = "com.molaja.android.SHOW_DIALOG";
+    public static final String DISMISS_DIALOG = "com.molaja.android.DISMISS_DIALOG";
+    BroadcastReceiver mDialogPopupReceiver = new BroadcastReceiver() {
+        ProgressDialog pDialog;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("MESSAGE");
+            boolean indeterminate = intent.getBooleanExtra("INDETERMINATE", true);
+            boolean cancelable = intent.getBooleanExtra("CANCELABLE", true);
+            if (intent.getAction().equals(SHOW_DIALOG)) {
+                pDialog = new ProgressDialog(context);
+                pDialog.setIndeterminate(indeterminate);
+                pDialog.setCancelable(cancelable);
+                pDialog.setMessage(message);
+                pDialog.show();
+            } else if (intent.getAction().equals(DISMISS_DIALOG)) {
+                if (pDialog != null)
+                    pDialog.dismiss();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -101,6 +127,11 @@ public class MainActivity extends ActionBarActivity {
 
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
 
+        //register receivers
+        IntentFilter filter = new IntentFilter(SHOW_DIALOG);
+        filter.addAction(DISMISS_DIALOG);
+        registerReceiver(mDialogPopupReceiver, filter);
+
         initActionBar();
 
         initTabs();
@@ -115,6 +146,16 @@ public class MainActivity extends ActionBarActivity {
             //showWatermark(R.drawable.hangout_actionbar_watermark,true);
 
         initNotification();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(mDialogPopupReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initActionBar(){

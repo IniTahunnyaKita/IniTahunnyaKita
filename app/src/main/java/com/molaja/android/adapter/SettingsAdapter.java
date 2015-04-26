@@ -79,7 +79,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onClick(View view) {
         Log.d("onclick","tag"+view.getTag());
         if (view.getTag().equals(settings[settings.length - 1])) {//log out
-            BackendHelper.logOut(view.getContext());
+            BackendHelper.logOut(context);
         }
     }
 
