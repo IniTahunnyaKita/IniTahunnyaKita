@@ -5,8 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -16,8 +15,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,8 +40,8 @@ import com.molaja.android.fragment.thebag.TheBagFragment;
 import com.molaja.android.model.HangoutPost;
 import com.molaja.android.model.NotificationItem;
 import com.molaja.android.util.HardcodeValues;
-import com.molaja.android.util.ImageUtil;
 import com.molaja.android.util.MainTabStack;
+import com.molaja.android.util.SoftKeyboardListener;
 import com.molaja.android.widget.ActionBarLayout;
 import com.molaja.android.widget.NotificationLayout;
 import com.molaja.android.widget.RevealLayout;
@@ -65,31 +64,34 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAB_3_TAG = "TAB 3";//trending/stories?
     public static final String TAB_4_TAG = "TAB 4";
 
+    final public static int USER_MODE  = 1;
+    final public static int SHOP_MODE  = 2;
+
+    public static final String SHOW_DIALOG = "com.molaja.android.SHOW_DIALOG";
+    public static final String DISMISS_DIALOG = "com.molaja.android.DISMISS_DIALOG";
+
+    private static boolean isPollLayoutShown = false;
+    public static int mode  = USER_MODE;
+
     private String TAG = "taikodok";
-    public int [] iconPos,iconDest = new int[2];
     List pollList = new ArrayList< HangoutPost>();
+
+    //views
     EditText pollCaption;
     FragmentTabHost mTabHost;
     RelativeLayout holderLayout;
     LinearLayout pollHolder;
     RevealLayout mRevealLayout;
+    View rootView;
     View content;
     NotificationLayout mNotificationLayout;
     ImageView blurredBg;
-    int contentHeight;
-    int contentWidth;
-    LayoutInflater inflater;
-    private AccelerateDecelerateInterpolator mSmoothInterpolator;
-    public Bitmap blurredBitmap;
-    boolean isLoggedIn;
-    private static boolean isPollLayoutShown = false;
-    final public static int USER_MODE  = 1;
-    final public static int SHOP_MODE  = 2;
-    public static int mode  = USER_MODE;
-    Drawable windowBackground;
 
-    public static final String SHOW_DIALOG = "com.molaja.android.SHOW_DIALOG";
-    public static final String DISMISS_DIALOG = "com.molaja.android.DISMISS_DIALOG";
+    LayoutInflater inflater;
+    SoftKeyboardListener keyboardListener;
+    boolean isLoggedIn;
+
+
     BroadcastReceiver mDialogPopupReceiver = new BroadcastReceiver() {
         ProgressDialog pDialog;
 
@@ -111,6 +113,28 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+            int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
+
+            //LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(MainActivity.this);
+
+            if(heightDiff <= contentViewTop){
+
+                if (keyboardListener != null)
+                    keyboardListener.onHide();
+
+            } else {
+                int keyboardHeight = heightDiff - contentViewTop;
+
+                if (keyboardListener != null)
+                    keyboardListener.onShow(keyboardHeight);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -125,8 +149,6 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        mSmoothInterpolator = new AccelerateDecelerateInterpolator();
-
         //register receivers
         IntentFilter filter = new IntentFilter(SHOW_DIALOG);
         filter.addAction(DISMISS_DIALOG);
@@ -140,10 +162,11 @@ public class MainActivity extends ActionBarActivity {
 
         blurredBg = (ImageView) findViewById(R.id.blur_image);
         inflater = LayoutInflater.from(this);
+        rootView = findViewById(R.id.root_view);
         content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
-        //if(whichFragmentIsShown()==HANG_OUT)
-            //showWatermark(R.drawable.hangout_actionbar_watermark,true);
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         initNotification();
     }
@@ -153,9 +176,17 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
         try {
             unregisterReceiver(mDialogPopupReceiver);
+            if (Build.VERSION.SDK_INT >= 16)
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+            else
+                rootView.getViewTreeObserver().removeGlobalOnLayoutListener(keyboardLayoutListener);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSoftKeyboardListener(SoftKeyboardListener keyboardListener) {
+        this.keyboardListener = keyboardListener;
     }
 
     public void initActionBar(){
@@ -244,6 +275,10 @@ public class MainActivity extends ActionBarActivity {
             ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showNext();
         else
             ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showPrevious();
+    }
+
+    public void setFocusToTabHost() {
+        mTabHost.requestFocus();
     }
 
     public void initProfileActionBar(String profileName, String image) {
@@ -336,32 +371,6 @@ public class MainActivity extends ActionBarActivity {
         }
         NotificationAdapter adapter = new NotificationAdapter(this, 0, list);
         notificationList.setAdapter(adapter);
-    }
-
-    private void setBlurredBackground(int height){
-        blurredBitmap = ImageUtil.drawViewToBitmap(
-                blurredBitmap,content,contentWidth,height,10,windowBackground);
-        blurredBitmap = ImageUtil.BlurBitmap(this, blurredBitmap, 5);
-        blurredBg.setVisibility(View.VISIBLE);
-        blurredBg.setImageBitmap(blurredBitmap);
-
-    }
-
-    private void blurBackground(final View slidingLayout){
-        runOnUiThread(new Runnable() {
-            int yPos = -1;
-            int[] pos = new int[2];
-
-            @Override
-            public void run() {
-                slidingLayout.getLocationInWindow(pos);
-                while (yPos != pos[1]) {
-                    yPos = pos[1];
-                    setBlurredBackground(yPos + contentHeight);
-                    slidingLayout.getLocationInWindow(pos);
-                }
-            }
-        });
     }
 
     public void initPollHolder(){

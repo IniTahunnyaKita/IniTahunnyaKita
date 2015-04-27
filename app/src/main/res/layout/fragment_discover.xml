@@ -12,7 +12,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:background="@color/Teal">
-        <EditText
+        <com.molaja.android.widget.CustomEditText
             android:id="@+id/search_box"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
