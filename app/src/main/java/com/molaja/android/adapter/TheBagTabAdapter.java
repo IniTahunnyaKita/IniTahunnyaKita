@@ -16,21 +16,25 @@ public class TheBagTabAdapter extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[] { "ACTIVITIES", "BUDDIES", "SETTINGS" };
     Scroller scroller;
+    int headerHeight;
+    boolean isCurrentUser;
 
-    public TheBagTabAdapter(FragmentManager fm, Scroller scroller) {
+    public TheBagTabAdapter(FragmentManager fm, Scroller scroller, int headerHeight, boolean isCurrentUser) {
         super(fm);
         this.scroller = scroller;
+        this.headerHeight = headerHeight;
+        this.isCurrentUser = isCurrentUser;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new ActivitiesFragment().setScroller(scroller);
+                return new ActivitiesFragment().setScroller(scroller).setHeaderHeight(headerHeight);
             case 1:
-                return new ShowBuddiesFragment().setScroller(scroller);
+                return new ShowBuddiesFragment().setScroller(scroller).setHeaderHeight(headerHeight);
             case 2:
-                return new SettingsFragment().setScroller(scroller);
+                return new SettingsFragment().setScroller(scroller).setHeaderHeight(headerHeight);
         }
         return null;
     }
@@ -42,6 +46,9 @@ public class TheBagTabAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return tabTitles.length;
+        if (isCurrentUser)
+            return tabTitles.length;
+        else
+            return tabTitles.length - 1;
     }
 }

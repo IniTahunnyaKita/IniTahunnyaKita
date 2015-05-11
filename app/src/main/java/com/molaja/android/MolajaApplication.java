@@ -3,6 +3,9 @@ package com.molaja.android;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.molaja.android.util.FontsOverride;
 
@@ -38,6 +41,24 @@ public class MolajaApplication extends Application {
 
     public static boolean isLoggedIn(Context context) {
         return getLoginCookies(context).getBoolean(is_logged_in, false);
+    }
+
+    public static void showKeyboard(Context context, View bindedView, boolean show){
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (show)
+            imm.showSoftInput(bindedView, 0);
+        else
+            imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
+    }
+
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
 }

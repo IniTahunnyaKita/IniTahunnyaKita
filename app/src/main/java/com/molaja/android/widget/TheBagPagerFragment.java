@@ -18,10 +18,16 @@ public class TheBagPagerFragment extends Fragment implements Synchronizer.Synchr
 
     public double SCROLLER_LIMIT;
     public int scrolledY = 0;
+    public int headerHeight = 0;
     boolean isAutoScrolling = false;
 
     public TheBagPagerFragment setScroller(Scroller scroller) {
         this.scroller = scroller;
+        return this;
+    }
+
+    public TheBagPagerFragment setHeaderHeight(int headerHeight) {
+        this.headerHeight = headerHeight;
         return this;
     }
 
@@ -47,9 +53,20 @@ public class TheBagPagerFragment extends Fragment implements Synchronizer.Synchr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Synchronizer.getInstance().registerSynchronizable(this);
         SCROLLER_LIMIT = 1.2 * (getActionBarHeight() -
                 getResources().getDimensionPixelSize(R.dimen.min_profile_header_height));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Synchronizer.getInstance().registerSynchronizable(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Synchronizer.getInstance().unregisterSynchronizable(this);
     }
 
     @Override

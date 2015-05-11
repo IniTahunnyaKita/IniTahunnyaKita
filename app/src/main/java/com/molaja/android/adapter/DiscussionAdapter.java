@@ -2,13 +2,13 @@ package com.molaja.android.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.molaja.android.R;
@@ -70,7 +70,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final Discussion discussion = list.get(position);
         if(holder instanceof DiscussionViewHolder && discussion instanceof Discussion){
-            DiscussionViewHolder discussionHolder = (DiscussionViewHolder) holder;
+            final DiscussionViewHolder discussionHolder = (DiscussionViewHolder) holder;
             discussionHolder.name.setText(discussion.name);
 
             Picasso.with(mContext)
@@ -85,17 +85,20 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     .fit().centerCrop()
                     .into(discussionHolder.mostRecent);
 
-            discussionHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            discussionHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!mIsAnItemSelected)
+                    if (!mIsAnItemSelected) {
+                        ViewCompat.setElevation(discussionHolder.profilePicture, 20f);
                         selectItem(position);
-                    else
+                    } else {
+                        ViewCompat.setElevation(discussionHolder.profilePicture, 0f);
                         restoreItems();
+                    }
                 }
             });
         } else if(holder instanceof ChildViewHolder && discussion instanceof Discussion.Conversation){
-            ChildViewHolder childHolder = (ChildViewHolder) holder;
+            final ChildViewHolder childHolder = (ChildViewHolder) holder;
             final Discussion.Conversation conversation = (Discussion.Conversation) list.get(position);
             childHolder.title.setText(conversation.title);
 
@@ -171,7 +174,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class DiscussionViewHolder extends RecyclerView.ViewHolder{
-        protected RelativeLayout parentLayout;
         protected CircleImageView profilePicture;
         protected TextView name;
         protected TextView noOfDiscussions;
@@ -179,7 +181,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public DiscussionViewHolder(View itemView) {
             super(itemView);
-            parentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_child_parent);
             profilePicture = (CircleImageView) itemView.findViewById(R.id.profile_picture);
             name = (TextView) itemView.findViewById(R.id.name);
             noOfDiscussions = (TextView) itemView.findViewById(R.id.no_of_discussions);

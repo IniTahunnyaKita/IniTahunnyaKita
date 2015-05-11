@@ -3,41 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:padding="@dimen/activity_horizontal_margin">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/shop_id_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_small_margin"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/Gray" >
 
-        <ImageView
-            android:id="@+id/featured_graphic"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:src="@color/DarkCyan"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/description_shop_pic"
+            android:layout_width="@dimen/profile_pic_size_large"
+            android:layout_height="@dimen/profile_pic_size_large"
+            android:layout_centerHorizontal="true"
+            android:src="@color/LightGrey"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/description_shop_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:gravity="center_horizontal" >
+            android:text="Shop Name"
+            android:textSize="16sp"
+            android:textColor="@color/White"
+            android:typeface="sans"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/description_shop_pic"
-                android:layout_width="@dimen/profile_pic_size_large"
-                android:layout_height="@dimen/profile_pic_size_large"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/jersenesia"/>
-
-            <TextView
-                android:id="@+id/description_shop_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:typeface="sans"
-                android:text="Jernesia Sport"
-                android:textSize="16sp"
-                android:textColor="@color/White"/>
-
-        </LinearLayout>
-        </RelativeLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

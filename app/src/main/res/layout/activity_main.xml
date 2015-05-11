@@ -22,12 +22,12 @@
 
             <include
                 layout="@layout/tabs_main"/>
-
-            <include
-                layout="@layout/poll_holder"/>
         </RelativeLayout>
 
     </com.molaja.android.widget.RevealLayout>
+
+    <include
+        layout="@layout/poll_holder"/>
 
     <ImageView
         android:id="@+id/blur_image"
@@ -36,8 +36,8 @@
         android:scaleType="fitStart"
         android:visibility="gone" />
 
+    <include layout="@layout/notification_layout"/>
 
-    <include
-        layout="@layout/notification_layout"/>
+    <include layout="@layout/custom_actionbar_default"/>
 
 </RelativeLayout>

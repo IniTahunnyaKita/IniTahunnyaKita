@@ -4,49 +4,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize">
+    android:paddingTop="?attr/actionBarSize"
+    android:paddingBottom="@dimen/tab_height"
+    android:animateLayoutChanges="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:background="@color/Teal">
-        <com.molaja.android.widget.CustomEditText
-            android:id="@+id/search_box"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:padding="6dp"
-            android:singleLine="true"
-            android:hint="@string/search"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:background="@drawable/actionbar_searchbox_bg"/>
-        <ImageView
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:layout_alignRight="@id/search_box"
-            android:padding="10dp"
-            android:src="@mipmap/ic_search"/>
-    </RelativeLayout>
-
-    <com.molaja.android.widget.RevealLayout
-        android:id="@+id/discover_reveal_layout"
-        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:background="@color/White"/>
-
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/LightGrey"/>
 
             <com.ogaclejapan.smarttablayout.SmartTabLayout
                 android:id="@+id/viewpager_tab"
@@ -54,23 +28,28 @@
                 android:layout_height="48dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:background="@color/Teal"
+                android:background="@color/White"
                 app:stl_indicatorAlwaysInCenter="false"
                 app:stl_indicatorInFront="false"
                 app:stl_indicatorInterpolation="smart"
-                app:stl_indicatorColor="#44000000"
+                app:stl_indicatorColor="@color/Teal"
                 app:stl_indicatorThickness="40dp"
                 app:stl_indicatorCornerRadius="10dp"
                 app:stl_underlineColor="@color/DarkTeal"
                 app:stl_underlineThickness="0dp"
                 app:stl_dividerColor="@android:color/transparent"
                 app:stl_dividerThickness="0dp"
-                app:stl_customTabTextLayoutId="@layout/simple_roboto_textview"
+                app:stl_customTabTextLayoutId="@layout/textview_discover_tab"
                 app:stl_customTabTextViewId="@+id/text_view"
                 app:stl_defaultTabTextAllCaps="true"
                 app:stl_defaultTabTextHorizontalPadding="16dp"
                 app:stl_defaultTabTextMinWidth="0dp"
                 app:stl_distributeEvenly="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/LightGrey"/>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
@@ -79,6 +58,18 @@
 
         </LinearLayout>
 
-    </com.molaja.android.widget.RevealLayout>
+        <ImageButton
+            android:id="@+id/search_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"
+            android:background="@drawable/circle_btn_teal_bg"
+            android:padding="@dimen/default_medium_margin"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_search"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -5,16 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.graphics.Palette;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,9 +37,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
 import com.molaja.android.activities.UploadImageActivity;
@@ -43,6 +52,7 @@ import com.molaja.android.util.ImageUtil;
 import com.molaja.android.util.Scroller;
 import com.molaja.android.util.Validations;
 import com.molaja.android.widget.BaseFragment;
+import com.molaja.android.widget.BuddyButton;
 import com.molaja.android.widget.ProfileItem;
 import com.nineoldandroids.view.ViewHelper;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -58,38 +68,63 @@ import java.io.IOException;
 /**
  * Created by Florian on 2/12/2015.
  */
-public class TheBagFragment extends BaseFragment implements Target, Scroller {
+public class TheBagFragment extends BaseFragment implements Target, Scroller, ViewPager.OnPageChangeListener,
+        View.OnClickListener {
+    private static final String DEFAULT_PROFILE_PICTURE = "file:///android_asset/default_profile_picture.jpg";
+    private int DEFAULT_THEME;
+    private Palette.Swatch userSwatch;
     public final int PICK_IMAGE_REQUEST_CODE = 1;
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
 
+    View fragmentView;
+    View mHeader;
     ViewPager mViewPager;
     ImageView profilePicture;
     ImageView blurredBg;
-    View mHeader;
+    ProfileItem activitiesItem;
+    ProfileItem buddiesItem;
+    ProfileItem subscriptionsItem;
+    BuddyButton buddyBtn;
+    Button discussBtn;
 
-    User currentUser;
+    User user;
     UploadImageTask uploadImageTask;
-    String mCurrentPhotoPath;
 
-    private int mMinHeaderHeight;
-    private int mHeaderHeight;
     private int mMinHeaderTranslation;
+    private String mCurrentPhotoPath;
+    private boolean isCurrentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
-        initProfile(fragmentView);
+        fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
 
-        mMinHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_profile_header_height);
-        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.profile_header_height);
-        mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
+        DEFAULT_THEME = getResources().getColor(R.color.Teal);
+
+        if (getArguments() != null && !Validations.isEmptyOrNull(getArguments().getString("USERNAME"))) {
+            isCurrentUser = false;
+            BackendHelper.getProfile(getActivity(),getArguments().getString("USERNAME"), new FutureCallback<JsonObject>() {
+                @Override
+                public void onCompleted(Exception e, JsonObject result) {
+                    if (e == null) {
+                        user = new Gson().fromJson(result.get("user"), User.class);
+                        initProfile(fragmentView);
+                        initPager(fragmentView);
+                    }
+                }
+            });
+        } else {
+            isCurrentUser = true;
+            user = User.getCurrentUser(getActivity());
+            initProfile(fragmentView);
+            initPager(fragmentView);
+        }
+
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
             setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         }*/
-        //mViewPager.setonp
         return fragmentView;
     }
 
@@ -101,74 +136,46 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
         return mActionBarSize;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     public void initProfile(final View v){
-        currentUser = User.getCurrentUser(getActivity());
-
+        //find views
         mViewPager = (ViewPager) v.findViewById(R.id.the_bag_pager);
         blurredBg = (ImageView) v.findViewById(R.id.blurred_bg);
         mHeader = v.findViewById(R.id.header);
-        ((TextView)v.findViewById(R.id.user_fullname)).setText(currentUser.name);
-        ((TextView)v.findViewById(R.id.username)).setText(currentUser.username);
-        ((ProfileItem)v.findViewById(R.id.profile_item_following)).setItemValue(56);
-        ((ProfileItem)v.findViewById(R.id.profile_item_shares)).setItemValue(71);
-        ((ProfileItem)v.findViewById(R.id.profile_item_friends)).setItemValue(650);
-
-        //load image
         profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
-        profilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MaterialDialog.Builder(getActivity())
-                        .title(R.string.change_profile_picture)
-                        .items(R.array.change_profile_picture_options)
-                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                /**
-                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                                 * returning false here won't allow the newly selected radio button to actually be selected.
-                                 **/
-                                switch (which) {
-                                    case 0:
-                                        sendPickImageIntent();
-                                        break;
-                                    case 1:
-                                        //TODO import from facebook
-                                        break;
-                                    case 2:
-                                        sendTakePhotoIntent();
-                                        break;
-                                    case 3:
-                                        //TODO delete current photo
-                                        break;
-                                }
+        activitiesItem = (ProfileItem)v.findViewById(R.id.profile_item_subscriptions);
+        subscriptionsItem = (ProfileItem)v.findViewById(R.id.profile_item_activities);
+        buddiesItem = (ProfileItem)v.findViewById(R.id.profile_item_buddies);
+        buddyBtn = (BuddyButton) v.findViewById(R.id.buddy_btn);
+        discussBtn = (Button) v.findViewById(R.id.discuss_btn);
 
-                                return true;
-                            }
-                        })
-                        .positiveText(R.string.choose)
-                        .show();
-            }
-        });
+        ((TextView)v.findViewById(R.id.user_fullname)).setText(user.name);
+        ((TextView)v.findViewById(R.id.username)).setText(user.username);
+        subscriptionsItem.setItemValue(56);
+        activitiesItem.setItemValue(71);
+        buddiesItem.setItemValue(650);
 
-        String image = Validations.isEmptyOrNull(currentUser.image)? "file:///android_asset/default_profile_picture.jpg" : currentUser.image;
-        setProfilePicture(image);
-
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).initProfileActionBar(currentUser.name, currentUser.image);
+        if (isCurrentUser) {
+            mHeader.findViewById(R.id.header_btns_container).setVisibility(View.GONE);
+            profilePicture.setOnClickListener(this);
+        } else {
+            buddyBtn.setOnClickListener(this);
+            discussBtn.setOnClickListener(this);
         }
 
-        //init pager
-        initPager(v);
+        //measure header size and pass it to the tabs
+        mHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int mMinHeaderHeight = mHeader.getMeasuredHeight() - getResources().getDimensionPixelSize(R.dimen.profile_tab_height)
+                            - getResources().getDimensionPixelSize(R.dimen.default_small_margin);
+        mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
+
+        //load image
+        String image = Validations.isEmptyOrNull(user.image)? DEFAULT_PROFILE_PICTURE : user.image;
+        setProfilePicture(image);
     }
 
     private void initPager(View v) {
-        mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this));
+        mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this,
+                mHeader.getMeasuredHeight(), isCurrentUser));
         mViewPager.setOffscreenPageLimit(3);
         SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
         viewPagerTab.setCustomTabView(new SmartTabLayout.TabProvider() {
@@ -178,19 +185,23 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
                 ImageView icon = (ImageView) LayoutInflater.from(getActivity()).inflate(R.layout.child_thebag_tab, viewGroup, false);
                 switch (position) {
                     case 0:
-                        icon.setImageResource(R.drawable.ic_activities_tab);
+                        icon.setImageResource(R.drawable.ic_activities_tab_normal);
+                        icon.setTag("TAB0");
                         break;
                     case 1:
-                        icon.setImageResource(R.drawable.ic_buddies_tab);
+                        icon.setImageResource(R.drawable.ic_buddies_tab_normal);
+                        icon.setTag("TAB1");
                         break;
                     case 2:
-                        icon.setImageResource(R.drawable.ic_settings_tab);
+                        icon.setImageResource(R.drawable.ic_settings_tab_normal);
+                        icon.setTag("TAB2");
                         break;
                 }
                 return icon;
             }
         });
         viewPagerTab.setViewPager(mViewPager);
+        viewPagerTab.setOnPageChangeListener(this);
     }
 
     public static float clamp(float value, float max, float min) {
@@ -228,6 +239,10 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
                 .load(imagePath)
                 .placeholder(new ColorDrawable(getResources().getColor(R.color.LightGrey)))
                 .into(this);
+
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).initProfileActionBar(user.name, imagePath);
+        }
     }
 
     public void sendPickImageIntent() {
@@ -257,6 +272,16 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
                 startActivityForResult(takePicture, TAKE_PHOTO_REQUEST_CODE);
             }
         }
+    }
+
+    private void setTabIconColor(int whichTab, int color, float alpha) {
+        Log.d("settabcolor","tab:"+whichTab);
+        ImageView tab = (ImageView) fragmentView.findViewWithTag("TAB"+whichTab);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        float alphaf = alpha * 255;
+        tab.setColorFilter(Color.argb((int) alphaf, red, green, blue));
     }
 
     private File createImageFile() throws IOException {
@@ -310,6 +335,60 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
         blurredBg.setImageBitmap(ImageUtil.BlurBitmap(getActivity(),bitmap, 20));
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                setActionBarColor(palette.getDarkVibrantColor(DEFAULT_THEME));
+
+                userSwatch = palette.getVibrantSwatch();
+
+                if (userSwatch != null) {
+                    setTabIconColor(mViewPager.getCurrentItem(), userSwatch.getRgb(), 1f);
+                    setButtonsColor(userSwatch.getRgb());
+                    activitiesItem.setValueColor(userSwatch.getRgb());
+                    buddiesItem.setValueColor(userSwatch.getRgb());
+                    subscriptionsItem.setValueColor(userSwatch.getRgb());
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("deprecation")
+    private void setButtonsColor(int color) {
+        StateListDrawable newDrawable = new StateListDrawable();
+        StateListDrawable buddiesBtnDrawable = new StateListDrawable();
+        GradientDrawable pressed;
+        GradientDrawable normal;
+
+        /*ShapeDrawable buddiesBtnDrawable = new ShapeDrawable();
+        buddiesBtnDrawable.getPaint().setStrokeWidth(1f);
+        buddiesBtnDrawable.getPaint().setc*/
+        GradientDrawable buddiesDisabled = (GradientDrawable) getResources().getDrawable(R.drawable.btn_buddies_bg_disabled);
+        buddiesDisabled.setStroke(MolajaApplication.dpToPx(1), color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            normal = (GradientDrawable) getResources().getDrawable(R.drawable.default_btn_bg_normal, null);
+            pressed = (GradientDrawable) getResources().getDrawable(R.drawable.default_btn_bg_pressed, null);
+        } else {
+            normal = (GradientDrawable) getResources().getDrawable(R.drawable.default_btn_bg_normal);
+            pressed = (GradientDrawable) getResources().getDrawable(R.drawable.default_btn_bg_pressed);
+        }
+
+        pressed.setColor(color);
+        pressed.setColorFilter(Color.parseColor("#77000000"), PorterDuff.Mode.DARKEN);
+        normal.setColor(color);
+
+        newDrawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
+        newDrawable.addState(new int[] { }, normal);
+        buddiesBtnDrawable.addState(new int[]{ }, buddiesDisabled);
+
+        //assign the new drawable to the buttons
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            discussBtn.setBackground(newDrawable);
+            buddyBtn.setBackground(buddiesBtnDrawable);
+        } else {
+            discussBtn.setBackgroundDrawable(newDrawable);
+            buddyBtn.setBackgroundDrawable(buddiesBtnDrawable);
+        }
     }
 
     @Override
@@ -344,10 +423,90 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
         }
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        int color = userSwatch==null? DEFAULT_THEME : userSwatch.getRgb();
+        setTabIconColor(position, color, 1 - positionOffset);
+
+        if(position + 1 < mViewPager.getAdapter().getCount())
+            setTabIconColor(position + 1, color, positionOffset);
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        for (int i=0; i<mViewPager.getAdapter().getCount(); i++) {
+            float elevation = i==position? getResources().getDimensionPixelSize(R.dimen.default_elevation) : 0;
+            ViewCompat.setElevation(fragmentView.findViewWithTag("TAB"+i), elevation);
+
+            if (i == position) {
+                if (userSwatch != null) {
+                    setTabIconColor(i, userSwatch.getRgb(), 1f);
+                } else {
+                    setTabIconColor(i, DEFAULT_THEME, 1f);
+                }
+            } else {
+                setTabIconColor(i, DEFAULT_THEME, 0f);
+            }
+        }
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.profile_picture:
+
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.change_profile_picture)
+                        .items(R.array.change_profile_picture_options)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                /**
+                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                                 * returning false here won't allow the newly selected radio button to actually be selected.
+                                 **/
+                                switch (which) {
+                                    case 0:
+                                        sendPickImageIntent();
+                                        break;
+                                    case 1:
+                                        //TODO import from facebook
+                                        break;
+                                    case 2:
+                                        sendTakePhotoIntent();
+                                        break;
+                                    case 3:
+                                        //TODO delete current photo
+                                        break;
+                                }
+
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.choose)
+                        .show();
+                break;
+            case R.id.buddy_btn:
+                BackendHelper.addBuddy(getActivity(), user.id);
+                //TODO update button image
+                break;
+            case R.id.discuss_btn:
+                //TODO do sth
+                break;
+        }
+    }
+
     private class UploadImageTask extends AsyncTask<String, Void, Void> {
-        Context context;
         final String UPLOAD_URL = "http://molaja-backend.herokuapp.com/api/v1/picture_uploader.json";
         final String CONTENT_TYPE_PREFIX = "data:image/jpg;base64,";
+        Context context;
 
         public UploadImageTask(Context context) {
             this.context = context;
@@ -369,7 +528,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
                 //upload to database
                 JsonObject json = new JsonObject();
                 JsonObject user = new JsonObject();
-                user.addProperty("authentication_token", currentUser.authentication_token);
+                user.addProperty("authentication_token", TheBagFragment.this.user.authentication_token);
                 user.addProperty("image", CONTENT_TYPE_PREFIX +
                         Base64.encodeToString(getBytesFromFile(params[0]), Base64.DEFAULT));
                 json.add("user", user);
@@ -389,10 +548,10 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller {
                                 if (e != null) {
                                     Toast.makeText(context, getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    currentUser.image = jsonObject.getAsJsonObject("image").get("url").getAsString();
-                                    currentUser.save(context);
+                                    TheBagFragment.this.user.image = jsonObject.getAsJsonPrimitive("image").getAsString();
+                                    TheBagFragment.this.user.save(context);
 
-                                    setProfilePicture(currentUser.image);
+                                    setProfilePicture(TheBagFragment.this.user.image);
                                 }
                             }
                         });

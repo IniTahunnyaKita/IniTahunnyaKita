@@ -25,10 +25,12 @@ public class ShowBuddiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     Context context;
     List<String> list;
+    int headerHeight;
 
-    public ShowBuddiesAdapter(Context context, List<String> list) {
+    public ShowBuddiesAdapter(Context context, List<String> list, int headerHeight) {
         this.context = context;
         this.list = list;
+        this.headerHeight = headerHeight;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class ShowBuddiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Log.d("buaya","viewtype:"+viewType);
         if (viewType == FAKE_HEADER) {
             view = LayoutInflater.from(context).inflate(R.layout.fake_profile_header, parent, false);
+            view.getLayoutParams().height = headerHeight;
             return new DummyViewHolder(view);
         } else {
             view = LayoutInflater.from(context).inflate(R.layout.child_buddies_list, parent, false);

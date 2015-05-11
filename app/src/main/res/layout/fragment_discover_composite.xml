@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/DarkTeal"/>
+
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/viewpager_tab"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@color/Teal"
+        app:stl_indicatorAlwaysInCenter="false"
+        app:stl_indicatorInFront="false"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorColor="#44000000"
+        app:stl_indicatorThickness="40dp"
+        app:stl_indicatorCornerRadius="10dp"
+        app:stl_underlineColor="@color/DarkTeal"
+        app:stl_underlineThickness="0dp"
+        app:stl_dividerColor="@android:color/transparent"
+        app:stl_dividerThickness="0dp"
+        app:stl_customTabTextLayoutId="@layout/textview_discover_tab"
+        app:stl_customTabTextViewId="@+id/text_view"
+        app:stl_defaultTabTextAllCaps="true"
+        app:stl_defaultTabTextHorizontalPadding="16dp"
+        app:stl_defaultTabTextMinWidth="0dp"
+        app:stl_distributeEvenly="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/DarkTeal"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

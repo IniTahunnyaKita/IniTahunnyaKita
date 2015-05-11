@@ -24,10 +24,12 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     List<String> list;
     String [] settings;
+    int headerHeight;
 
-    public SettingsAdapter(Context context, List<String> list) {
+    public SettingsAdapter(Context context, List<String> list, int headerHeight) {
         this.context = context;
         this.list = list;
+        this.headerHeight = headerHeight;
         settings = context.getResources().getStringArray(R.array.settings_options);
     }
 
@@ -37,6 +39,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Log.d("buaya","viewtype:"+viewType);
         if (viewType == FAKE_HEADER) {
             view = LayoutInflater.from(context).inflate(R.layout.fake_profile_header, parent, false);
+            view.getLayoutParams().height = headerHeight;
             return new DummyViewHolder(view);
         } else if (viewType == SETTINGS_TITLE){
             view = LayoutInflater.from(context).inflate(R.layout.child_settings_title, parent, false);

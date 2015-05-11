@@ -47,10 +47,10 @@ public class ActivitiesFragment extends TheBagPagerFragment{
         for (int i=0; i<80; i++) {
             list.add("position "+i);
         }
-        recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list));
+        recyclerView.setAdapter(new ActivitiesAdapter(getActivity(), list, headerHeight));
         Log.d("elf","scrolltoppos");
 
-        recyclerView.setOnScrollListener(onScrollListener);
+        recyclerView.addOnScrollListener(onScrollListener);
 
     }
 

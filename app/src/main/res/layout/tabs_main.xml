@@ -21,6 +21,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="-4dp"
             android:showDividers="none"
+            android:background="@color/White"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_above="@android:id/tabs"
             android:background="@color/Teal"/>
 
     </RelativeLayout>

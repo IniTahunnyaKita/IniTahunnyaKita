@@ -48,13 +48,8 @@ public class SettingsFragment extends TheBagPagerFragment {
         //for dummy view
         list.add(0,"");
 
-        recyclerView.setAdapter(new SettingsAdapter(getActivity(), list));
-        recyclerView.setOnScrollListener(onScrollListener);
-    }
-
-
-    private boolean isScrolling() {
-        return recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE;
+        recyclerView.setAdapter(new SettingsAdapter(getActivity(), list, headerHeight));
+        recyclerView.addOnScrollListener(onScrollListener);
     }
 
     @Override

@@ -3,11 +3,7 @@
     android:id="@+id/gridview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="@dimen/tab_height"
     android:numColumns="2"
-    android:horizontalSpacing="10dp"
     android:stretchMode="columnWidth"
-    android:gravity="center"/>
+    android:gravity="center"
+    android:background="?android:attr/windowBackground"/>

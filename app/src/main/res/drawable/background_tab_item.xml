@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/DarkTeal" android:state_selected="true" />
-    <item android:drawable="@color/Teal" />
+    <item android:drawable="@drawable/circle_btn_teal_bg_normal" android:state_selected="true" />
+    <item android:drawable="@color/White" />
 
 </selector>

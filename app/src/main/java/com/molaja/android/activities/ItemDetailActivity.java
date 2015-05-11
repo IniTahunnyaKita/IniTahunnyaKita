@@ -9,7 +9,7 @@ import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -38,7 +38,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 /**
  * Created by Florian on 4/4/2015.
  */
-public class ItemDetailActivity extends ActionBarActivity implements VerticalPager.OnPullToZoomListener {
+public class ItemDetailActivity extends AppCompatActivity implements VerticalPager.OnPullToZoomListener {
 
     private static final int CENTRAL_PAGE_INDEX = 0;
 
@@ -79,8 +79,6 @@ public class ItemDetailActivity extends ActionBarActivity implements VerticalPag
         haptic = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         springSystem = SpringSystem.create();
-
-        getSupportActionBar().hide();
     }
 
     private void findViews() {

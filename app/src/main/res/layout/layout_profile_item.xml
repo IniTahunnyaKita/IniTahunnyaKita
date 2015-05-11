@@ -9,9 +9,10 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:text="0"
+        android:textColor="@color/Teal"
         android:textSize="20sp"
-        android:gravity="center"
-        android:background="@drawable/profile_item_circle_bg"/>
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/profile_item_title"
@@ -22,9 +23,8 @@
         android:layout_centerHorizontal="true"
         android:paddingLeft="@dimen/default_small_margin"
         android:paddingRight="@dimen/default_small_margin"
-        android:textColor="@color/White"
+        android:text="title"
         android:textSize="12sp"
-        android:gravity="center"
-        android:background="@drawable/profile_item_rect_bg"/>
+        android:gravity="center"/>
 
 </RelativeLayout>

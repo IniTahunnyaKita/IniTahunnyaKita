@@ -5,9 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,17 +30,18 @@ import java.util.ArrayList;
 /**
  * Created by tinklabs on 4/16/2015.
  */
-public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener, Target {
+public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, Target {
     SlidingUpPanelLayout slidingLayout;
     private ViewPagerIndicator mViewPagerIndicator;
     ImageView profileBarBg;
     View profileBar;
+    ImageButton addImageBtn;
+
     Discussion.Conversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_chat);
 
         conversation = (Discussion.Conversation) getIntent().getSerializableExtra("CONVERSATION");
@@ -51,6 +54,7 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
         profileBar = findViewById(R.id.profile_bar);
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.viewpager_indicator);
         profileBarBg = (ImageView) findViewById(R.id.profile_bar_background);
+        addImageBtn = (ImageButton) findViewById(R.id.add_image_btn);
         ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture);
         ImageView itemImage = (ImageView) findViewById(R.id.chat_item_image);
         TextView name = (TextView) findViewById(R.id.name);
@@ -72,6 +76,8 @@ public class ChatActivity extends ActionBarActivity implements ViewPager.OnPageC
 
         name.setText(getIntent().getStringExtra("NAME"));
         itemName.setText(conversation.title);
+
+        ViewCompat.setElevation(addImageBtn, 20);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 

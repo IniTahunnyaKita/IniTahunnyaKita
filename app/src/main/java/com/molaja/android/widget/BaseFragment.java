@@ -29,6 +29,12 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    public void setActionBarColor(int color) {
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setActionBarColor(color);
+        }
+    }
+
     public void setTitleAlpha(float alpha) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity)getActivity()).setActionBarAlpha(alpha);

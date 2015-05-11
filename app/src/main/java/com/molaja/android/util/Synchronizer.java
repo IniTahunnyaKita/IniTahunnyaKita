@@ -27,6 +27,11 @@ public class Synchronizer {
         synchronizableList.add(synchronizable);
     }
 
+    public void unregisterSynchronizable(Synchronizable synchronizable) {
+        if (synchronizableList != null)
+            synchronizableList.remove(synchronizable);
+    }
+
     public void update(Synchronizable sender, int update) {
         //if(update < 0) update = 0;
 

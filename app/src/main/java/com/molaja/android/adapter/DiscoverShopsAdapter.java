@@ -23,6 +23,7 @@ import com.molaja.android.widget.SquareImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Florian on 2/23/2015.
@@ -136,7 +137,7 @@ public class DiscoverShopsAdapter extends ArrayAdapter<DiscoverShops> implements
         Gson gson = new Gson();
         HangoutPost hangoutPost = new HangoutPost();
         hangoutPost.setTitle("DiscoverShops");
-        hangoutPost.setPrice(450000);
+        hangoutPost.setPrice(Integer.parseInt((100+new Random().nextInt(399))+"000"));
         hangoutPost.setItemUrl(itemUrl);
         hangoutPost.setFullname(items.get(position).shopName);
         hangoutPost.setProfileUrl(items.get(position).profileUrl);

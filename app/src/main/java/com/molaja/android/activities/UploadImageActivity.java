@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,7 +32,7 @@ import java.io.IOException;
 /**
  * Created by florianhidayat on 12/4/15.
  */
-public class UploadImageActivity extends ActionBarActivity implements View.OnClickListener {
+public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
     final int ANIMATION_DELAY = 1000;
 
     View cancelBtn, rotateLeftBtn, rotateRightBtn, finishBtn;
@@ -49,8 +49,6 @@ public class UploadImageActivity extends ActionBarActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getSupportActionBar().hide();
 
         setContentView(R.layout.activity_upload_image);
 

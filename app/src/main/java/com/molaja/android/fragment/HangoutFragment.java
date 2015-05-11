@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -115,7 +115,7 @@ public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.
                 //profileFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
             }
         }
-        ((ActionBarActivity) mContext).getSupportFragmentManager()
+        ((FragmentActivity) mContext).getSupportFragmentManager()
                 .beginTransaction()
                 .replace(android.R.id.tabcontent, profileFragment, "PROFILE")
                 .addToBackStack("PROFILE")

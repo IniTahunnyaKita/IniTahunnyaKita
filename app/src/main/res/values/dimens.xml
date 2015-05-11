@@ -7,6 +7,7 @@
     <dimen name="min_profile_header_height">255dp</dimen>
     <dimen name="profile_header_height">300dp</dimen>
     <dimen name="profile_header_logo_size">75dp</dimen>
+    <dimen name="profile_tab_height">40dp</dimen>
 
     <dimen name="profile_pic_size">40dp</dimen>
     <dimen name="profile_pic_size_large">60dp</dimen>
@@ -21,4 +22,5 @@
     <dimen name="default_small_margin">5dp</dimen>
     <dimen name="default_medium_margin">10dp</dimen>
     <dimen name="default_large_margin">20dp</dimen>
+    <dimen name="default_elevation">5dp</dimen>
 </resources>

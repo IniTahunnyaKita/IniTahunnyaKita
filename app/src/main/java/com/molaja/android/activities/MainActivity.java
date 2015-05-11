@@ -5,24 +5,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.LayoutParams;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -31,29 +29,27 @@ import android.widget.ViewSwitcher;
 
 import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
-import com.molaja.android.adapter.NotificationAdapter;
+import com.molaja.android.adapter.NotificationPagerAdapter;
 import com.molaja.android.fragment.DiscussionFragment;
 import com.molaja.android.fragment.HangoutFragment;
 import com.molaja.android.fragment.ProfileFragment;
 import com.molaja.android.fragment.discover.DiscoverFragment;
 import com.molaja.android.fragment.thebag.TheBagFragment;
 import com.molaja.android.model.HangoutPost;
-import com.molaja.android.model.NotificationItem;
-import com.molaja.android.util.HardcodeValues;
 import com.molaja.android.util.MainTabStack;
-import com.molaja.android.util.SoftKeyboardListener;
 import com.molaja.android.widget.ActionBarLayout;
 import com.molaja.android.widget.NotificationLayout;
 import com.molaja.android.widget.RevealLayout;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     public static final String HANG_OUT_TAG = "HANG_OUT";
     public static final String DISCOVER_TAG = "DISCOVER";
     public static final String DISCUSSION_TAG = "DISCUSSION";
@@ -73,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
     private static boolean isPollLayoutShown = false;
     public static int mode  = USER_MODE;
 
-    private String TAG = "taikodok";
+    private String TAG = getClass().getSimpleName();
     List pollList = new ArrayList< HangoutPost>();
 
     //views
@@ -88,7 +84,6 @@ public class MainActivity extends ActionBarActivity {
     ImageView blurredBg;
 
     LayoutInflater inflater;
-    SoftKeyboardListener keyboardListener;
     boolean isLoggedIn;
 
 
@@ -109,28 +104,6 @@ public class MainActivity extends ActionBarActivity {
             } else if (intent.getAction().equals(DISMISS_DIALOG)) {
                 if (pDialog != null)
                     pDialog.dismiss();
-            }
-        }
-    };
-
-    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-            int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
-
-            //LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(MainActivity.this);
-
-            if(heightDiff <= contentViewTop){
-
-                if (keyboardListener != null)
-                    keyboardListener.onHide();
-
-            } else {
-                int keyboardHeight = heightDiff - contentViewTop;
-
-                if (keyboardListener != null)
-                    keyboardListener.onShow(keyboardHeight);
             }
         }
     };
@@ -166,8 +139,6 @@ public class MainActivity extends ActionBarActivity {
         content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
 
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
         initNotification();
     }
 
@@ -176,36 +147,15 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
         try {
             unregisterReceiver(mDialogPopupReceiver);
-            if (Build.VERSION.SDK_INT >= 16)
-                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
-            else
-                rootView.getViewTreeObserver().removeGlobalOnLayoutListener(keyboardLayoutListener);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setSoftKeyboardListener(SoftKeyboardListener keyboardListener) {
-        this.keyboardListener = keyboardListener;
-    }
-
     public void initActionBar(){
-        ActionBar mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-        mActionBar.setDisplayUseLogoEnabled(false);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHideOnContentScrollEnabled(true);
-        mActionBar.setHideOffset(50);
-        mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        mActionBar.setDisplayShowCustomEnabled(true);
-        LayoutInflater mInflater = LayoutInflater.from(this);
-
-        LayoutParams lp = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        ActionBarLayout mCustomView = (ActionBarLayout) mInflater.inflate(R.layout.custom_actionbar_default, null);
-        mCustomView.setHasRevealLayout(true);
-        mActionBar.setCustomView(mCustomView, lp);
-
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        ((ActionBarLayout)mToolbar.findViewById(R.id.actionbar_layout)).setHasRevealLayout(true);
+        setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -218,24 +168,30 @@ public class MainActivity extends ActionBarActivity {
             ((ActionBarLayout) findViewById(R.id.actionbar_layout)).switchToUserMode();
             return;
         }
-        int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(android.R.id.tabcontent);
-        if (backstackCount>0) {
+        if (backStackEntryCount > 0) {
             if (currentFragment instanceof ProfileFragment) {
-                getSupportActionBar().show();
                 setActionBarDefault();
-            } else if(currentFragment instanceof DiscussionFragment) {
+            } else if (currentFragment instanceof DiscussionFragment) {
                 DiscussionFragment discussionFragment = (DiscussionFragment) currentFragment;
-                if(discussionFragment.onBackPressed()){
+                if(discussionFragment.onBackPressed())
                     return;
-                }
+            } else if (currentFragment instanceof DiscoverFragment) {
+                DiscoverFragment discoverFragment = (DiscoverFragment) currentFragment;
+                if (discoverFragment.onBackPressed())
+                    return;
             }
             getSupportFragmentManager().popBackStack();
-        } else if (getSupportFragmentManager().findFragmentById(android.R.id.tabcontent) instanceof DiscussionFragment) {
-            if (!(((DiscussionFragment) getSupportFragmentManager().findFragmentById(android.R.id.tabcontent)).onBackPressed()))
-                handleTabNavigation();
         } else {
-            handleTabNavigation();
+            if (currentFragment instanceof DiscussionFragment)
+                if (((DiscussionFragment)currentFragment).onBackPressed())
+                    return;
+
+            if (currentFragment instanceof DiscoverFragment)
+                if (((DiscoverFragment)currentFragment).onBackPressed())
+                    return;
+                handleTabNavigation();
         }
     }
 
@@ -249,45 +205,40 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void setActionBarDefault() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.custom_actionbar_default);
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.Teal));
-        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(R.color.CornflowerBlue));
-        actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
+        setActionBarColor(getResources().getColor(R.color.Teal));
+        ((ImageView)findViewById(R.id.shopmode_action_bar_bg)).setImageDrawable(new ColorDrawable(getResources().getColor(R.color.CornflowerBlue)));
+        findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
+        findViewById(R.id.action_bar_watermark).setVisibility(View.VISIBLE);
     }
 
     public void setActionBarTransparent() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
-        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
-        actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
+        findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
+        findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
+        findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
     public void setActionBarAlpha(float alpha) {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
-        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);
+        findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
+        findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);
+    }
+
+    public void setActionBarColor(int color) {
+        ((ImageView)findViewById(R.id.usermode_action_bar_bg)).setImageDrawable(new ColorDrawable(color));
     }
 
     public void switchToProfileActionBar(boolean b) {
-        ActionBar actionBar = getSupportActionBar();
         if (b)
-            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showNext();
+            ((ViewSwitcher) findViewById(R.id.actiobar_view_switcher)).showNext();
         else
-            ((ViewSwitcher) actionBar.getCustomView().findViewById(R.id.actiobar_view_switcher)).showPrevious();
-    }
-
-    public void setFocusToTabHost() {
-        mTabHost.requestFocus();
+            ((ViewSwitcher) findViewById(R.id.actiobar_view_switcher)).showPrevious();
     }
 
     public void initProfileActionBar(String profileName, String image) {
-        ActionBar actionBar = getSupportActionBar();
-        ((TextView)actionBar.getCustomView().findViewById(R.id.action_bar_profile_name)).setText(profileName);
+        ((TextView) findViewById(R.id.action_bar_profile_name)).setText(profileName);
         Picasso.with(this)
                 .load(image)
                 .fit()
-                .into((ImageView)actionBar.getCustomView().findViewById(R.id.action_bar_profile_picture));
+                .into((ImageView) findViewById(R.id.action_bar_profile_picture));
     }
 
     public Fragment getFragment(Class className) {
@@ -322,10 +273,8 @@ public class MainActivity extends ActionBarActivity {
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), DiscoverFragment.class, null);
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), DiscussionFragment.class, null);
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), TheBagFragment.class, null);
-        /*mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)));
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)));
-        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)));
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)));*/
+
+        ViewCompat.setElevation(mTabHost, getResources().getDimensionPixelSize(R.dimen.default_elevation));
     }
 
     private TabHost.TabSpec setIndicator(Context ctx, TabHost.TabSpec spec) {
@@ -335,21 +284,20 @@ public class MainActivity extends ActionBarActivity {
         TextView tabTitle = (TextView) v.findViewById(R.id.tab_title);
         String tag = spec.getTag();
         if(tag.equals(TAB_1_TAG)) {
-            tabImg.setBackgroundResource(R.drawable.ic_hangout_tab_inactive);
+            tabImg.setImageResource(R.drawable.ic_hangout_tab);
             tabTitle.setText("Hang Out");
         }
         else if(tag.equals(TAB_2_TAG)) {
-            tabImg.setBackgroundResource(R.drawable.ic_discover_tab_inactive);
+            tabImg.setImageResource(R.drawable.ic_discover_tab);
             tabTitle.setText("Discover");
         }
         else if(tag.equals(TAB_3_TAG)){
-            tabImg.setBackgroundResource(R.drawable.ic_discussion_tab_normal);
+            tabImg.setImageResource(R.drawable.ic_discussion_tab);
             tabTitle.setText("Discussion");
 
         }
         else if(tag.equals(TAB_4_TAG)){
-            //v.setBackgroundColor(getResources().getColor(R.color.Chocolate));
-            tabImg.setBackgroundResource(R.drawable.ic_thebag_tab_inactive);
+            tabImg.setImageResource(R.drawable.ic_thebag_tab);
             tabTitle.setText("The Bag");
 
         }
@@ -358,7 +306,14 @@ public class MainActivity extends ActionBarActivity {
 
     private void initNotification(){
         mNotificationLayout = (NotificationLayout) findViewById(R.id.notification_layout);
-        ListView notificationList = (ListView) findViewById(R.id.notif_listview);
+        mNotificationLayout.setVisibility(View.GONE);
+
+        ViewPager notificationPager = (ViewPager) findViewById(R.id.notif_view_pager);
+        notificationPager.setAdapter(new NotificationPagerAdapter(getSupportFragmentManager()));
+        SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpager_tab);
+        viewPagerTab.setViewPager(notificationPager);
+
+        /*ListView notificationList = (ListView) findViewById(R.id.notif_listview);
         ArrayList<NotificationItem> list = new ArrayList<>();
         for (int i=0;i< HardcodeValues.NotificationItems.fullnames.length;i++){
             NotificationItem item = new NotificationItem();
@@ -370,7 +325,7 @@ public class MainActivity extends ActionBarActivity {
             list.add(item);
         }
         NotificationAdapter adapter = new NotificationAdapter(this, 0, list);
-        notificationList.setAdapter(adapter);
+        notificationList.setAdapter(adapter);*/
     }
 
     public void initPollHolder(){
@@ -398,7 +353,7 @@ public class MainActivity extends ActionBarActivity {
         mover.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                MolajaApplication.showKeyboard(MainActivity.this, pollCaption, false);
             }
 
             @Override
@@ -407,7 +362,6 @@ public class MainActivity extends ActionBarActivity {
                     pollHolder.removeAllViews();
                     pollList.clear();
                     pollCaption.setText("");
-                    showKeyboard(pollCaption, false);
                 }
             }
 
@@ -444,15 +398,6 @@ public class MainActivity extends ActionBarActivity {
         pollList.add(post);
         if(!isPollLayoutShown)
             showPollHolder(true);
-    }
-
-    public void showKeyboard(View bindedView, boolean show){
-        InputMethodManager imm = (InputMethodManager)getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (show)
-            imm.showSoftInput(bindedView, 0);
-        else
-            imm.hideSoftInputFromWindow(bindedView.getWindowToken(), 0);
     }
 
 }

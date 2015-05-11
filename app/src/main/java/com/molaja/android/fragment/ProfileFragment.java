@@ -2,7 +2,6 @@ package com.molaja.android.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.molaja.android.R;
+import com.molaja.android.activities.MainActivity;
 import com.molaja.android.model.HangoutPost;
 import com.molaja.android.util.HardcodeValues;
 import com.squareup.picasso.Picasso;
@@ -41,7 +41,6 @@ public class ProfileFragment extends Fragment{
     private TypedValue mTypedValue = new TypedValue();
     private static int mFirstTime;
     public String profileUrl;
-    private SharedPreferences loginCookies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -62,7 +61,9 @@ public class ProfileFragment extends Fragment{
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        setActionBarBgTransparent();
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).setActionBarTransparent();
+
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
         mListView = (ListView) view.findViewById(android.R.id.list);
         mRealHeader = view.findViewById(R.id.header);
@@ -151,14 +152,6 @@ public class ProfileFragment extends Fragment{
         }
         //HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),R.layout.list,list);
         //mListView.setAdapter(mAdapter);
-    }
-
-    public void setActionBarBgTransparent(){
-        ActionBar actionBar = ((ActionBarActivity)mContext).getSupportActionBar();
-        actionBar.getCustomView().findViewById(R.id.usermode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        actionBar.getCustomView().findViewById(R.id.shopmode_action_bar_bg).setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        actionBar.getCustomView().findViewById(R.id.app_logo).setVisibility(View.GONE);
-        actionBar.getCustomView().findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

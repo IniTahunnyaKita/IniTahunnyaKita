@@ -41,7 +41,7 @@ public class ProfileItem extends RelativeLayout{
     }
 
     private void init(Context context){
-        inflate(context,R.layout.profile_item_layout, this);
+        inflate(context,R.layout.layout_profile_item, this);
         this.itemValue = (TextView) this.findViewById(R.id.profile_item_value);
         this.itemTitle = (TextView) this.findViewById(R.id.profile_item_title);
     }
@@ -59,5 +59,9 @@ public class ProfileItem extends RelativeLayout{
     public void setItemTitle(String title){
         if(this.itemValue!=null)
             this.itemValue.setText(title);
+    }
+
+    public void setValueColor(int color) {
+        itemValue.setTextColor(color);
     }
 }

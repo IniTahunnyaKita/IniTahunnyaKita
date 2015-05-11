@@ -21,10 +21,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     Context context;
     List<String> list;
+    int headerHeight;
 
-    public ActivitiesAdapter(Context context, List<String> list) {
+    public ActivitiesAdapter(Context context, List<String> list, int headerHeight) {
         this.context = context;
         this.list = list;
+        this.headerHeight = headerHeight;
     }
 
     @Override
@@ -33,9 +35,10 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Log.d("buaya","viewtype:"+viewType);
         if (viewType == FAKE_HEADER) {
             view = LayoutInflater.from(context).inflate(R.layout.fake_profile_header, parent, false);
+            view.getLayoutParams().height = headerHeight;
             return new DummyViewHolder(view);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.simple_roboto_textview, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.textview_discover_tab, parent, false);
             return new ViewHolder(view);
         }
     }

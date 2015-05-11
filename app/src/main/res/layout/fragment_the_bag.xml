@@ -13,14 +13,15 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/profile_header_height"
+        android:layout_height="wrap_content"
         android:background="@color/White">
 
         <ImageView
             android:id="@+id/blurred_bg"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@color/LightGrey"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
@@ -31,12 +32,19 @@
             android:scaleType="centerCrop"
             android:src="@color/Gray"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/blurred_bg"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
         <TextView
             android:id="@+id/user_fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/blurred_bg"
-            android:layout_centerHorizontal="true"
+            android:text="Full Name"
             android:textStyle="bold"
             android:textSize="16sp"/>
 
@@ -57,42 +65,63 @@
             android:gravity="center_horizontal">
 
             <com.molaja.android.widget.ProfileItem
-                android:id="@+id/profile_item_shares"
+                android:id="@+id/profile_item_activities"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:layout_marginTop="20dp"
                 android:gravity="center"
                 app:item_title="activities"/>
 
             <com.molaja.android.widget.ProfileItem
-                android:id="@+id/profile_item_friends"
+                android:id="@+id/profile_item_buddies"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
                 app:item_title="buddies"/>
 
             <com.molaja.android.widget.ProfileItem
-                android:id="@+id/profile_item_following"
+                android:id="@+id/profile_item_subscriptions"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
                 app:item_title="subscriptions"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/header_btns_container"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/default_medium_margin"
+            android:gravity="center_horizontal">
+
+            <com.molaja.android.widget.BuddyButton
+                android:id="@+id/buddy_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/discuss_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/default_medium_margin"
+                android:text="@string/discuss"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:textColor="@color/White"
+                android:background="@drawable/btn_bg_teal"/>
 
         </LinearLayout>
 
         <com.ogaclejapan.smarttablayout.SmartTabLayout
             android:id="@+id/viewpager_tab"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="@dimen/profile_tab_height"
+            android:layout_marginTop="@dimen/default_medium_margin"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:layout_marginBottom="4dp"
             app:stl_indicatorColor="@android:color/transparent"
             app:stl_indicatorThickness="0dp"
             app:stl_dividerColor="@android:color/transparent"
@@ -101,11 +130,13 @@
             app:stl_underlineThickness="0dp"
             app:stl_distributeEvenly="true" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="@color/Silver"
-            android:layout_alignParentBottom="true"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/Silver"/>
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 

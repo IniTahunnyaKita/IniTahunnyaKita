@@ -23,8 +23,12 @@ import com.molaja.android.model.User;
  */
 public class BackendHelper {
     private final static String LOGIN_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/sessions.json";
+    private static final String SEARCH_USER_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/search_user.json";
+    private static final String PROFILE_FETCHER_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/profile_fetcher.json";
+    private static final String ADD_BUDDY_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/relationships.json";
+    private static final String GET_PENDING_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/get_pending.json";
     private final static String TAG = BackendHelper.class.getSimpleName();
-    
+
     public static void login(final Context context, String username, String password) {
         clearIonCookies(context);
 
@@ -126,6 +130,78 @@ public class BackendHelper {
                         }
                     }
                 });
+    }
+
+    public static void searchForUser(Context context, String query, int page, FutureCallback<JsonObject> callback) {
+        JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
+        json.addProperty("queried_name", query);
+        json.addProperty("page", page);
+
+        Ion.with(context)
+                .load("POST", SEARCH_USER_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(callback);
+    }
+
+    /**
+     * fetch a user's profile.
+     * @param context Context to be passed to Ion's static function.
+     * @param username Username of this user.
+     * @param callback Callback to handle the response.
+     */
+    public static void getProfile(Context context, String username, FutureCallback<JsonObject> callback) {
+        JsonObject json = new JsonObject();
+        json.addProperty("username", username);
+
+        Ion.with(context)
+                .load("POST", PROFILE_FETCHER_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(callback);
+
+    }
+
+    public static void addBuddy(Context context, String id) {
+        JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
+        json.addProperty("other_id", id);
+
+        Ion.with(context)
+                .load("POST", ADD_BUDDY_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject();
+    }
+
+    public static void getPendingRequests(Context context, int page, FutureCallback<JsonObject> callback) {
+        JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
+        json.addProperty("page", page);
+
+        Ion.with(context)
+                .load("POST", GET_PENDING_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(callback);
     }
 
     public static boolean isTokenNil(JsonObject json) {

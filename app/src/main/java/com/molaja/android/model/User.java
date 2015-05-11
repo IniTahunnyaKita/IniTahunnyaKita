@@ -10,6 +10,7 @@ import com.molaja.android.MolajaApplication;
  * Created by florianhidayat on 18/4/15.
  */
 public class User {
+    public String id;
     public String username;
     public String name;
     public String email;
