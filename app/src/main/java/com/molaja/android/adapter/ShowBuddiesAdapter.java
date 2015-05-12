@@ -1,8 +1,8 @@
 package com.molaja.android.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.molaja.android.R;
+import com.molaja.android.fragment.thebag.TheBagFragment;
+import com.molaja.android.model.User;
+import com.molaja.android.util.FragmentUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by florianhidayat on 20/4/15.
@@ -23,12 +26,10 @@ public class ShowBuddiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     protected final int FAKE_HEADER = 0;
     protected final int REAL_CONTENT = 1;
 
-    Context context;
-    List<String> list;
+    List<User> list;
     int headerHeight;
 
-    public ShowBuddiesAdapter(Context context, List<String> list, int headerHeight) {
-        this.context = context;
+    public ShowBuddiesAdapter(List<User> list, int headerHeight) {
         this.list = list;
         this.headerHeight = headerHeight;
     }
@@ -38,11 +39,11 @@ public class ShowBuddiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         View view;
         Log.d("buaya","viewtype:"+viewType);
         if (viewType == FAKE_HEADER) {
-            view = LayoutInflater.from(context).inflate(R.layout.fake_profile_header, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fake_profile_header, parent, false);
             view.getLayoutParams().height = headerHeight;
             return new DummyViewHolder(view);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.child_buddies_list, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_buddies_list, parent, false);
             return new ViewHolder(view);
         }
     }
@@ -56,19 +57,42 @@ public class ShowBuddiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.buddyName.setText("Buddy "+list.get(position));
-            viewHolder.buddyUsername.setText("username" + list.get(position));
+            final ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.buddyName.setText(list.get(position).name);
+            viewHolder.buddyUsername.setText(list.get(position).username);
 
-            Random rand = new Random();
+            Picasso.with(holder.itemView.getContext())
+                    .load(list.get(position).image)
+                    .fit().centerCrop()
+                    .into(viewHolder.buddyImage);
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = viewHolder.itemView.getContext();
+
+                    if (context instanceof FragmentActivity) {
+                        FragmentActivity activity = (FragmentActivity) context;
+                        Bundle bundle = new Bundle();
+                        bundle.putString("USERNAME", list.get(holder.getAdapterPosition()).username);
+                        FragmentUtil.switchFragment(
+                                activity.getSupportFragmentManager(),
+                                android.R.id.tabcontent,
+                                new TheBagFragment(),
+                                bundle);
+                    }
+                }
+            });
+
+            /*Random rand = new Random();
             int r = rand.nextInt(255);
             int g = rand.nextInt(255);
             int b = rand.nextInt(255);
             int randomColor = Color.rgb(r, g, b);
 
-            viewHolder.buddyImage.setImageDrawable(new ColorDrawable(randomColor));
+            viewHolder.buddyImage.setImageDrawable(new ColorDrawable(randomColor));*/
         }
     }
 

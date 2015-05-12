@@ -8,11 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
 import com.molaja.android.R;
 import com.molaja.android.adapter.ShowBuddiesAdapter;
+import com.molaja.android.model.User;
+import com.molaja.android.util.BackendHelper;
 import com.molaja.android.widget.TheBagPagerFragment;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -41,14 +47,20 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        List<String> list = new ArrayList<>();
-        for (int i=0;i<80;i++) {
-            list.add(Integer.toString(i));
-        }
-        //for dummy view
-        list.add(0,"");
 
-        recyclerView.setAdapter(new ShowBuddiesAdapter(getActivity(), list, headerHeight));
+        //recyclerView.setAdapter(new ShowBuddiesAdapter(getActivity(), list, headerHeight));
+        BackendHelper.getBuddies(getActivity(), 1, new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                Type type = new TypeToken<List<User>>() { }.getType();
+                List<User> list = new Gson().fromJson(result.get("entries"), type);
+
+                //for dummy view
+                if (list != null)
+                    list.add(0, new User());
+                recyclerView.setAdapter(new ShowBuddiesAdapter(list, headerHeight));
+            }
+        });
 
         recyclerView.addOnScrollListener(onScrollListener);
     }

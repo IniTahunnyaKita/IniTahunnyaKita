@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.molaja.android.R;
 import com.molaja.android.model.User;
+import com.molaja.android.util.BackendHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -110,6 +111,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void acceptRequest(Request request, int position) {
+        BackendHelper.acceptRequest(context, request.id);
         requestList.remove(position);
         notifyItemRemoved(position);
 

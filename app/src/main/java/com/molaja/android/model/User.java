@@ -10,12 +10,14 @@ import com.molaja.android.MolajaApplication;
  * Created by florianhidayat on 18/4/15.
  */
 public class User {
-    public String id;
+    public int id;
     public String username;
     public String name;
     public String email;
     public String authentication_token;
     public String image;
+
+    public int buddies_count;
 
     public static User getCurrentUser(Context context) {
         SharedPreferences cookie = context.getSharedPreferences(MolajaApplication.login_cookies, Context.MODE_PRIVATE);

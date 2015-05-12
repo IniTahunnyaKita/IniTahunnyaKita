@@ -77,14 +77,11 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
 
-    View fragmentView;
-    View mHeader;
+    View fragmentView, mHeader;
     ViewPager mViewPager;
-    ImageView profilePicture;
-    ImageView blurredBg;
-    ProfileItem activitiesItem;
-    ProfileItem buddiesItem;
-    ProfileItem subscriptionsItem;
+    SmartTabLayout viewPagerTab;
+    ImageView profilePicture, blurredBg;
+    ProfileItem activitiesItem, buddiesItem, subscriptionsItem;
     BuddyButton buddyBtn;
     Button discussBtn;
 
@@ -99,33 +96,54 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
 
+        bindViews();
+
         DEFAULT_THEME = getResources().getColor(R.color.Teal);
 
+        String username;
+        final boolean withRebound;
         if (getArguments() != null && !Validations.isEmptyOrNull(getArguments().getString("USERNAME"))) {
             isCurrentUser = false;
-            BackendHelper.getProfile(getActivity(),getArguments().getString("USERNAME"), new FutureCallback<JsonObject>() {
-                @Override
-                public void onCompleted(Exception e, JsonObject result) {
-                    if (e == null) {
-                        user = new Gson().fromJson(result.get("user"), User.class);
-                        initProfile(fragmentView);
-                        initPager(fragmentView);
-                    }
-                }
-            });
+            username = getArguments().getString("USERNAME");
+            withRebound = true;
         } else {
             isCurrentUser = true;
+            withRebound = false;
             user = User.getCurrentUser(getActivity());
-            initProfile(fragmentView);
+            username = user.username;
+            initProfile(fragmentView, true);
             initPager(fragmentView);
         }
 
+        BackendHelper.getProfile(getActivity(), username, new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                if (e == null) {
+                    user = new Gson().fromJson(result.get("user"), User.class);
+                    initProfile(fragmentView, withRebound);
+                    initPager(fragmentView);
+                }
+            }
+        });
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
             setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         }*/
         return fragmentView;
+    }
+
+    private void bindViews() {
+        mViewPager = (ViewPager) fragmentView.findViewById(R.id.the_bag_pager);
+        blurredBg = (ImageView) fragmentView.findViewById(R.id.blurred_bg);
+        mHeader = fragmentView.findViewById(R.id.header);
+        profilePicture = (ImageView) fragmentView.findViewById(R.id.profile_picture);
+        activitiesItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_subscriptions);
+        subscriptionsItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_activities);
+        buddiesItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_buddies);
+        buddyBtn = (BuddyButton) fragmentView.findViewById(R.id.buddy_btn);
+        discussBtn = (Button) fragmentView.findViewById(R.id.discuss_btn);
+        viewPagerTab = (SmartTabLayout) fragmentView.findViewById(R.id.viewpager_tab);
     }
 
     private int getActionBarHeight() {
@@ -136,23 +154,12 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         return mActionBarSize;
     }
 
-    public void initProfile(final View v){
-        //find views
-        mViewPager = (ViewPager) v.findViewById(R.id.the_bag_pager);
-        blurredBg = (ImageView) v.findViewById(R.id.blurred_bg);
-        mHeader = v.findViewById(R.id.header);
-        profilePicture = (ImageView)v.findViewById(R.id.profile_picture);
-        activitiesItem = (ProfileItem)v.findViewById(R.id.profile_item_subscriptions);
-        subscriptionsItem = (ProfileItem)v.findViewById(R.id.profile_item_activities);
-        buddiesItem = (ProfileItem)v.findViewById(R.id.profile_item_buddies);
-        buddyBtn = (BuddyButton) v.findViewById(R.id.buddy_btn);
-        discussBtn = (Button) v.findViewById(R.id.discuss_btn);
-
+    public void initProfile(final View v, boolean withRebound){
         ((TextView)v.findViewById(R.id.user_fullname)).setText(user.name);
         ((TextView)v.findViewById(R.id.username)).setText(user.username);
-        subscriptionsItem.setItemValue(56);
-        activitiesItem.setItemValue(71);
-        buddiesItem.setItemValue(650);
+        subscriptionsItem.setItemValue(0);
+        activitiesItem.setItemValue(0);
+        buddiesItem.setItemValue(user.buddies_count);
 
         if (isCurrentUser) {
             mHeader.findViewById(R.id.header_btns_container).setVisibility(View.GONE);
@@ -170,14 +177,14 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
         //load image
         String image = Validations.isEmptyOrNull(user.image)? DEFAULT_PROFILE_PICTURE : user.image;
-        setProfilePicture(image);
+        setProfilePicture(image, withRebound);
     }
 
     private void initPager(View v) {
         mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this,
                 mHeader.getMeasuredHeight(), isCurrentUser));
         mViewPager.setOffscreenPageLimit(3);
-        SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
+
         viewPagerTab.setCustomTabView(new SmartTabLayout.TabProvider() {
 
             @Override
@@ -208,26 +215,28 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         return Math.max(Math.min(value, min), max);
     }
 
-    public void setProfilePicture(String imagePath) {
+    public void setProfilePicture(String imagePath, final boolean withRebound) {
         Picasso.with(getActivity())
                 .load(imagePath)
                 .placeholder(new ColorDrawable(getResources().getColor(R.color.Gray)))
                 .into(profilePicture, new Callback() {
                     @Override
                     public void onSuccess() {
-                        //do a beautiful spring animation
-                        SpringSystem springSystem = SpringSystem.create();
-                        Spring spring = springSystem.createSpring();
-                        spring.addListener(new SimpleSpringListener() {
-                            @Override
-                            public void onSpringUpdate(Spring spring) {
-                                super.onSpringUpdate(spring);
-                                float value = (float) spring.getCurrentValue();
-                                profilePicture.setScaleX(value);
-                                profilePicture.setScaleY(value);
-                            }
-                        });
-                        spring.setEndValue(1);
+                        if (withRebound) {
+                            //do a beautiful spring animation
+                            SpringSystem springSystem = SpringSystem.create();
+                            Spring spring = springSystem.createSpring();
+                            spring.addListener(new SimpleSpringListener() {
+                                @Override
+                                public void onSpringUpdate(Spring spring) {
+                                    super.onSpringUpdate(spring);
+                                    float value = (float) spring.getCurrentValue();
+                                    profilePicture.setScaleX(value);
+                                    profilePicture.setScaleY(value);
+                                }
+                            });
+                            spring.setEndValue(1);
+                        }
                     }
 
                     @Override
@@ -551,7 +560,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                                     TheBagFragment.this.user.image = jsonObject.getAsJsonPrimitive("image").getAsString();
                                     TheBagFragment.this.user.save(context);
 
-                                    setProfilePicture(TheBagFragment.this.user.image);
+                                    setProfilePicture(TheBagFragment.this.user.image, true);
                                 }
                             }
                         });

@@ -27,6 +27,8 @@ public class BackendHelper {
     private static final String PROFILE_FETCHER_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/profile_fetcher.json";
     private static final String ADD_BUDDY_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/relationships.json";
     private static final String GET_PENDING_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/get_pending.json";
+    private static final String GET_BUDDIES_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/get_buddies.json";
+    private static final String ACCEPT_REQUEST_API_ENDPOINT_URL = "http://molaja-backend.herokuapp.com/api/v1/accept_request.json";
     private final static String TAG = BackendHelper.class.getSimpleName();
 
     public static void login(final Context context, String username, String password) {
@@ -117,7 +119,7 @@ public class BackendHelper {
                                 //clear own shared prefs
                                 SharedPreferences.Editor editor = MolajaApplication.getLoginCookies(context).edit();
                                 editor.clear();
-                                editor.commit();
+                                editor.apply();
 
                                 Intent loginIntent = new Intent(context, LoginActivity.class);
                                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -171,7 +173,7 @@ public class BackendHelper {
 
     }
 
-    public static void addBuddy(Context context, String id) {
+    public static void addBuddy(Context context, int id) {
         JsonObject json = new JsonObject();
         JsonObject user = new JsonObject();
         user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
@@ -202,6 +204,39 @@ public class BackendHelper {
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(callback);
+    }
+
+    public static void getBuddies(Context context, int page, FutureCallback<JsonObject> callback) {
+        JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
+        json.addProperty("page", page);
+
+        Ion.with(context)
+                .load("POST", GET_BUDDIES_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(callback);
+    }
+
+    public static void acceptRequest(Context context, int id) {
+        JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
+        json.addProperty("other_id", id);
+
+        Ion.with(context)
+                .load("POST", ACCEPT_REQUEST_API_ENDPOINT_URL)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .noCache()
+                .setJsonObjectBody(json)
+                .asJsonObject();
     }
 
     public static boolean isTokenNil(JsonObject json) {

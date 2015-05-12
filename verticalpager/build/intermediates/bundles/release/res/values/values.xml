@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/tinklabs/Documents/GitHub/IniTahunnyaKita/verticalpager/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/florianhidayat/IniTahunnyaKita/verticalpager/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">VerticalPager Example</string>
     <string name="hello">Hello World, TestActivity!</string>
