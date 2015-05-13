@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import com.molaja.android.R;
 import com.molaja.android.activities.ItemDetailActivity;
 import com.molaja.android.adapter.ItemDetailPagerAdapter;
-import com.molaja.android.util.EventBus;
 import com.molaja.android.util.HardcodeValues;
 import com.molaja.android.util.PageChangedEvent;
 import com.molaja.android.widget.SmartViewPager;
 import com.molaja.android.widget.ViewPagerIndicator;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Florian on 2/5/2015.
@@ -30,7 +30,7 @@ public class OverviewCompositeFragment extends Fragment{
     private ViewPager.OnPageChangeListener mPagerChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-            EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position, position));
+            EventBus.getDefault().post(new PageChangedEvent(mCentralPageIndex == position, position));
         }
 
         @Override
@@ -56,19 +56,18 @@ public class OverviewCompositeFragment extends Fragment{
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        EventBus.getInstance().register(this);
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onPause() {
-        EventBus.getInstance().unregister(this);
-        super.onPause();
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
-    @Subscribe
-    public void onLocationChanged(PageChangedEvent event) {
+    public void onEvent(PageChangedEvent event) {
         position = event.getPosition();
 
         if(ItemDetailActivity.isInZoomMode){

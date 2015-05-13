@@ -29,10 +29,10 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
     public final int DEFAULT_VIEW_TYPE = 1;
     public final int LOADING_VIEW_TYPE = 2;
 
-    List<User> list;
+    List<SearchResult> list;
     Context context;
 
-    public SearchViewAdapter(List<User> list, Context context) {
+    public SearchViewAdapter(List<SearchResult> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -84,18 +84,12 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        int count =  list.size();
-
-        if (count == 0) {
-            return 1;
-        }
-
-        return count;
+        return list.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (list.size() == 0)
+        if (list.get(position).TYPE == SearchResult.LOADING_TYPE)
             return LOADING_VIEW_TYPE;
 
         return DEFAULT_VIEW_TYPE;
@@ -119,6 +113,21 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
 
         public LoadingViewHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    public static class SearchResult extends User {
+        public static int DEFAULT_TYPE = 1;
+        public static int LOADING_TYPE = 2;
+
+        public int TYPE;
+
+        public SearchResult() {
+            TYPE = DEFAULT_TYPE;
+        }
+
+        public SearchResult(int type) {
+            TYPE = type;
         }
     }
 }

@@ -7,13 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.molaja.android.R;
+import com.molaja.android.model.BusEvent.ScrollEvent;
 import com.molaja.android.util.Scroller;
-import com.molaja.android.util.Synchronizer;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by florianhidayat on 23/4/15.
  */
-public class TheBagPagerFragment extends Fragment implements Synchronizer.Synchronizable {
+public class TheBagPagerFragment extends Fragment {
     Scroller scroller;
 
     public double SCROLLER_LIMIT;
@@ -44,7 +46,8 @@ public class TheBagPagerFragment extends Fragment implements Synchronizer.Synchr
 
             //send to synchronizer
             if (!isAutoScrolling && scrolledY < 600)
-                Synchronizer.getInstance().update(TheBagPagerFragment.this, scrolledY);
+                EventBus.getDefault().post(new ScrollEvent( scrolledY));
+                //Synchronizer.getInstance().update(TheBagPagerFragment.this, scrolledY);
 
             isAutoScrolling = false;
         }
@@ -58,20 +61,21 @@ public class TheBagPagerFragment extends Fragment implements Synchronizer.Synchr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Synchronizer.getInstance().registerSynchronizable(this);
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+        //Synchronizer.getInstance().registerSynchronizable(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Synchronizer.getInstance().unregisterSynchronizable(this);
+    public void onStop() {
+        //Synchronizer.getInstance().unregisterSynchronizable(this);
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
-    @Override
-    public void onUpdate(int update) {
-        Log.d("autoscroll", "autoscrolling scrolled y:" + scrolledY + " update:" + update);
+    public void onEvent(ScrollEvent event) {
+        Log.d("autoscroll", "autoscrolling scrolled y:" + scrolledY + " update:" + event.scroll);
         isAutoScrolling = true;
     }
 

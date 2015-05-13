@@ -20,12 +20,12 @@ import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.molaja.android.R;
 import com.molaja.android.adapter.SearchViewAdapter;
-import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.util.Validations;
 import com.molaja.android.widget.BaseFragment;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
@@ -42,7 +42,7 @@ public class SearchFragment extends BaseFragment {
     ImageView searchIcon;
 
     String query;
-    List<User> list;
+    List<SearchViewAdapter.SearchResult> list;
     Handler searchHandler;
     Runnable searchRunnable = new Runnable() {
         @Override
@@ -53,7 +53,7 @@ public class SearchFragment extends BaseFragment {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (e == null) {
-                            Type type = new TypeToken<List<User>>() { }.getType();
+                            Type type = new TypeToken<List<SearchViewAdapter.SearchResult>>() { }.getType();
                             list = new Gson().fromJson(result.get("entries"), type);
                             searchViewAdapter = new SearchViewAdapter(list, getActivity());
                             searchView.setAdapter(searchViewAdapter);
@@ -80,6 +80,8 @@ public class SearchFragment extends BaseFragment {
         //init search view
         searchView.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchView.setItemAnimator(new FadeInAnimator());
+        searchViewAdapter = new SearchViewAdapter(list = new ArrayList<>(), getActivity());
+        searchView.setAdapter(searchViewAdapter);
 
         searchHandler = new Handler();
 
@@ -101,6 +103,17 @@ public class SearchFragment extends BaseFragment {
                 int visibility = Validations.isEmptyOrNull(query)? View.VISIBLE : View.GONE;
                 searchIcon.setVisibility(visibility);
 
+                if (!Validations.isEmptyOrNull(query)) {
+                    Log.d("searchfr", "query not empty");
+                    if (list.isEmpty() || list.get(0).TYPE != SearchViewAdapter.SearchResult.LOADING_TYPE) {
+                        Log.d("searchfr", "list size:"+list.size());
+                        list.add(0, new SearchViewAdapter.SearchResult(SearchViewAdapter.SearchResult.LOADING_TYPE));
+                        searchViewAdapter.notifyItemInserted(0);
+                    }
+                } else if (!list.isEmpty() && list.get(0).TYPE == SearchViewAdapter.SearchResult.LOADING_TYPE) {
+                    list.remove(0);
+                    searchViewAdapter.notifyItemRemoved(0);
+                }
                 searchHandler.removeCallbacks(searchRunnable);
                 searchHandler.postDelayed(searchRunnable, 1000);
             }

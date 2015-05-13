@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.molaja.android.R;
 import com.molaja.android.adapter.ShowBuddiesAdapter;
+import com.molaja.android.model.BusEvent.ScrollEvent;
 import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.widget.TheBagPagerFragment;
@@ -66,8 +67,8 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
     }
 
     @Override
-    public void onUpdate(int update) {
-        super.onUpdate(update);
-        recyclerView.scrollBy(0, update - scrolledY);
+    public void onEvent(ScrollEvent event) {
+        super.onEvent(event);
+        recyclerView.scrollBy(0, event.scroll - scrolledY);
     }
 }

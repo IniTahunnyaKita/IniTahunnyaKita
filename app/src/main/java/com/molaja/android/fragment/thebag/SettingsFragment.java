@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.SettingsAdapter;
+import com.molaja.android.model.BusEvent.ScrollEvent;
 import com.molaja.android.widget.TheBagPagerFragment;
 
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public class SettingsFragment extends TheBagPagerFragment {
     }
 
     @Override
-    public void onUpdate(int update) {
-        super.onUpdate(update);
-        recyclerView.scrollBy(0, update - scrolledY);
+    public void onEvent(ScrollEvent event) {
+        super.onEvent(event);
+        recyclerView.scrollBy(0, event.scroll - scrolledY);
     }
 }

@@ -112,7 +112,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             user = User.getCurrentUser(getActivity());
             username = user.username;
             initProfile(fragmentView, true);
-            initPager(fragmentView);
+            //initPager();
         }
 
         BackendHelper.getProfile(getActivity(), username, new FutureCallback<JsonObject>() {
@@ -121,7 +121,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                 if (e == null) {
                     user = new Gson().fromJson(result.get("user"), User.class);
                     initProfile(fragmentView, withRebound);
-                    initPager(fragmentView);
+                    initPager();
                 }
             }
         });
@@ -180,7 +180,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         setProfilePicture(image, withRebound);
     }
 
-    private void initPager(View v) {
+    private void initPager() {
         mViewPager.setAdapter(new TheBagTabAdapter(getChildFragmentManager(), this,
                 mHeader.getMeasuredHeight(), isCurrentUser));
         mViewPager.setOffscreenPageLimit(3);
@@ -286,11 +286,14 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     private void setTabIconColor(int whichTab, int color, float alpha) {
         Log.d("settabcolor","tab:"+whichTab);
         ImageView tab = (ImageView) fragmentView.findViewWithTag("TAB"+whichTab);
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        float alphaf = alpha * 255;
-        tab.setColorFilter(Color.argb((int) alphaf, red, green, blue));
+
+        if (tab != null) {
+            int red = Color.red(color);
+            int green = Color.green(color);
+            int blue = Color.blue(color);
+            float alphaf = alpha * 255;
+            tab.setColorFilter(Color.argb((int) alphaf, red, green, blue));
+        }
     }
 
     private File createImageFile() throws IOException {
