@@ -206,11 +206,9 @@ public class BackendHelper {
                 .setCallback(callback);
     }
 
-    public static void getBuddies(Context context, int page, FutureCallback<JsonObject> callback) {
+    public static void getBuddies(Context context,int id, int page, FutureCallback<JsonObject> callback) {
         JsonObject json = new JsonObject();
-        JsonObject user = new JsonObject();
-        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
-        json.add("user", user);
+        json.addProperty("id", id);
         json.addProperty("page", page);
 
         Ion.with(context)

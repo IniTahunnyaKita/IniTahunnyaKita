@@ -46,6 +46,7 @@ import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
 import com.molaja.android.activities.UploadImageActivity;
 import com.molaja.android.adapter.TheBagTabAdapter;
+import com.molaja.android.model.BusEvent.GetBuddiesEvent;
 import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.util.ImageUtil;
@@ -64,6 +65,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Florian on 2/12/2015.
@@ -122,9 +125,19 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                     user = new Gson().fromJson(result.get("user"), User.class);
                     initProfile(fragmentView, withRebound);
                     initPager();
+
+                    BackendHelper.getBuddies(getActivity(), user.id, 1, new FutureCallback<JsonObject>() {
+
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            EventBus.getDefault().post(new GetBuddiesEvent(result));
+                        }
+                    });
                 }
             }
         });
+
+
 
         /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));

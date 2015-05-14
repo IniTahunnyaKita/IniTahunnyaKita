@@ -9,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.koushikdutta.async.future.FutureCallback;
 import com.molaja.android.R;
 import com.molaja.android.adapter.ShowBuddiesAdapter;
+import com.molaja.android.model.BusEvent.GetBuddiesEvent;
 import com.molaja.android.model.BusEvent.ScrollEvent;
 import com.molaja.android.model.User;
-import com.molaja.android.util.BackendHelper;
 import com.molaja.android.widget.TheBagPagerFragment;
 
 import java.lang.reflect.Type;
@@ -50,18 +48,6 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
         recyclerView.setLayoutManager(llm);
 
         //recyclerView.setAdapter(new ShowBuddiesAdapter(getActivity(), list, headerHeight));
-        BackendHelper.getBuddies(getActivity(), 1, new FutureCallback<JsonObject>() {
-            @Override
-            public void onCompleted(Exception e, JsonObject result) {
-                Type type = new TypeToken<List<User>>() { }.getType();
-                List<User> list = new Gson().fromJson(result.get("entries"), type);
-
-                //for dummy view
-                if (list != null)
-                    list.add(0, new User());
-                recyclerView.setAdapter(new ShowBuddiesAdapter(list, headerHeight));
-            }
-        });
 
         recyclerView.addOnScrollListener(onScrollListener);
     }
@@ -70,5 +56,17 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
     public void onEvent(ScrollEvent event) {
         super.onEvent(event);
         recyclerView.scrollBy(0, event.scroll - scrolledY);
+    }
+
+    public void onEvent(GetBuddiesEvent event) {
+        Type type = new TypeToken<List<User>>() {
+        }.getType();
+        List<User> list = new Gson().fromJson(event.jsonObject.get("entries"), type);
+
+        //for dummy view
+        if (list != null)
+            list.add(0, new User());
+
+        recyclerView.setAdapter(new ShowBuddiesAdapter(list, headerHeight));
     }
 }
