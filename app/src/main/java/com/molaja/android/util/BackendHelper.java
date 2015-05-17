@@ -160,6 +160,9 @@ public class BackendHelper {
      */
     public static void getProfile(Context context, String username, FutureCallback<JsonObject> callback) {
         JsonObject json = new JsonObject();
+        JsonObject user = new JsonObject();
+        user.addProperty("authentication_token", User.getCurrentUser(context).authentication_token);
+        json.add("user", user);
         json.addProperty("username", username);
 
         Ion.with(context)
@@ -168,6 +171,7 @@ public class BackendHelper {
                 .addHeader("Content-Type", "application/json")
                 .noCache()
                 .setJsonObjectBody(json)
+                .group("GET_PROFILE")
                 .asJsonObject()
                 .setCallback(callback);
 

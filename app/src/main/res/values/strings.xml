@@ -37,7 +37,7 @@
     <string name="pick_image">Pick image</string>
     <string name="upload_failed">Upload failed.</string>
     <string name="search">Search</string>
-    <string name="buddies">buddies</string>
+    <string name="buddies">BUDDIES</string>
     <string name="discuss_something">Discuss something</string>
     <string name="discuss">Discuss</string>
     <string name="path_search">M141,17 A9,9 0 1,1 142,16 L149,23</string>
@@ -45,6 +45,8 @@
     <string name="reject">Reject</string>
     <string name="request_accepted">Request accepted.</string>
     <string name="request_rejected">Request rejected.</string>
+    <string name="pending">PENDING</string>
+    <string name="add_buddy">ADD BUDDY</string>
 
     <string-array name="change_profile_picture_options">
         <item>Select from library</item>

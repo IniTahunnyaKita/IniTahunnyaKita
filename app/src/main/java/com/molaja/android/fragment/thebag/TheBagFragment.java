@@ -3,6 +3,7 @@ package com.molaja.android.fragment.thebag;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -79,6 +81,9 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     public final int PICK_IMAGE_REQUEST_CODE = 1;
     public final int TAKE_PHOTO_REQUEST_CODE = 2;
     public final int EDIT_IMAGE_REQUEST_CODE = 3;
+    public static final int ARE_BUDDIES = 1;
+    public static final int PENDING_INVITE = 2;
+    public static final int NOT_BUDDIES = -1;
 
     View fragmentView, mHeader;
     ViewPager mViewPager;
@@ -90,14 +95,18 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     User user;
     UploadImageTask uploadImageTask;
+    Context mContext;
 
     private int mMinHeaderTranslation;
     private String mCurrentPhotoPath;
     private boolean isCurrentUser;
+    private int areBuddies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
+
+        mContext = getActivity().getApplicationContext();
 
         bindViews();
 
@@ -105,7 +114,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
         String username;
         final boolean withRebound;
-        if (getArguments() != null && !Validations.isEmptyOrNull(getArguments().getString("USERNAME"))) {
+        if (getArguments() != null &&
+                !getArguments().getString("USERNAME").equals(User.getCurrentUser(getActivity()).username) ) {
             isCurrentUser = false;
             username = getArguments().getString("USERNAME");
             withRebound = true;
@@ -123,6 +133,16 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             public void onCompleted(Exception e, JsonObject result) {
                 if (e == null) {
                     user = new Gson().fromJson(result.get("user"), User.class);
+
+                    if (result.get("are_buddies") instanceof JsonNull) {
+                        areBuddies = NOT_BUDDIES;
+                    } else if (result.get("are_buddies").getAsBoolean()) {
+                        areBuddies = ARE_BUDDIES;
+                    } else {
+                        areBuddies = PENDING_INVITE;
+                    }
+
+
                     initProfile(fragmentView, withRebound);
                     initPager();
 
@@ -181,6 +201,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             buddyBtn.setOnClickListener(this);
             discussBtn.setOnClickListener(this);
         }
+
+        buddyBtn.setStatus(areBuddies);
 
         //measure header size and pass it to the tabs
         mHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -331,6 +353,12 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     }
 
     @Override
+    public void onDetach() {
+        Ion.getDefault(mContext).cancelAll("GET_PROFILE");
+        super.onDetach();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -363,8 +391,10 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                setActionBarColor(palette.getDarkVibrantColor(DEFAULT_THEME));
+                if (!isVisible())
+                    return;
 
+                setActionBarColor(palette.getDarkVibrantColor(DEFAULT_THEME));
                 userSwatch = palette.getVibrantSwatch();
 
                 if (userSwatch != null) {
@@ -385,9 +415,6 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         GradientDrawable pressed;
         GradientDrawable normal;
 
-        /*ShapeDrawable buddiesBtnDrawable = new ShapeDrawable();
-        buddiesBtnDrawable.getPaint().setStrokeWidth(1f);
-        buddiesBtnDrawable.getPaint().setc*/
         GradientDrawable buddiesDisabled = (GradientDrawable) getResources().getDrawable(R.drawable.btn_buddies_bg_disabled);
         buddiesDisabled.setStroke(MolajaApplication.dpToPx(1), color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -408,12 +435,14 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
         //assign the new drawable to the buttons
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            discussBtn.setBackground(newDrawable);
+            //discussBtn.setBackground(newDrawable);
             buddyBtn.setBackground(buddiesBtnDrawable);
         } else {
-            discussBtn.setBackgroundDrawable(newDrawable);
+            //discussBtn.setBackgroundDrawable(newDrawable);
             buddyBtn.setBackgroundDrawable(buddiesBtnDrawable);
         }
+        ViewCompat.setBackgroundTintList(discussBtn, ColorStateList.valueOf(color));
+        buddyBtn.setColor(color);
     }
 
     @Override
@@ -518,9 +547,14 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                         .positiveText(R.string.choose)
                         .show();
                 break;
-            case R.id.buddy_btn:
-                BackendHelper.addBuddy(getActivity(), user.id);
-                //TODO update button image
+            case R.id.buddy_btn_bg:
+                if (areBuddies == NOT_BUDDIES) {
+                    BackendHelper.addBuddy(getActivity(), user.id);
+                    areBuddies = PENDING_INVITE;
+                    buddyBtn.setStatus(areBuddies);
+                } else if (areBuddies == PENDING_INVITE) {
+
+                }
                 break;
             case R.id.discuss_btn:
                 //TODO do sth

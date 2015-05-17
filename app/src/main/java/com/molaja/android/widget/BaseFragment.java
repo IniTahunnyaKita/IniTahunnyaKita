@@ -1,7 +1,10 @@
 package com.molaja.android.widget;
 
+import android.os.Build;
 import android.support.v4.app.Fragment;
 
+import com.molaja.android.MolajaApplication;
+import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
 import com.molaja.android.fragment.thebag.TheBagFragment;
 
@@ -25,6 +28,9 @@ public class BaseFragment extends Fragment {
             } else {
                 mainActivity.setActionBarDefault();
                 setTitleAlpha(1f);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.DarkTeal));
             }
         }
     }
@@ -32,6 +38,11 @@ public class BaseFragment extends Fragment {
     public void setActionBarColor(int color) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setActionBarColor(color);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setStatusBarColor(MolajaApplication.darkenColor(color, 0.3f));
+            }
+
         }
     }
 

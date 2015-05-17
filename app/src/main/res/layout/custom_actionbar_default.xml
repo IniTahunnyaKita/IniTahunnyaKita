@@ -91,7 +91,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_notification"
-        android:background="@drawable/actionbar_btn_bg"/>
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 
     <ImageButton
         android:id="@+id/cart_btn"
@@ -99,7 +99,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_cart"
-        android:background="@drawable/actionbar_btn_bg"/>
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 
 </com.molaja.android.widget.ActionBarLayout>
 </android.support.v7.widget.Toolbar>

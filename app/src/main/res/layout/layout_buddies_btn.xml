@@ -1,21 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="@dimen/default_small_margin"
-    android:background="@drawable/btn_buddies_bg">
+    android:padding="3dp"
+    android:animateLayoutChanges="true">
 
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginRight="@dimen/default_small_margin"
-        android:src="@drawable/ic_buddies_tab"/>
-
-    <TextView
+    <ImageButton
+        android:id="@+id/buddy_btn_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:typeface="sans"
-        android:text="@string/buddies"/>
+        android:layout_alignTop="@+id/text_and_icon"
+        android:layout_alignBottom="@+id/text_and_icon"
+        android:layout_alignLeft="@+id/text_and_icon"
+        android:layout_alignRight="@+id/text_and_icon"
+        android:src="@drawable/btn_buddies_bg"
+        android:background="?attr/selectableItemBackground"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/text_and_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:minWidth="80dp"
+        android:orientation="horizontal"
+        android:clickable="false"
+        android:gravity="center"
+        android:padding="@dimen/default_small_margin">
+
+        <ImageView
+            android:id="@+id/buddy_btn_status_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="@dimen/default_small_margin"
+            android:clickable="false"
+            android:src="@drawable/ic_action_new"
+            android:tint="@color/Teal"/>
+
+        <TextView
+            android:id="@+id/buddy_btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="25dp"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="@string/add_buddy"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

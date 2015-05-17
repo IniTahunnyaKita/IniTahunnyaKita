@@ -93,14 +93,16 @@
         <LinearLayout
             android:id="@+id/header_btns_container"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="46dp"
             android:layout_marginTop="@dimen/default_medium_margin"
             android:gravity="center_horizontal">
 
             <com.molaja.android.widget.BuddyButton
                 android:id="@+id/buddy_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center"/>
 
             <Button
                 android:id="@+id/discuss_btn"
@@ -111,7 +113,7 @@
                 android:textAllCaps="true"
                 android:textSize="12sp"
                 android:textColor="@color/White"
-                android:background="@drawable/btn_bg_teal"/>
+                android:backgroundTint="@color/Teal"/>
 
         </LinearLayout>
 
