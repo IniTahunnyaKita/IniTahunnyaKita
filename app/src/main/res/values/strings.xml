@@ -74,4 +74,11 @@
         <item>Log out</item>
     </string-array>
 
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis metus nec urna convallis,
+        a sollicitudin augue finibus. Aenean gravida aliquet dui, et pulvinar tellus laoreet eu.
+        Maecenas elementum quam eget velit consectetur vulputate. Nulla id urna massa. Etiam et nunc sem.
+        Sed in erat urna.</string>
+    <string name="shares">shares</string>
+    <string name="likes">likes</string>
+
 </resources>

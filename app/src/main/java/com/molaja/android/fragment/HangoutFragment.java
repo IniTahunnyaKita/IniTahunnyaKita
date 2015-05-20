@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.eowise.recyclerview.stickyheaders.OnHeaderClickListener;
-import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
-import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.molaja.android.R;
 import com.molaja.android.adapter.HangoutAdapter;
@@ -69,17 +67,17 @@ public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.
             list.add(post);
         }
         HangoutAdapter mAdapter= new HangoutAdapter(getActivity(),list, this);
-        mAdapter.setHasStableIds(true);
+        /*mAdapter.setHasStableIds(true);
         HangoutAdapter.HeaderAdapter headerAdapter= new HangoutAdapter.HeaderAdapter(list);
         StickyHeadersItemDecoration decoration = new StickyHeadersBuilder()
                 .setAdapter(mAdapter)
                 .setRecyclerView(mRecyclerView.getRecyclerView())
                 .setStickyHeadersAdapter(headerAdapter)
                 .setOnHeaderClickListener(this)
-                .build();
+                .build();*/
 
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(decoration);
+        //mRecyclerView.addItemDecoration(decoration);
         mRecyclerView.setRefreshListener(this);
     }
 

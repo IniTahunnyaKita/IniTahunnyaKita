@@ -5,127 +5,185 @@
     android:layout_height="match_parent"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    android:paddingBottom="@dimen/post_vertical_margin">
-
-    <TextView
-        android:id="@+id/post_overview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:typeface="sans"
-        android:fontFamily="sans-serif-light"/>
+    android:padding="@dimen/post_vertical_margin">
 
     <com.molaja.android.widget.RoundLinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="5dp">
-    <com.molaja.android.widget.SquareImageView
-        android:id="@+id/post_image"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"/>
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/hangoutpost_btn_container_bg">
-        <TableRow
-            android:layout_weight="1"
-            android:stretchColumns="*">
+        <com.molaja.android.widget.SquareImageView
+            android:id="@+id/post_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@color/LightGrey"/>
+    </com.molaja.android.widget.RoundLinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/thumbs_up_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:clickable="true"
-                android:background="@drawable/hangoutpost_btn_bg">
-                <ImageView
-                    android:id="@+id/thumbs_up_img"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_thumbs_up_default"/>
-                <LinearLayout
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_small_margin">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="@dimen/profile_pic_notif_size"
+            android:layout_height="@dimen/profile_pic_notif_size"
+            android:scaleType="centerCrop"
+            android:src="@color/Gray"/>
+
+        <TextView
+            android:id="@+id/full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_medium_margin"
+            android:text="Shop name"
+            android:typeface="sans"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item Title"
+        android:textSize="20sp"
+        android:typeface="sans"
+        android:fontFamily="sans-serif-medium"/>
+
+
+
+    <TextView
+        android:id="@+id/post_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Price"
+        android:textSize="14sp"
+        android:textColor="@color/DarkGray"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/post_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_medium_margin"
+        android:text="@string/lorem"
+        android:typeface="sans"
+        android:fontFamily="sans-serif-light"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_medium_margin"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/thumbs_up_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+            <ImageView
+                android:id="@+id/thumbs_up_img"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_thumbs_up_default"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_small_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/post_thumbs_up"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical"
-                    android:layout_toRightOf="@+id/thumbs_up_img">
-                    <TextView
-                        android:id="@+id/post_thumbs_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="thumbs up"
-                        android:textSize="12sp"/>
+                    android:gravity="bottom"
+                    android:text="0"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_small_margin"
+                    android:gravity="bottom"
+                    android:text="@string/likes"
+                    android:textSize="12sp"/>
 
-                </LinearLayout>
-            </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:background="@drawable/hangoutpost_btn_bg">
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_discuss"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:text="Discuss"/>
+            </LinearLayout>
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/post_poll_btn"
-            android:layout_width="0dp"
+            android:id="@+id/share_btn"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/default_large_margin"
+            android:gravity="center_vertical"
             android:clickable="true"
-            android:background="@drawable/hangoutpost_btn_bg">
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_poll"/>
-            <TextView
+                android:id="@+id/share_img"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/abc_ic_menu_share_mtrl_alpha"/>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:text="Poll"/>
+                android:layout_marginLeft="@dimen/default_small_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/post_shares"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="0"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_small_margin"
+                    android:gravity="bottom"
+                    android:text="@string/shares"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
         </LinearLayout>
-        </TableRow>
-    </TableLayout>
-        <TextView
-            android:id="@+id/post_price"
-            android:layout_width="match_parent"
+
+        <View
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:gravity="center_horizontal"
-            android:textSize="16sp"
-            android:textColor="@color/Black"
-            android:textStyle="bold"
-            android:background="@color/LightGrey"/>
-    </com.molaja.android.widget.RoundLinearLayout>
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_discuss"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <ImageButton
+            android:id="@+id/post_poll_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="@dimen/default_medium_margin"
+            android:src="@drawable/ic_poll"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/default_small_margin"
+        android:background="@drawable/divider_with_gradient"/>
 
 
 </LinearLayout>

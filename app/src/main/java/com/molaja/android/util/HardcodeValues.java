@@ -84,7 +84,7 @@ public class HardcodeValues {
     public final static String [] profileUrls = new String[]{"file:///android_asset/jersenesia.jpg",
             "http://www.quienlovio.com/media/p9.png",
             "file:///android_asset/ensa_shop.jpg",
-            "http://issue-support.com/wp-content/uploads/2013/08/lenovo.png"};
+            "https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10919352_643009905821607_158150800_n.jpg"};
     public final static String [] fullnames = new String[]{"Jersenesia Bandung","SONY Indonesia","Ensa Shop","Lenovo"};
     public final static String [] titles = new String[]{"MU Away Kit 2014/15","Playstation 4 - White 32GB", "Dompet Gaul",
             "The All-new Thinkpad Yoga"};

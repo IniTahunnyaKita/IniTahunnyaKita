@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,8 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.eowise.recyclerview.stickyheaders.StickyHeadersAdapter;
@@ -27,6 +26,7 @@ import com.molaja.android.activities.MainActivity;
 import com.molaja.android.fragment.HangoutFragment;
 import com.molaja.android.model.HangoutPost;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 
@@ -62,6 +62,25 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
 
     @Override
     public void onBindViewHolder(final PostViewHolder postHolder, final int position) {
+        Picasso.with(mContext)
+                .load(group.get(position).getProfileUrl())
+                .fit().centerCrop()
+                .transform(new Transformation() {
+                    @Override
+                    public Bitmap transform(Bitmap source) {
+                        //TODO insert palette
+                        return source;
+                    }
+
+                    @Override
+                    public String key() {
+                        return "palette";
+                    }
+                })
+                .into(postHolder.profilePic);
+        postHolder.fullName.setText(group.get(position).getFullname());
+        postHolder.title.setText(group.get(position).getTitle());
+        postHolder.profilePic.getRootView().setTag(postHolder.profilePic);
         postHolder.overview.setText(group.get(position).getOverview());
         postHolder.thumbsUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +105,6 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         postHolder.price.setText(group.get(position).getPrice());
         Picasso.with(mContext)
                 .load(group.get(position).getItemUrl())
-                .error(R.drawable.ensa_shop)
                 .fit().centerCrop()
                 .into(postHolder.postImg);
         postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
@@ -118,24 +136,31 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
     }
 
     static class PostViewHolder extends RecyclerView.ViewHolder{
+        CircleImageView profilePic;
+        TextView fullName;
+        TextView title;
         TextView overview;
         ImageView postImg;
-        RelativeLayout thumbsUpBtn;
+        View thumbsUpBtn;
         ImageView thumbsUpIv;
-        boolean thumbsUpState;
         TextView thumbsUp;
-        LinearLayout pollBtn;
+        View pollBtn;
         TextView price;
+
+        boolean thumbsUpState;
 
         public PostViewHolder(View v) {
             super(v);
+            profilePic = (CircleImageView) v.findViewById(R.id.profile_picture);
+            fullName = (TextView) v.findViewById(R.id.full_name);
+            title = (TextView) v.findViewById(R.id.post_title);
             overview = (TextView) v.findViewById(R.id.post_overview);
             postImg = (ImageView) v.findViewById(R.id.post_image);
-            thumbsUpBtn = (RelativeLayout) v.findViewById(R.id.thumbs_up_btn);
+            thumbsUpBtn = v.findViewById(R.id.thumbs_up_btn);
             thumbsUpIv = (ImageView) v.findViewById(R.id.thumbs_up_img);
             thumbsUpState = false;
             thumbsUp = (TextView) v.findViewById(R.id.post_thumbs_up);
-            pollBtn = (LinearLayout) v.findViewById(R.id.post_poll_btn);
+            pollBtn = v.findViewById(R.id.post_poll_btn);
             price = (TextView) v.findViewById(R.id.post_price);
         }
     }
