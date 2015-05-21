@@ -7,23 +7,11 @@
     android:paddingRight="5dp"
     android:padding="@dimen/post_vertical_margin">
 
-    <com.molaja.android.widget.RoundLinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp">
-        <com.molaja.android.widget.SquareImageView
-            android:id="@+id/post_image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@color/LightGrey"/>
-    </com.molaja.android.widget.RoundLinearLayout>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_small_margin">
+        android:layout_marginTop="@dimen/default_small_margin"
+        android:layout_marginLeft="@dimen/default_medium_margin">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
@@ -37,11 +25,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_medium_margin"
+            android:layout_marginLeft="@dimen/default_small_margin"
             android:text="Shop name"
             android:typeface="sans"/>
 
     </LinearLayout>
+
+    <com.molaja.android.widget.RoundLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp">
+        <com.molaja.android.widget.SquareImageView
+            android:id="@+id/post_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@color/LightGrey"/>
+    </com.molaja.android.widget.RoundLinearLayout>
 
     <TextView
         android:id="@+id/post_title"

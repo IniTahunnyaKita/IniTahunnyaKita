@@ -57,7 +57,7 @@ public class HardcodeValues {
         public static final String [] names = new String[]{"Felicia Anggraini","Ardy Agustino","Cynthia Kartika","Jethro Satya"};
         public static final String [] profileUrls = new String[]{"https://instagramimages-a.akamaihd.net/profiles/profile_229439753_75sq_1395937794.jpg",
         "http://i58.tinypic.com/350l9oo.jpg",
-        "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11084922_854525801285481_2075853304_a.jpg",
+        "https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/1208307_1583238641925320_2079136125_n.jpg",
         "http://i58.tinypic.com/1zeum54.jpg"};;
 
         public static final Discussion.Conversation[] [] CONVERSATIONS = new Discussion.Conversation[][]{

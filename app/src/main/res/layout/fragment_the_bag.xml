@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/the_bag_pager"
@@ -122,8 +123,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/profile_tab_height"
             android:layout_marginTop="@dimen/default_medium_margin"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:stl_indicatorColor="@android:color/transparent"
             app:stl_indicatorThickness="0dp"
             app:stl_dividerColor="@android:color/transparent"
@@ -132,14 +133,15 @@
             app:stl_underlineThickness="0dp"
             app:stl_distributeEvenly="true" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:background="@color/Silver"/>
-
-
         </LinearLayout>
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/header_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/header"
+        android:background="@drawable/shadow"/>
 
 </RelativeLayout>

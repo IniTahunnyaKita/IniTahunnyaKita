@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment{
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (getActivity() instanceof MainActivity)
-            ((MainActivity)getActivity()).setActionBarTransparent();
+            ((MainActivity)getActivity()).setToolbarTransparent();
 
         mSmoothInterpolator = new AccelerateDecelerateInterpolator();
         mListView = (ListView) view.findViewById(android.R.id.list);

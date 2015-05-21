@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     List pollList = new ArrayList< HangoutPost>();
 
     //views
+    Toolbar mToolbar;
     EditText pollCaption;
     FragmentTabHost mTabHost;
     RelativeLayout holderLayout;
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initActionBar(){
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         ((ActionBarLayout)mToolbar.findViewById(R.id.actionbar_layout)).setHasRevealLayout(true);
         setSupportActionBar(mToolbar);
     }
@@ -172,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(android.R.id.tabcontent);
         if (backStackEntryCount > 0) {
             if (currentFragment instanceof ProfileFragment) {
-                setActionBarDefault();
+                setToolbarDefault();
             } else if (currentFragment instanceof DiscussionFragment) {
                 DiscussionFragment discussionFragment = (DiscussionFragment) currentFragment;
                 if(discussionFragment.onBackPressed())
@@ -204,25 +206,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBarDefault() {
-        setActionBarColor(getResources().getColor(R.color.Teal));
+    public void setToolbarDefault() {
+        mToolbar.setBackgroundColor(Color.WHITE);
+        setToolbarColor(getResources().getColor(R.color.Teal));
         ((ImageView)findViewById(R.id.shopmode_action_bar_bg)).setImageDrawable(new ColorDrawable(getResources().getColor(R.color.CornflowerBlue)));
         findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
         findViewById(R.id.action_bar_watermark).setVisibility(View.VISIBLE);
     }
 
-    public void setActionBarTransparent() {
+    public void setToolbarTransparent() {
+        mToolbar.setBackgroundColor(Color.TRANSPARENT);
         findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
         findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
         findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
-    public void setActionBarAlpha(float alpha) {
+    public void setToolbarAlpha(float alpha) {
         findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
         findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);
     }
 
-    public void setActionBarColor(int color) {
+    public void setToolbarColor(int color) {
         ((ImageView)findViewById(R.id.usermode_action_bar_bg)).setImageDrawable(new ColorDrawable(color));
     }
 

@@ -24,9 +24,9 @@ public class BaseFragment extends Fragment {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
             if (this instanceof TheBagFragment) {
-                mainActivity.setActionBarTransparent();
+                mainActivity.setToolbarTransparent();
             } else {
-                mainActivity.setActionBarDefault();
+                mainActivity.setToolbarDefault();
                 setTitleAlpha(1f);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -37,7 +37,7 @@ public class BaseFragment extends Fragment {
 
     public void setActionBarColor(int color) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setActionBarColor(color);
+            ((MainActivity) getActivity()).setToolbarColor(color);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getActivity().getWindow().setStatusBarColor(MolajaApplication.darkenColor(color, 0.3f));
@@ -48,7 +48,7 @@ public class BaseFragment extends Fragment {
 
     public void setTitleAlpha(float alpha) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity)getActivity()).setActionBarAlpha(alpha);
+            ((MainActivity)getActivity()).setToolbarAlpha(alpha);
         }
 
     }

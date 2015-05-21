@@ -65,13 +65,17 @@ public class DiscussionFragment extends BaseFragment {
             discussions.add(discussion);
         }
 
-        mAdapter = new DiscussionAdapter(recyclerView, getActivity(),discussions);
+        mAdapter = new DiscussionAdapter(discussions);
         recyclerView.setAdapter(mAdapter);
     }
 
     public boolean onBackPressed(){
+        //do nothing if recycler view is animating
+        if (mAdapter.isAnimating())
+            return true;
+
         if(mAdapter.isAnItemSelected()){
-            mAdapter.restoreItems();
+            mAdapter.restoreItemsCompat();
             return true;
         }
         return false;

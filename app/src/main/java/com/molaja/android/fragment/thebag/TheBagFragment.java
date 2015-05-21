@@ -85,7 +85,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     public static final int PENDING_INVITE = 2;
     public static final int NOT_BUDDIES = -1;
 
-    View fragmentView, mHeader;
+    View fragmentView, mHeader, mHeaderShadow;
     ViewPager mViewPager;
     SmartTabLayout viewPagerTab;
     ImageView profilePicture, blurredBg;
@@ -170,6 +170,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         mViewPager = (ViewPager) fragmentView.findViewById(R.id.the_bag_pager);
         blurredBg = (ImageView) fragmentView.findViewById(R.id.blurred_bg);
         mHeader = fragmentView.findViewById(R.id.header);
+        mHeaderShadow = fragmentView.findViewById(R.id.header_shadow);
         profilePicture = (ImageView) fragmentView.findViewById(R.id.profile_picture);
         activitiesItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_subscriptions);
         subscriptionsItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_activities);
@@ -206,8 +207,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
         //measure header size and pass it to the tabs
         mHeader.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int mMinHeaderHeight = mHeader.getMeasuredHeight() - getResources().getDimensionPixelSize(R.dimen.profile_tab_height)
-                            - getResources().getDimensionPixelSize(R.dimen.default_small_margin);
+        int mMinHeaderHeight = mHeader.getMeasuredHeight() - getResources().getDimensionPixelSize(R.dimen.profile_tab_height);
         mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
 
         //load image
@@ -395,10 +395,11 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                     return;
 
                 setActionBarColor(palette.getDarkVibrantColor(DEFAULT_THEME));
+                viewPagerTab.setBackgroundColor(palette.getDarkVibrantColor(DEFAULT_THEME));
                 userSwatch = palette.getVibrantSwatch();
 
                 if (userSwatch != null) {
-                    setTabIconColor(mViewPager.getCurrentItem(), userSwatch.getRgb(), 1f);
+                    //setTabIconColor(mViewPager.getCurrentItem(), userSwatch.getRgb(), 1f);
                     setButtonsColor(userSwatch.getRgb());
                     activitiesItem.setValueColor(userSwatch.getRgb());
                     buddiesItem.setValueColor(userSwatch.getRgb());
@@ -407,6 +408,45 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             }
         });
     }
+
+    /*private void changeHeaderBackgroundHeightAnimated(boolean shouldShowGap, boolean animated) {
+        if (mGapIsChanging) {
+            return;
+        }
+        final int heightOnGapShown = mHeaderBar.getHeight();
+        final int heightOnGapHidden = mHeaderBar.getHeight() + mActionBarSize;
+        final float from = mHeaderBackground.getLayoutParams().height;
+        final float to;
+        if (shouldShowGap) {
+            if (!mGapHidden) {
+                // Already shown
+                return;
+            }
+            to = heightOnGapShown;
+        } else {
+            if (mGapHidden) {
+                // Already hidden
+                return;
+            }
+            to = heightOnGapHidden;
+        }
+        if (animated) {
+            //ViewPropertyAnimatorCompat.animate(mHeaderBackground).cancel();
+            ValueAnimator a = ValueAnimator.ofFloat(from, to);
+            a.setDuration(100);
+            a.setInterpolator(new AccelerateDecelerateInterpolator());
+            a.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float height = (float) animation.getAnimatedValue();
+                    changeHeaderBackgroundHeight(height, to, heightOnGapHidden);
+                }
+            });
+            a.start();
+        } else {
+            changeHeaderBackgroundHeight(to, to, heightOnGapHidden);
+        }
+    }*/
 
     @SuppressWarnings("deprecation")
     private void setButtonsColor(int color) {
@@ -457,7 +497,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     @Override
     public void onYScroll(int totalScroll) {
-        ViewHelper.setTranslationY(mHeader, Math.max(-totalScroll, mMinHeaderTranslation));
+        ViewCompat.setTranslationY(mHeader, Math.max(-totalScroll, mMinHeaderTranslation));
+        ViewCompat.setTranslationY(mHeaderShadow, Math.max(-totalScroll, mMinHeaderTranslation));
         mViewPager.getChildAt(1);
         float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
         setTitleAlpha(ratio);
@@ -479,7 +520,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        int color = userSwatch==null? DEFAULT_THEME : userSwatch.getRgb();
+        //int color = userSwatch==null? DEFAULT_THEME : userSwatch.getRgb();
+        int color = Color.WHITE;
         setTabIconColor(position, color, 1 - positionOffset);
 
         if(position + 1 < mViewPager.getAdapter().getCount())
@@ -489,10 +531,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     @Override
     public void onPageSelected(int position) {
-        for (int i=0; i<mViewPager.getAdapter().getCount(); i++) {
-            float elevation = i==position? getResources().getDimensionPixelSize(R.dimen.default_elevation) : 0;
-            ViewCompat.setElevation(fragmentView.findViewWithTag("TAB"+i), elevation);
-
+        /*for (int i=0; i<mViewPager.getAdapter().getCount(); i++) {
             if (i == position) {
                 if (userSwatch != null) {
                     setTabIconColor(i, userSwatch.getRgb(), 1f);
@@ -502,7 +541,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             } else {
                 setTabIconColor(i, DEFAULT_THEME, 0f);
             }
-        }
+        }*/
 
     }
 

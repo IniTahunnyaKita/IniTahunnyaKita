@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
+    android:paddingBottom="@dimen/tab_height"
     app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
     app:recyclerClipToPadding="false"
     app:scrollbarStyle="outsideOverlay" />

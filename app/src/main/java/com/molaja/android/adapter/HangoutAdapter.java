@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -68,7 +70,12 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                 .transform(new Transformation() {
                     @Override
                     public Bitmap transform(Bitmap source) {
-                        //TODO insert palette
+                        Palette.from(source).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                postHolder.title.setTextColor(palette.getDarkVibrantColor(Color.BLACK));
+                            }
+                        });
                         return source;
                     }
 
