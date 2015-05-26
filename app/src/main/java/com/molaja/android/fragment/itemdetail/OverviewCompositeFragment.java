@@ -25,7 +25,7 @@ import de.greenrobot.event.EventBus;
 public class OverviewCompositeFragment extends Fragment{
     private SmartViewPager mHorizontalPager;
     private ViewPagerIndicator mViewPagerIndicator;
-    private int mCentralPageIndex = 0, totalPage;
+    private int mCentralPageIndex = 0;
     public static int position = 0;
     private ViewPager.OnPageChangeListener mPagerChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -94,7 +94,7 @@ public class OverviewCompositeFragment extends Fragment{
     private void populateHorizontalPager() {
         ArrayList<Class<? extends Fragment>> pages = new ArrayList<Class<? extends Fragment>>();
 
-        totalPage = HardcodeValues.ItemDetailValues.imageUrls.length;
+        int totalPage = HardcodeValues.ItemDetailValues.imageUrls.length;
         for(int i=0;i< totalPage;i++)
             pages.add(OverviewFragment.class);
 

@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -72,7 +73,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         super.onCreate(savedInstanceState);
 
         Gson gson = new Gson();
-        itemInfo = gson.fromJson(getIntent().getStringExtra("ITEM_INFO"),HangoutPost.class);
+        itemInfo = gson.fromJson(getIntent().getStringExtra("ITEM_INFO"), HangoutPost.class);
         setContentView(R.layout.fragment_item_detail);
         findViews();
 
@@ -93,6 +94,10 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         priceOverlay.setText(itemInfo.getPrice());
         titleOverlay = (TextView) findViewById(R.id.overlay_title);
         initViews();
+    }
+
+    public void setBackgroundColor(int backgroundColor) {
+        findViewById(R.id.root_view).setBackgroundColor(backgroundColor);
     }
 
     private void initViews() {
@@ -117,6 +122,19 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
 
         snapPageWhenLayoutIsReady(mVerticalPager, CENTRAL_PAGE_INDEX);
         mVerticalPager.setOnPullToZoomListener(this);
+        mVerticalPager.addOnScrollListener(new VerticalPager.OnScrollListener() {
+
+            @Override
+            public void onScroll(int scrollX) {
+                //create parallax effect
+                ViewCompat.setTranslationY(findViewById(R.id.main_overview_fragment), - scrollX / 4);
+            }
+
+            @Override
+            public void onViewScrollFinished(int currentPage) {
+
+            }
+        });
         mVerticalPager.setOnTapListener(new VerticalPager.OnTapListener() {
             @Override
             public void onTap() {
@@ -129,9 +147,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
                             .duration(200)
                             .withListener(new Animator.AnimatorListener() {
                                 @Override
-                                public void onAnimationStart(Animator animation) {
-
-                                }
+                                public void onAnimationStart(Animator animation) {}
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
@@ -140,12 +156,10 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
                                 }
 
                                 @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
+                                public void onAnimationCancel(Animator animation) {}
 
                                 @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
+                                public void onAnimationRepeat(Animator animation) {}
                             })
                             .playOn(overlay);
                 } else {
@@ -160,17 +174,14 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-
                                 }
 
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
-
                                 }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animation) {
-
                                 }
                             })
                             .playOn(overlay);

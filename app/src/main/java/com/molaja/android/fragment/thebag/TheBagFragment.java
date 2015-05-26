@@ -605,6 +605,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         final String UPLOAD_URL = "http://molaja-backend.herokuapp.com/api/v1/picture_uploader.json";
         final String CONTENT_TYPE_PREFIX = "data:image/jpg;base64,";
         Context context;
+        User userInstance;
 
         public UploadImageTask(Context context) {
             this.context = context;
@@ -618,6 +619,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             animation.setRepeatCount(Animation.INFINITE);
             animation.setDuration(1000);
             profilePicture.setAnimation(animation);
+
+            userInstance = User.getCurrentUser(context);
         }
 
         @Override
@@ -626,7 +629,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                 //upload to database
                 JsonObject json = new JsonObject();
                 JsonObject user = new JsonObject();
-                user.addProperty("authentication_token", TheBagFragment.this.user.authentication_token);
+                user.addProperty("authentication_token", userInstance.authentication_token);
                 user.addProperty("image", CONTENT_TYPE_PREFIX +
                         Base64.encodeToString(getBytesFromFile(params[0]), Base64.DEFAULT));
                 json.add("user", user);
@@ -646,8 +649,10 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                                 if (e != null) {
                                     Toast.makeText(context, getString(R.string.upload_failed), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    TheBagFragment.this.user.image = jsonObject.getAsJsonPrimitive("image").getAsString();
-                                    TheBagFragment.this.user.save(context);
+                                    userInstance.image = jsonObject.getAsJsonPrimitive("image").getAsString();
+                                    userInstance.save(context);
+
+                                    TheBagFragment.this.user = userInstance;
 
                                     setProfilePicture(TheBagFragment.this.user.image, true);
                                 }

@@ -48,11 +48,15 @@ public class DescriptionFragment extends Fragment {
                                         public void onGenerated(Palette palette) {
                                             Palette.Swatch swatch = palette.getDarkVibrantSwatch();
 
-                                            if (swatch == null)
+                                            if (swatch == null) {
                                                 swatch = palette.getDarkMutedSwatch();
+                                            }
 
-                                            shopIdContainer.setBackgroundColor(swatch.getRgb());
-                                            shopName.setTextColor(swatch.getBodyTextColor());
+                                            if (swatch != null) {
+                                                shopIdContainer.setBackgroundColor(swatch.getRgb());
+                                                shopName.setTextColor(swatch.getBodyTextColor());
+                                                updateActivityBackground(swatch.getRgb());
+                                            }
                                         }
                                     });
                         }
@@ -66,5 +70,12 @@ public class DescriptionFragment extends Fragment {
         }
 
         return fragmentView;
+    }
+
+    private void updateActivityBackground(int color) {
+        if (getActivity() != null && getActivity() instanceof ItemDetailActivity) {
+            ItemDetailActivity activity = (ItemDetailActivity) getActivity();
+            activity.setBackgroundColor(color);
+        }
     }
 }
