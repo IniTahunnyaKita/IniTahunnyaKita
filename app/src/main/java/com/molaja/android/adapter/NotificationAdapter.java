@@ -40,17 +40,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         Picasso.with(mContext)
                 .load(items.get(position).getProfileUrl())
-                .error(R.drawable.ensa_shop)
                 .fit().centerCrop()
                 .into(viewHolder.profilePic);
         viewHolder.fullname.setText(items.get(position).getFullname());
         viewHolder.action.setText(items.get(position).getAction());
         Picasso.with(mContext)
                 .load(items.get(position).getItemUrl())
-                .error(R.drawable.ensa_shop)
                 .fit().centerCrop()
                 .into(viewHolder.itemPic);
         viewHolder.content.setText(items.get(position).getContent());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

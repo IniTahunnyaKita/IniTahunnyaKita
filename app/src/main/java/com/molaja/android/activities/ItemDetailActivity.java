@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -19,8 +21,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
@@ -36,6 +36,8 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Created by Florian on 4/4/2015.
  */
@@ -49,7 +51,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
     //
     // -----------------------------------------------------------------------
     private VerticalPager mVerticalPager;
-    private View overlay;
+    private View itemDetailOverlay, buttonOverlay;
     private TextView priceOverlay, titleOverlay;
     private ImageView zoomIcon, zoomInBtn, zoomOutBtn;
     public static HangoutPost itemInfo;
@@ -80,6 +82,15 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         haptic = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         springSystem = SpringSystem.create();
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isOverlayShown)
+                    hideOverlays();
+            }
+        },1000);
     }
 
     private void findViews() {
@@ -89,7 +100,8 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         zoomOutBtn = (ImageView) findViewById(R.id.zoom_out_btn);
         zoomInBtn = (ImageView) findViewById(R.id.zoom_in_btn);
 
-        overlay = findViewById(R.id.short_detail_overlay);
+        itemDetailOverlay = findViewById(R.id.short_detail_overlay);
+        buttonOverlay = findViewById(R.id.button_overlay);
         priceOverlay = (TextView) findViewById(R.id.overlay_price);
         priceOverlay.setText(itemInfo.getPrice());
         titleOverlay = (TextView) findViewById(R.id.overlay_title);
@@ -116,7 +128,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         ft.commit();
 
         //hide zoom icon
-        ObjectAnimator hide = ObjectAnimator.ofFloat(zoomIcon, "translationY", 0f, -zoomIcon.getMeasuredHeight()*2);
+        final ObjectAnimator hide = ObjectAnimator.ofFloat(zoomIcon, "translationY", 0f, -zoomIcon.getMeasuredHeight()*2);
         hide.setDuration(0);
         hide.start();
 
@@ -138,54 +150,21 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         mVerticalPager.setOnTapListener(new VerticalPager.OnTapListener() {
             @Override
             public void onTap() {
-                //disable overlay if in zoom mode
+                //disable itemDetailOverlay if in zoom mode
                 if(isInZoomMode)
                     return;
 
                 if (isOverlayShown) {
-                    YoYo.with(Techniques.FadeOut)
-                            .duration(200)
-                            .withListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {}
-
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    isOverlayShown = false;
-                                    overlay.setVisibility(View.GONE);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animation) {}
-
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {}
-                            })
-                            .playOn(overlay);
+                    hideOverlays();
                 } else {
-                    YoYo.with(Techniques.FadeIn)
-                            .duration(200)
-                            .withListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    overlay.setVisibility(View.VISIBLE);
-                                    isOverlayShown = true;
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
-                            })
-                            .playOn(overlay);
+                    showOverlays();
                 }
+            }
+
+            @Override
+            public void onDispatchTouchEvent(MotionEvent event) {
+                Log.d("scroll","onDispatchTouchEvent");
+                EventBus.getDefault().post(event);
             }
         });
     }
@@ -219,30 +198,24 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         return itemInfo;
     }
 
-    public void hideOverlay(){
-        final View overlay = findViewById(R.id.short_detail_overlay);
-        YoYo.with(Techniques.FadeOut)
-                .duration(200)
-                .withListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                    }
+    /**
+     * Hides overlays on the screen.
+     */
+    private void hideOverlays(){
+        itemDetailOverlay.animate().translationY(-itemDetailOverlay.getMeasuredHeight())
+                .setInterpolator(new FastOutSlowInInterpolator()).start();
+        buttonOverlay.animate().translationY(buttonOverlay.getMeasuredHeight())
+                .setInterpolator(new FastOutSlowInInterpolator()).start();
+        isOverlayShown = false;
+    }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        isOverlayShown = false;
-                        overlay.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-                    }
-                })
-                .playOn(overlay);
+    /**
+     * Shows overlays on the screen.
+     */
+    private void showOverlays() {
+        itemDetailOverlay.animate().translationY(0).setInterpolator(new FastOutSlowInInterpolator()).start();
+        buttonOverlay.animate().translationY(0).setInterpolator(new FastOutSlowInInterpolator()).start();
+        isOverlayShown = true;
     }
 
     @Override
@@ -270,21 +243,6 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         scaleUp.play(scaleUpX).with(scaleUpY);
         scaleUp.start();
         Log.d("vpager", "progress:" + progress);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                overlay.setVisibility(View.VISIBLE);
-                isOverlayShown = true;
-                YoYo.with(Techniques.FadeIn)
-                        .duration(200)
-                        .playOn(overlay);
-            }
-        },1000);
     }
 
     @Override
@@ -405,7 +363,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         overviewCompositeFragment.setHorizontalPagingEnabled(false);
 
         if(isOverlayShown)
-            hideOverlay();
+            hideOverlays();
 
         //enable zoom
         //Log.d("test","size:"+overviewCompositeFragment.getChildFragmentManager().getFragments().size());

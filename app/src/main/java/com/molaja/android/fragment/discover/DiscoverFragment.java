@@ -1,14 +1,13 @@
 package com.molaja.android.fragment.discover;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
 import com.molaja.android.R;
 import com.molaja.android.adapter.DiscoverTabAdapter;
@@ -24,7 +23,7 @@ public class DiscoverFragment extends BaseFragment {
     final int SEARCH_MODE = 2;
 
     //views
-    ImageButton searchButton;
+    FloatingActionButton searchButton;
     ViewPager viewPager;
 
     DiscoverTabAdapter mAdapter;
@@ -41,7 +40,7 @@ public class DiscoverFragment extends BaseFragment {
     }
 
     public void initViews(View v) {
-        searchButton = (ImageButton) v.findViewById(R.id.search_btn);
+        searchButton = (FloatingActionButton) v.findViewById(R.id.search_btn);
         viewPager = (ViewPager) v.findViewById(R.id.pager);
 
         mAdapter = new DiscoverTabAdapter(getChildFragmentManager());
@@ -50,7 +49,8 @@ public class DiscoverFragment extends BaseFragment {
         SmartTabLayout viewPagerTab = (SmartTabLayout) v.findViewById(R.id.viewpager_tab);
         viewPagerTab.setViewPager(viewPager);
 
-        ViewCompat.setElevation(searchButton, getResources().getDimensionPixelSize(R.dimen.default_elevation));
+        //ViewCompat.setElevation(searchButton, getResources().getDimensionPixelSize(R.dimen.default_elevation));
+        searchButton.setRippleColor(getColor(R.color.DarkTeal));
 
         /*searchBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

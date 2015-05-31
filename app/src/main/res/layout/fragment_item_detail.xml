@@ -8,7 +8,8 @@
     <FrameLayout
         android:id="@+id/main_overview_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/White"/>
 
     <com.grantlandchew.view.VerticalPager
         android:id="@+id/main_vertical_pager"
@@ -35,12 +36,11 @@
     </com.grantlandchew.view.VerticalPager>
 
     <RelativeLayout
-        android:id="@+id/short_detail_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/short_detail_overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -63,6 +63,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/button_overlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
 
@@ -76,12 +74,12 @@ public class ActionBarLayout extends RelativeLayout{
             mRevealLayout.next();
         }
         MainActivity.mode = MainActivity.SHOP_MODE;
-        YoYo.with(Techniques.FadeOut)
+        /*YoYo.with(Techniques.FadeOut)
                 .duration(500)
                 .playOn(findViewById(R.id.usermode_action_bar_bg));
         YoYo.with(Techniques.FadeIn)
                 .duration(500)
-                .playOn(findViewById(R.id.shopmode_action_bar_bg));
+                .playOn(findViewById(R.id.shopmode_action_bar_bg));*/
     }
 
     public void switchToUserMode(){
@@ -89,12 +87,13 @@ public class ActionBarLayout extends RelativeLayout{
             mRevealLayout.next();
         }
         MainActivity.mode = MainActivity.USER_MODE;
-        YoYo.with(Techniques.FadeIn)
+
+        /*YoYo.with(Techniques.FadeIn)
                 .duration(500)
                 .playOn(findViewById(R.id.usermode_action_bar_bg));
         YoYo.with(Techniques.FadeOut)
                 .duration(500)
-                .playOn(findViewById(R.id.shopmode_action_bar_bg));
+                .playOn(findViewById(R.id.shopmode_action_bar_bg));*/
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {

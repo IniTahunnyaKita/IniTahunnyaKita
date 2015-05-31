@@ -1,5 +1,9 @@
 package com.molaja.android.widget;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -10,20 +14,18 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.molaja.android.R;
-import com.molaja.android.activities.MainActivity;
 import com.molaja.android.util.ImageUtil;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -33,15 +35,14 @@ import java.util.TimerTask;
  * Created by Florian on 1/26/2015.
  */
 public class NotificationLayout extends RelativeLayout{
+    public final int DEFAULT_ANIMATION_DURATION = 1000;
 
-    private NotificationLayout layout;
-    private MainActivity mainActivity;
     private ImageView blurredBg;
     private int initialY, maxHeight, mActionBarSize, topOffset;
     private float initialTouchY;
     private int triggerPixel = 250;
     private int goBack;
-    private int duration = 800;
+    private int mDuration = DEFAULT_ANIMATION_DURATION;
     private Timer t;
     private int timeCounter = 0;
     private static boolean isExpanded = false;
@@ -54,35 +55,39 @@ public class NotificationLayout extends RelativeLayout{
 
     public NotificationLayout(Context context) {
         super(context);
-        initLayout(context);
+        initLayout();
     }
 
     public NotificationLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initLayout(context);
+        initLayout();
     }
 
     public NotificationLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initLayout(context);
+        initLayout();
 
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        View toggle = layout.findViewById(R.id.notif_toggle);
+        View toggle = findViewById(R.id.notif_toggle);
         toggle.setOnTouchListener(new OnTouchListener() {
-            int [] location = new int[2];
+            private final int RELEASE_DURATION = 300;
+
+            int[] location = new int[2];
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
-                switch(event.getAction()){
+            public boolean onTouch(View v, MotionEvent event) {
+                blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         //ignore double tap
                         //if(event.getRawY()<mActionBarSize+topOffset)
-                            //return true;
-                        layout.setVisibility(VISIBLE);
-                        layout.getLocationInWindow(location);
+                        //return true;
+                        setVisibility(VISIBLE);
+                        getLocationInWindow(location);
                         initialY = location[1];
                         initialTouchY = event.getRawY();
                         blurredBg.setVisibility(View.VISIBLE);
@@ -91,13 +96,10 @@ public class NotificationLayout extends RelativeLayout{
                         isBlurred = true;
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        //ignore double tap
-                        //if(event.getRawY()<mActionBarSize)
-                            //return true;
-                        layout.setVisibility(VISIBLE);
-                        if(!isBlurred){
-                            Log.d("hello","hello");
-                            layout.getLocationInWindow(location);
+                        setVisibility(VISIBLE);
+                        if (!isBlurred) {
+                            Log.d("hello", "hello");
+                            getLocationInWindow(location);
                             initialY = location[1];
                             initialTouchY = event.getRawY();
                             blurredBg.setVisibility(View.VISIBLE);
@@ -106,14 +108,14 @@ public class NotificationLayout extends RelativeLayout{
                             isBlurred = true;
                         }
                         int newPos;
-                        if(isExpanded && (event.getRawY() - initialTouchY > 0))
-                            newPos = initialY + (int) (event.getRawY() - initialTouchY)/3;
+                        if (isExpanded && (event.getRawY() - initialTouchY > 0))
+                            newPos = initialY + (int) (event.getRawY() - initialTouchY) / 3;
                         else
                             newPos = initialY + (int) (event.getRawY() - initialTouchY);
-                        cutBackground((float)getToggleYPosition()/maxHeight);
-                        props = new ArrayList<PropertyValuesHolder>(1);
+                        cutBackground((float) getToggleYPosition() / maxHeight);
+                        props = new ArrayList<>(1);
                         props.add(PropertyValuesHolder.ofFloat("y", newPos));
-                        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
+                        anim = ObjectAnimator.ofPropertyValuesHolder(NotificationLayout.this,
                                 props.toArray(new PropertyValuesHolder[props.size()]));
                         anim.setDuration(0);
                         anim.start();
@@ -121,51 +123,46 @@ public class NotificationLayout extends RelativeLayout{
                     case MotionEvent.ACTION_UP:
                         //ignore double tap
                         //if(event.getRawY()<mActionBarSize)
-                            //return true;
-                        if(!isExpanded){
-                            if(triggerPixel < event.getRawY() - initialTouchY)
-                            {
-                                int y = 0 ;
+                        //return true;
+                        if (!isExpanded) {
+                            if (triggerPixel < event.getRawY() - initialTouchY) {
+                                int y = 0;
                                 isExpanded = true;
-                                props = new ArrayList<PropertyValuesHolder>(1);
-                                props.add(PropertyValuesHolder.ofFloat("y", y));
-                                anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                                        props.toArray(new PropertyValuesHolder[props.size()]));
-                                anim.setDuration(300);
-                                duration = 300;
-                                anim.addListener(animatorListener);
-                                anim.start();
-                            }else{
+                                setDuration(RELEASE_DURATION);
+                                animate().translationY(y)
+                                        .setDuration(RELEASE_DURATION)
+                                        .setListener(animatorListener)
+                                        .start();
+                            } else {
                                 int y = goBack;
                                 isExpanded = false;
-                                props = new ArrayList<PropertyValuesHolder>(1);
+                                props = new ArrayList<>(1);
                                 props.add(PropertyValuesHolder.ofFloat("y", y));
-                                anim = ObjectAnimator.ofPropertyValuesHolder(layout,
+                                anim = ObjectAnimator.ofPropertyValuesHolder(NotificationLayout.this,
                                         props.toArray(new PropertyValuesHolder[props.size()]));
-                                anim.setDuration(300);
-                                duration = 300;
+                                anim.setDuration(RELEASE_DURATION);
+                                setDuration(300);
                                 anim.addListener(animatorListener);
                                 anim.start();
                             }
                         } else {
-                            if(triggerPixel < initialTouchY - event.getRawY())
-                            {
+                            if (triggerPixel < initialTouchY - event.getRawY()) {
                                 int y = goBack;
                                 isExpanded = false;
                                 props = new ArrayList<PropertyValuesHolder>(1);
                                 props.add(PropertyValuesHolder.ofFloat("y", y));
-                                anim = ObjectAnimator.ofPropertyValuesHolder(layout,
+                                anim = ObjectAnimator.ofPropertyValuesHolder(NotificationLayout.this,
                                         props.toArray(new PropertyValuesHolder[props.size()]));
                                 anim.setDuration(300);
                                 anim.addListener(animatorListener);
                                 anim.start();
-                            }else{
+                            } else {
                                 int y = 0;
                                 isExpanded = true;
-                                props = new ArrayList<PropertyValuesHolder>(1);
+                                props = new ArrayList<>(1);
                                 props.add(PropertyValuesHolder.ofFloat("y", y));
                                 ObjectAnimator anim = null;
-                                anim = ObjectAnimator.ofPropertyValuesHolder(layout,
+                                anim = ObjectAnimator.ofPropertyValuesHolder(NotificationLayout.this,
                                         props.toArray(new PropertyValuesHolder[props.size()]));
                                 anim.setDuration(300);
                                 anim.addListener(animatorListener);
@@ -184,152 +181,70 @@ public class NotificationLayout extends RelativeLayout{
         return isExpanded;
     }
 
-    public void initLayout(Context context){
-        layout = (NotificationLayout) findViewById(R.id.notification_layout);
+    public void initLayout(){
+        //obtain actionbar size
         final TypedArray styledAttributes = getContext().getTheme().obtainStyledAttributes(
                 new int[] { android.R.attr.actionBarSize });
         mActionBarSize = (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
+
         maxHeight = getResources().getDisplayMetrics().heightPixels - mActionBarSize;
-        goBack = -getResources().getDisplayMetrics().heightPixels+mActionBarSize;
-        anim = ObjectAnimator.ofFloat(layout,"y",0,-getResources().getDisplayMetrics().heightPixels+mActionBarSize);
+        goBack = -getResources().getDisplayMetrics().heightPixels;
+        anim = ObjectAnimator.ofFloat(this, "y", 0, -getResources().getDisplayMetrics().heightPixels + mActionBarSize);
         anim.setDuration(0);
         anim.start();
 
         contentWidth = getResources().getDisplayMetrics().widthPixels;
+
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //find blurred bg
+                blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
+
+                //get window background drawable
+                TypedValue outValue = new TypedValue();
+                int[] attrs = { android.R.attr.windowBackground };
+                getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, outValue, true);
+                TypedArray style = getContext().getTheme().obtainStyledAttributes(outValue.resourceId, attrs);
+                windowBackground = style.getDrawable(0);
+                style.recycle();
+
+                //compute top offset
+                topOffset = getResources().getDisplayMetrics().heightPixels - getMeasuredHeight();
+            }
+        });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mainActivity = (MainActivity) getContext();
-                TypedValue outValue = new TypedValue();
-                int[] attrs = { android.R.attr.windowBackground };
-                mainActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, outValue, true);
-                TypedArray style = mainActivity.getTheme().obtainStyledAttributes(outValue.resourceId, attrs);
-                windowBackground = style.getDrawable(0);
-                style.recycle();
+
             }
-        },500);
+        }, 500);
 
 
     }
 
-    /*public boolean dispatchTouchEvent(MotionEvent event) {
-        int [] location = new int[2];
-        //topOffset = getResources().getDisplayMetrics().heightPixels - layout.getMeasuredHeight();
-        blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
-        switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                //ignore double tap
-                if(event.getRawY()<mActionBarSize+topOffset)
-                    return true;
-                layout.setVisibility(VISIBLE);
-                layout.getLocationInWindow(location);
-                initialY = location[1];
-                initialTouchY = event.getRawY();
-                blurredBg.setVisibility(View.VISIBLE);
-                drawBlurredBackground();
-                cutBackground((float) getToggleYPosition() / maxHeight);
-                isBlurred = true;
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                //ignore double tap
-                if(event.getRawY()<mActionBarSize)
-                    return true;
-                layout.setVisibility(VISIBLE);
-                if(!isBlurred){
-                    Log.d("hello","hello");
-                    layout.getLocationInWindow(location);
-                    initialY = location[1];
-                    initialTouchY = event.getRawY();
-                    blurredBg.setVisibility(View.VISIBLE);
-                    drawBlurredBackground();
-                    cutBackground((float) getToggleYPosition() / maxHeight);
-                    isBlurred = true;
-                }
-                int newPos;
-                if(isExpanded && (event.getRawY() - initialTouchY > 0))
-                    newPos = initialY + (int) (event.getRawY() - initialTouchY)/3;
-                else
-                    newPos = initialY + (int) (event.getRawY() - initialTouchY);
-                cutBackground((float)getToggleYPosition()/maxHeight);
-                props = new ArrayList<PropertyValuesHolder>(1);
-                props.add(PropertyValuesHolder.ofFloat("y", newPos));
-                anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                        props.toArray(new PropertyValuesHolder[props.size()]));
-                anim.setDuration(0);
-                anim.start();
-                return true;
-            case MotionEvent.ACTION_UP:
-                //ignore double tap
-                if(event.getRawY()<mActionBarSize)
-                    return true;
-                if(!isExpanded){
-                    if(triggerPixel < event.getRawY() - initialTouchY)
-                    {
-                        int y = 0 ;
-                        isExpanded = true;
-                        props = new ArrayList<PropertyValuesHolder>(1);
-                        props.add(PropertyValuesHolder.ofFloat("y", y));
-                        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                                props.toArray(new PropertyValuesHolder[props.size()]));
-                        anim.setDuration(300);
-                        anim.addListener(animatorListener);
-                        anim.start();
-                    }else{
-                        int y = goBack;
-                        isExpanded = false;
-                        props = new ArrayList<PropertyValuesHolder>(1);
-                        props.add(PropertyValuesHolder.ofFloat("y", y));
-                        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                                props.toArray(new PropertyValuesHolder[props.size()]));
-                        anim.setDuration(300);
-                        anim.addListener(animatorListener);
-                        anim.start();
-                    }
-                } else {
-                    if(triggerPixel < initialTouchY - event.getRawY())
-                    {
-                        int y = goBack;
-                        isExpanded = false;
-                        props = new ArrayList<PropertyValuesHolder>(1);
-                        props.add(PropertyValuesHolder.ofFloat("y", y));
-                        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                                props.toArray(new PropertyValuesHolder[props.size()]));
-                        anim.setDuration(300);
-                        anim.addListener(animatorListener);
-                        anim.start();
-                    }else{
-                        int y = 0;
-                        isExpanded = true;
-                        props = new ArrayList<PropertyValuesHolder>(1);
-                        props.add(PropertyValuesHolder.ofFloat("y", y));
-                        ObjectAnimator anim = null;
-                        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                                props.toArray(new PropertyValuesHolder[props.size()]));
-                        anim.setDuration(300);
-                        anim.addListener(animatorListener);
-                        anim.start();
-                    }
-                }
-
-                return true;
-        }
-        return super.dispatchTouchEvent(event);
-    }*/
+    private void setDuration(int duration) {
+        this.mDuration = duration;
+    }
 
     Animator.AnimatorListener animatorListener = new Animator.AnimatorListener(){
         @Override
         public void onAnimationStart(Animator animation) {
-            animateBlurredBg(duration);
+            blurredBg.setVisibility(View.VISIBLE);
+            animateBlurredBg(mDuration);
         }
         @Override
         public void onAnimationEnd(Animator animation) {
             if(!isExpanded) {
-                if(blurredBitmap!=null)
+                //recycle bitmap
+                if(blurredBitmap!=null) {
                     blurredBitmap.recycle();
-                blurredBitmap = null;
+                    blurredBitmap = null;
+                }
+
                 blurredBg.setVisibility(GONE);
-                layout.setVisibility(GONE);
+                setVisibility(GONE);
                 isBlurred = false;
             }
             else
@@ -345,19 +260,21 @@ public class NotificationLayout extends RelativeLayout{
         }
     };
 
+    /**
+     * blur whatever is on the main view.
+     */
     private void drawBlurredBackground(){
         maxHeight = getRootView().findViewById(R.id.content_view).getMeasuredHeight();
         blurredBitmap = ImageUtil.drawViewToBitmap(
                 blurredBitmap, getRootView().findViewById(R.id.content_view), contentWidth, maxHeight, 5, windowBackground);
-        blurredBitmap = ImageUtil.BlurBitmap(mainActivity, blurredBitmap, 20);
-        blurredBg.setVisibility(View.VISIBLE);
+        blurredBitmap = ImageUtil.BlurBitmap(getContext(), blurredBitmap, 20);
         blurredBg.setImageBitmap(blurredBitmap);
-
     }
 
     public void cutBackground(float percent){
         if(blurredBitmap == null)
             return;
+
         Bitmap mutableBitmap = blurredBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Paint p = new Paint();
         p.setColor(Color.TRANSPARENT);
@@ -380,7 +297,7 @@ public class NotificationLayout extends RelativeLayout{
 
             @Override
             public void run() {
-                mainActivity.runOnUiThread(new Runnable() {
+                ((Activity) getContext()).runOnUiThread(new Runnable() {
                     public void run() {
                         cutBackground((float) getToggleYPosition() / maxHeight);
                         timeCounter += 10;
@@ -395,34 +312,32 @@ public class NotificationLayout extends RelativeLayout{
     }
 
     public void expandLayout(){
-        topOffset = getResources().getDisplayMetrics().heightPixels - layout.getMeasuredHeight();
-        blurredBg = (ImageView) getRootView().findViewById(R.id.blur_image);
         drawBlurredBackground();
         cutBackground((float) getToggleYPosition() / maxHeight);
-        layout.setVisibility(VISIBLE);
-        blurredBg.setVisibility(View.VISIBLE);
+        setVisibility(VISIBLE);
         int y = 0 ;
         isExpanded = true;
-        props = new ArrayList<PropertyValuesHolder>(1);
-        props.add(PropertyValuesHolder.ofFloat("y", y));
-        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                props.toArray(new PropertyValuesHolder[props.size()]));
-        anim.setDuration(800);
-        duration = 800;
-        anim.addListener(animatorListener);
-        anim.start();
+
+        setDuration(DEFAULT_ANIMATION_DURATION);
+
+        animate().translationY(y)
+                .setInterpolator(new LinearOutSlowInInterpolator())
+                .setListener(animatorListener)
+                .setDuration(DEFAULT_ANIMATION_DURATION)
+                .start();
     }
 
     public void collapseLayout(){
         int y = goBack;
         isExpanded = false;
-        props = new ArrayList<PropertyValuesHolder>(1);
-        props.add(PropertyValuesHolder.ofFloat("y", y));
-        anim = ObjectAnimator.ofPropertyValuesHolder(layout,
-                props.toArray(new PropertyValuesHolder[props.size()]));
-        anim.setDuration(800);
-        anim.addListener(animatorListener);
-        anim.start();
+
+        setDuration(DEFAULT_ANIMATION_DURATION);
+
+        animate().translationY(y)
+                .setInterpolator(new LinearOutSlowInInterpolator())
+                .setListener(animatorListener)
+                .setDuration(DEFAULT_ANIMATION_DURATION)
+                .start();
     }
 
 }

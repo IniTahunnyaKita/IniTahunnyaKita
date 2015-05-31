@@ -2,6 +2,7 @@ package com.molaja.android.widget;
 
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
@@ -17,17 +18,20 @@ public class BaseFragment extends Fragment {
 
     public int actionBarMode = MODE_ACTIONBAR_DEFAULT;
 
+    private View fragmentView;
+
     @Override
     public void onResume() {
         super.onResume();
 
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
+            updateToolbarElevation(mainActivity);
             if (this instanceof TheBagFragment) {
                 mainActivity.setToolbarTransparent();
             } else {
                 mainActivity.setToolbarDefault();
-                setTitleAlpha(1f);
+                //setTitleAlpha(1f, getResources().getColor(R.color.Teal));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.DarkTeal));
@@ -35,9 +39,48 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    public void setFragmentView(View fragmentView) {
+        this.fragmentView = fragmentView;
+    }
+
+    /**
+     * Look for a view inside this fragment.
+     * @param id id of the view to look for.
+     * @return the view that has the given id in the hierarchy or null.
+     */
+    public View findViewById(int id) {
+        return fragmentView.findViewById(id);
+    }
+
+    /**
+     * Look for a child with the given tag in the fragment.
+     * @param tag tag of the view to look for.
+     * @return the view that has the given tag in the hierarchy or null.
+     */
+    public View findViewWithTag(Object tag) {
+        return fragmentView.findViewWithTag(tag);
+    }
+
+    /**
+     * get the specified color based on id
+     * @param colorId the id of the color to look for.
+     * @return color value in form of 0xAARRGGBB.
+     */
+    public int getColor(int colorId) {
+        return getResources().getColor(colorId);
+    }
+
+    private void updateToolbarElevation(MainActivity mainActivity) {
+        if (this instanceof TheBagFragment) {
+            mainActivity.setToolbarElevation(0);
+        } else {
+            mainActivity.setToolbarElevation(getResources().getDimensionPixelSize(R.dimen.default_elevation));
+        }
+    }
+
     public void setActionBarColor(int color) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setToolbarColor(color);
+            ((MainActivity) getActivity()).setToolbarColor(color, false);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getActivity().getWindow().setStatusBarColor(MolajaApplication.darkenColor(color, 0.3f));
@@ -46,9 +89,9 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    public void setTitleAlpha(float alpha) {
+    public void setTitleAlpha(float alpha, int color) {
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity)getActivity()).setToolbarAlpha(alpha);
+            ((MainActivity)getActivity()).setToolbarAlpha(alpha, color);
         }
 
     }

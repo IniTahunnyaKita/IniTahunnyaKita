@@ -59,6 +59,7 @@ import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -96,6 +97,7 @@ public class VerticalPager extends ViewGroup {
     public static final int PAGE_SNAP_DURATION_INSTANT = 1;
 
     private boolean mIsPagingEnabled = true;
+    private boolean mIsScrollingHorizontally = true;
 
     public static final String TAG = "VerticalPager";
 
@@ -368,8 +370,26 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isTapDetectorEnabled)
-            mGestureDetector.onTouchEvent(ev);
+        if (isTapDetectorEnabled) {
+            Log.d("scroll", "onintercept mIsScrollingHorizontally:"+mIsScrollingHorizontally);
+            if (ev.getAction() == MotionEvent.ACTION_DOWN)
+                onTapListener.onDispatchTouchEvent(ev);
+
+            if (!mIsScrollingHorizontally)
+                mIsScrollingHorizontally = mGestureDetector.onTouchEvent(ev);
+
+            if (ev.getAction() == MotionEvent.ACTION_UP)
+                mIsScrollingHorizontally = true;
+
+            requestDisallowInterceptTouchEvent(mIsScrollingHorizontally);
+
+            //dispatch touch event
+            /*if (mIsScrollingHorizontally) {
+                onTapListener.onDispatchTouchEvent(ev);
+                return false;
+            }*/
+        }
+
         if (!mIsPagingEnabled)
             return false;
 
@@ -504,8 +524,25 @@ public class VerticalPager extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (isTapDetectorEnabled)
-            mGestureDetector.onTouchEvent(ev);
+        if (isTapDetectorEnabled) {
+            Log.d("scroll", "mIsScrollingHorizontally:"+mIsScrollingHorizontally);
+            if (ev.getAction() == MotionEvent.ACTION_DOWN)
+                onTapListener.onDispatchTouchEvent(ev);
+
+            if (!mIsScrollingHorizontally)
+                mIsScrollingHorizontally = mGestureDetector.onTouchEvent(ev);
+
+            if (ev.getAction() == MotionEvent.ACTION_UP)
+                mIsScrollingHorizontally = true;
+
+            requestDisallowInterceptTouchEvent(mIsScrollingHorizontally);
+
+            //dispatch touch event
+            /*if (mIsScrollingHorizontally) {
+                onTapListener.onDispatchTouchEvent(ev);
+                return false;
+            }*/
+        }
 
         if (!mIsPagingEnabled)
             return false;
@@ -760,14 +797,23 @@ public class VerticalPager extends ViewGroup {
             onTapListener.onTap();
             return super.onSingleTapConfirmed(e);
         }
+
+        /**
+         * @return true - if we're scrolling in X direction, false - in Y direction.
+         */
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return Math.abs(distanceX) > Math.abs(distanceY);
+        }
     }
 
     public interface OnTapListener{
-        public void onTap();
+        void onTap();
+        void onDispatchTouchEvent(MotionEvent event);
     }
 
     public interface OnPullToZoomListener{
-        public void onProgress(float progress);
-        public void onCancel();
+        void onProgress(float progress);
+        void onCancel();
     }
 }

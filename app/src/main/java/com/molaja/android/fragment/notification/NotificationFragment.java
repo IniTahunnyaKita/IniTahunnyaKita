@@ -42,6 +42,7 @@ public class NotificationFragment extends Fragment {
             item.setItemUrl(HardcodeValues.NotificationItems.itemUrls[i]);
             list.add(item);
         }
+
         NotificationAdapter adapter = new NotificationAdapter(getActivity(), list);
         recyclerView.setAdapter(adapter);
     }

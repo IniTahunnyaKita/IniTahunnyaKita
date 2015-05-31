@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
+    android:background="@color/White"
     sothree:umanoPanelHeight="@dimen/profile_bar_height"
     sothree:umanoShadowHeight="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/profile_bar_height">
+        android:layout_marginBottom="@dimen/profile_bar_height"
+        android:background="@color/White">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
@@ -27,17 +29,17 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="50dp"/>
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_image_btn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:padding="10dp"
+            android:padding="@dimen/default_medium_margin"
             android:scaleType="fitCenter"
-            android:background="@drawable/circle_btn_teal_bg"
+            android:elevation="12dp"
             android:src="@drawable/ic_action_new_white"/>
 
     </RelativeLayout>

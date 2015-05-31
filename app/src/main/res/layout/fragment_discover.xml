@@ -54,21 +54,21 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="?android:attr/windowBackground"/>
 
         </LinearLayout>
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/search_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="25dp"
-            android:background="@drawable/circle_btn_teal_bg"
-            android:padding="@dimen/default_medium_margin"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_search"/>
+            android:elevation="12dp"
+            android:src="@mipmap/ic_search"
+            app:fabSize="normal"/>
 
     </RelativeLayout>
 

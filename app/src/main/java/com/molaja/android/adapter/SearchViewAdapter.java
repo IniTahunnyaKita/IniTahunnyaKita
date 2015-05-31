@@ -1,6 +1,5 @@
 package com.molaja.android.adapter;
 
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gc.materialdesign.views.ProgressBarIndeterminate;
 import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
 import com.molaja.android.fragment.thebag.TheBagFragment;
@@ -30,20 +28,18 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
     public final int LOADING_VIEW_TYPE = 2;
 
     List<SearchResult> list;
-    Context context;
 
-    public SearchViewAdapter(List<SearchResult> list, Context context) {
+    public SearchViewAdapter(List<SearchResult> list) {
         this.list = list;
-        this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case DEFAULT_VIEW_TYPE:
-                return new UserViewHolder(LayoutInflater.from(context).inflate(R.layout.child_buddies_list, parent, false));
+                return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.child_buddies_list, parent, false));
             case LOADING_VIEW_TYPE:
-                return new LoadingViewHolder(LayoutInflater.from(context).inflate(R.layout.child_loading_view, parent, false));
+                return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.child_loading_view, parent, false));
             default:
                 return null;
         }
@@ -60,9 +56,9 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
 
             String image = Validations.isEmptyOrNull(list.get(position).image) ?
                     "file:///android_asset/default_profile_picture.jpg" : list.get(position).image;
-            Picasso.with(context)
+            Picasso.with(holder.itemView.getContext())
                     .load(image)
-                    .placeholder(new ColorDrawable(context.getResources().getColor(R.color.LightGrey)))
+                    .placeholder(new ColorDrawable(holder.itemView.getContext().getResources().getColor(R.color.LightGrey)))
                     .into(viewHolder.image);
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,10 +66,10 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putString("USERNAME", list.get(position).username);
-                    MolajaApplication.showKeyboard(context, viewHolder.itemView, false);
+                    MolajaApplication.showKeyboard(v.getContext(), viewHolder.itemView, false);
 
-                    if (context instanceof FragmentActivity)
-                        FragmentUtil.switchFragment(((FragmentActivity) context).getSupportFragmentManager(),
+                    if (v.getContext() instanceof FragmentActivity)
+                        FragmentUtil.switchFragment(((FragmentActivity) v.getContext()).getSupportFragmentManager(),
                                 android.R.id.tabcontent,
                                 new TheBagFragment(),
                                 bundle);
@@ -109,7 +105,7 @@ public class SearchViewAdapter extends RecyclerView.Adapter {
     }
 
     static class LoadingViewHolder extends RecyclerView.ViewHolder {
-        ProgressBarIndeterminate progressBar;
+        View progressBar;
 
         public LoadingViewHolder(View itemView) {
             super(itemView);

@@ -4,12 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +34,7 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ViewPagerIndicator mViewPagerIndicator;
     ImageView profileBarBg;
     View profileBar;
-    ImageButton addImageBtn;
+    FloatingActionButton addImageBtn;
 
     Discussion.Conversation conversation;
 
@@ -54,7 +53,7 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
         profileBar = findViewById(R.id.profile_bar);
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.viewpager_indicator);
         profileBarBg = (ImageView) findViewById(R.id.profile_bar_background);
-        addImageBtn = (ImageButton) findViewById(R.id.add_image_btn);
+        addImageBtn = (FloatingActionButton) findViewById(R.id.add_image_btn);
         ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture);
         ImageView itemImage = (ImageView) findViewById(R.id.chat_item_image);
         TextView name = (TextView) findViewById(R.id.name);
@@ -77,7 +76,8 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
         name.setText(getIntent().getStringExtra("NAME"));
         itemName.setText(conversation.title);
 
-        ViewCompat.setElevation(addImageBtn, 20);
+        //ViewCompat.setElevation(addImageBtn, 20);
+        addImageBtn.setRippleColor(getResources().getColor(R.color.DarkTeal));
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 

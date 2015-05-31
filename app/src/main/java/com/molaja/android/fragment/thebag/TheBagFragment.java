@@ -75,17 +75,21 @@ import de.greenrobot.event.EventBus;
  */
 public class TheBagFragment extends BaseFragment implements Target, Scroller, ViewPager.OnPageChangeListener,
         View.OnClickListener {
+
+    //CONSTANTS
     private static final String DEFAULT_PROFILE_PICTURE = "file:///android_asset/default_profile_picture.jpg";
-    private int DEFAULT_THEME;
-    private Palette.Swatch userSwatch;
-    public final int PICK_IMAGE_REQUEST_CODE = 1;
-    public final int TAKE_PHOTO_REQUEST_CODE = 2;
-    public final int EDIT_IMAGE_REQUEST_CODE = 3;
     public static final int ARE_BUDDIES = 1;
     public static final int PENDING_INVITE = 2;
     public static final int NOT_BUDDIES = -1;
+    public static final int PICK_IMAGE_REQUEST_CODE = 1;
+    public static final int TAKE_PHOTO_REQUEST_CODE = 2;
+    public static final int EDIT_IMAGE_REQUEST_CODE = 3;
 
-    View fragmentView, mHeader, mHeaderShadow;
+    private int DEFAULT_THEME;
+    private int THEMED_DARK_COLOR;
+    private Palette.Swatch userSwatch;
+
+    View mHeader, mHeaderShadow;
     ViewPager mViewPager;
     SmartTabLayout viewPagerTab;
     ImageView profilePicture, blurredBg;
@@ -104,7 +108,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
+        setFragmentView(fragmentView);
 
         mContext = getActivity().getApplicationContext();
 
@@ -124,7 +129,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
             withRebound = false;
             user = User.getCurrentUser(getActivity());
             username = user.username;
-            initProfile(fragmentView, true);
+            initProfile(true);
             //initPager();
         }
 
@@ -143,7 +148,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                     }
 
 
-                    initProfile(fragmentView, withRebound);
+                    initProfile(withRebound);
                     initPager();
 
                     BackendHelper.getBuddies(getActivity(), user.id, 1, new FutureCallback<JsonObject>() {
@@ -167,17 +172,17 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     }
 
     private void bindViews() {
-        mViewPager = (ViewPager) fragmentView.findViewById(R.id.the_bag_pager);
-        blurredBg = (ImageView) fragmentView.findViewById(R.id.blurred_bg);
-        mHeader = fragmentView.findViewById(R.id.header);
-        mHeaderShadow = fragmentView.findViewById(R.id.header_shadow);
-        profilePicture = (ImageView) fragmentView.findViewById(R.id.profile_picture);
-        activitiesItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_subscriptions);
-        subscriptionsItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_activities);
-        buddiesItem = (ProfileItem) fragmentView.findViewById(R.id.profile_item_buddies);
-        buddyBtn = (BuddyButton) fragmentView.findViewById(R.id.buddy_btn);
-        discussBtn = (Button) fragmentView.findViewById(R.id.discuss_btn);
-        viewPagerTab = (SmartTabLayout) fragmentView.findViewById(R.id.viewpager_tab);
+        mViewPager = (ViewPager) findViewById(R.id.the_bag_pager);
+        blurredBg = (ImageView) findViewById(R.id.blurred_bg);
+        mHeader = findViewById(R.id.header);
+        mHeaderShadow = findViewById(R.id.header_shadow);
+        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        activitiesItem = (ProfileItem) findViewById(R.id.profile_item_subscriptions);
+        subscriptionsItem = (ProfileItem) findViewById(R.id.profile_item_activities);
+        buddiesItem = (ProfileItem) findViewById(R.id.profile_item_buddies);
+        buddyBtn = (BuddyButton) findViewById(R.id.buddy_btn);
+        discussBtn = (Button) findViewById(R.id.discuss_btn);
+        viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpager_tab);
     }
 
     private int getActionBarHeight() {
@@ -188,9 +193,9 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         return mActionBarSize;
     }
 
-    public void initProfile(final View v, boolean withRebound){
-        ((TextView)v.findViewById(R.id.user_fullname)).setText(user.name);
-        ((TextView)v.findViewById(R.id.username)).setText(user.username);
+    public void initProfile(boolean withRebound){
+        ((TextView) findViewById(R.id.user_fullname)).setText(user.name);
+        ((TextView) findViewById(R.id.username)).setText(user.username);
         subscriptionsItem.setItemValue(0);
         activitiesItem.setItemValue(0);
         buddiesItem.setItemValue(user.buddies_count);
@@ -320,7 +325,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
     private void setTabIconColor(int whichTab, int color, float alpha) {
         Log.d("settabcolor","tab:"+whichTab);
-        ImageView tab = (ImageView) fragmentView.findViewWithTag("TAB"+whichTab);
+        ImageView tab = (ImageView) findViewWithTag("TAB"+whichTab);
 
         if (tab != null) {
             int red = Color.red(color);
@@ -394,8 +399,8 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                 if (!isVisible())
                     return;
 
-                setActionBarColor(palette.getDarkVibrantColor(DEFAULT_THEME));
-                viewPagerTab.setBackgroundColor(palette.getDarkVibrantColor(DEFAULT_THEME));
+                THEMED_DARK_COLOR = palette.getDarkVibrantColor(DEFAULT_THEME);
+                viewPagerTab.setBackgroundColor(THEMED_DARK_COLOR);
                 userSwatch = palette.getVibrantSwatch();
 
                 if (userSwatch != null) {
@@ -501,7 +506,7 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         ViewCompat.setTranslationY(mHeaderShadow, Math.max(-totalScroll, mMinHeaderTranslation));
         mViewPager.getChildAt(1);
         float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
-        setTitleAlpha(ratio);
+        setTitleAlpha(ratio, THEMED_DARK_COLOR);
 
         switch (actionBarMode) {
             case MODE_ACTIONBAR_DEFAULT:

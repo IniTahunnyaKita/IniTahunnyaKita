@@ -4,7 +4,7 @@
     android:layout_height="?attr/actionBarSize"
     android:layout_width="match_parent"
     android:elevation="5dp"
-    android:background="@color/White">
+    android:background="@color/Teal">
 <com.molaja.android.widget.ActionBarLayout
     xmlns:alibabi="http://schemas.android.com/apk/res-auto"
     android:id="@+id/actionbar_layout"
@@ -21,7 +21,7 @@
         android:layout_height="50dp"
         android:layout_centerInParent="true"/>
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/shopmode_action_bar_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionName="@string/actionbar_background_transition"
-        android:src="@color/Teal"/>
+        android:src="@color/Teal"/>-->
 
     <ImageView
         android:id="@+id/action_bar_watermark"

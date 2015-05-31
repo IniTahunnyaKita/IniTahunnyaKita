@@ -36,7 +36,7 @@
     <string name="welcome_text">Welcome back,</string>
     <string name="pick_image">Pick image</string>
     <string name="upload_failed">Upload failed.</string>
-    <string name="search">Search</string>
+    <string name="molaja_search">Search on Molaja</string>
     <string name="buddies">BUDDIES</string>
     <string name="discuss_something">Discuss something</string>
     <string name="discuss">Discuss</string>
@@ -45,6 +45,7 @@
     <string name="reject">Reject</string>
     <string name="request_accepted">Request accepted.</string>
     <string name="request_rejected">Request rejected.</string>
+    <string name="trending_searches">Trending searches</string>
     <string name="pending">PENDING</string>
     <string name="add_buddy">ADD BUDDY</string>
 
@@ -74,11 +75,15 @@
         <item>Log out</item>
     </string-array>
 
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis metus nec urna convallis,
-        a sollicitudin augue finibus. Aenean gravida aliquet dui, et pulvinar tellus laoreet eu.
-        Maecenas elementum quam eget velit consectetur vulputate. Nulla id urna massa. Etiam et nunc sem.
-        Sed in erat urna.</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Proin ac elementum quam, quis pretium massa. Ut vel risus et diam semper laoreet.
+        Nam sagittis augue vel eros facilisis, ut consequat libero pulvinar.
+        Suspendisse bibendum non sapien ac lobortis. Quisque ut nibh rutrum, mattis lacus vel, ornare tortor.
+        Nulla facilisi. Duis erat nisi, dignissim at aliquam quis, luctus eget dolor.
+        Pellentesque egestas iaculis ante, in aliquet metus pulvinar laoreet.
+        Aliquam pellentesque condimentum lectus, id egestas nunc efficitur tincidunt</string>
     <string name="shares">shares</string>
     <string name="likes">likes</string>
+    <string name="search_did_not_match_anything">Your search did not match anything.</string>
 
 </resources>

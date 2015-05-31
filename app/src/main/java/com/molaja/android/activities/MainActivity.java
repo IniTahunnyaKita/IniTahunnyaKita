@@ -1,5 +1,8 @@
 package com.molaja.android.activities;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -41,8 +44,6 @@ import com.molaja.android.util.MainTabStack;
 import com.molaja.android.widget.ActionBarLayout;
 import com.molaja.android.widget.NotificationLayout;
 import com.molaja.android.widget.RevealLayout;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public static int mode  = USER_MODE;
 
     private String TAG = getClass().getSimpleName();
-    List pollList = new ArrayList< HangoutPost>();
+    List pollList = new ArrayList<>();
 
     //views
     Toolbar mToolbar;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     NotificationLayout mNotificationLayout;
     ImageView blurredBg;
 
-    LayoutInflater inflater;
     boolean isLoggedIn;
 
 
@@ -129,17 +129,13 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction(DISMISS_DIALOG);
         registerReceiver(mDialogPopupReceiver, filter);
 
+        bindViews();
+
         initActionBar();
 
         initTabs();
 
         initPollHolder();
-
-        blurredBg = (ImageView) findViewById(R.id.blur_image);
-        inflater = LayoutInflater.from(this);
-        rootView = findViewById(R.id.root_view);
-        content = blurredBg.getRootView();
-        mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
 
         initNotification();
     }
@@ -154,8 +150,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void initActionBar(){
+    public void bindViews() {
+        blurredBg = (ImageView) findViewById(R.id.blur_image);
+        rootView = findViewById(R.id.root_view);
+        content = blurredBg.getRootView();
+        mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        holderLayout = (RelativeLayout) findViewById(R.id.holder_layout);
+        pollHolder = (LinearLayout) findViewById(R.id.poll_holder);
+        pollCaption = (EditText) findViewById(R.id.poll_EditText);
+
+    }
+
+    public void initActionBar(){
         ((ActionBarLayout)mToolbar.findViewById(R.id.actionbar_layout)).setHasRevealLayout(true);
         setSupportActionBar(mToolbar);
     }
@@ -207,27 +214,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setToolbarDefault() {
-        mToolbar.setBackgroundColor(Color.WHITE);
-        setToolbarColor(getResources().getColor(R.color.Teal));
-        ((ImageView)findViewById(R.id.shopmode_action_bar_bg)).setImageDrawable(new ColorDrawable(getResources().getColor(R.color.CornflowerBlue)));
+        setToolbarColor(getResources().getColor(R.color.Teal), true);
         findViewById(R.id.app_logo).setVisibility(View.VISIBLE);
         findViewById(R.id.action_bar_watermark).setVisibility(View.VISIBLE);
     }
 
     public void setToolbarTransparent() {
         mToolbar.setBackgroundColor(Color.TRANSPARENT);
-        findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
-        findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
+        //findViewById(R.id.usermode_action_bar_bg).setAlpha(0f);
+        //findViewById(R.id.shopmode_action_bar_bg).setAlpha(0f);
         findViewById(R.id.action_bar_watermark).setVisibility(View.GONE);
     }
 
-    public void setToolbarAlpha(float alpha) {
-        findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
-        findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);
+    public void setToolbarAlpha(float alpha, int color) {
+        /*findViewById(R.id.usermode_action_bar_bg).setAlpha(alpha);
+        findViewById(R.id.shopmode_action_bar_bg).setAlpha(alpha);*/
+        float convertedAlpha = alpha * 255;
+        setToolbarColor(Color.argb((int) convertedAlpha, Color.red(color), Color.green(color), Color.blue(color)), false);
     }
 
-    public void setToolbarColor(int color) {
-        ((ImageView)findViewById(R.id.usermode_action_bar_bg)).setImageDrawable(new ColorDrawable(color));
+    public void setToolbarColor(int color, boolean animate) {
+        if (animate) {
+            int currentColor = ((ColorDrawable)mToolbar.getBackground()).getColor();
+            ObjectAnimator colorFade = ObjectAnimator.ofObject(mToolbar, "backgroundColor", new ArgbEvaluator(),
+                    currentColor, color);
+            colorFade.setDuration(500);
+            colorFade.start();
+        } else {
+            mToolbar.setBackgroundColor(color);
+        }
+        //((ImageView)findViewById(R.id.usermode_action_bar_bg)).setImageDrawable(new ColorDrawable(color));
+    }
+
+    public void setToolbarElevation(int elevation) {
+        ViewCompat.setElevation(mToolbar, elevation);
     }
 
     public void switchToProfileActionBar(boolean b) {
@@ -276,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), HangoutFragment.class, null);
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), DiscoverFragment.class, null);
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), DiscussionFragment.class, null);
-        mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_4_TAG)), TheBagFragment.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_4_TAG)), TheBagFragment.class, null);
 
         ViewCompat.setElevation(mTabHost, getResources().getDimensionPixelSize(R.dimen.default_elevation));
     }
@@ -333,9 +353,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initPollHolder(){
-        holderLayout = (RelativeLayout) findViewById(R.id.holder_layout);
-        pollHolder = (LinearLayout) findViewById(R.id.poll_holder);
-        pollCaption = (EditText) findViewById(R.id.poll_EditText);
         ImageView cancelBtn = (ImageView) holderLayout.findViewById(R.id.poll_cancel_btn);
         Button pollBtn = (Button) holderLayout.findViewById(R.id.poll_btn);
         View.OnClickListener closeHolder = new View.OnClickListener() {

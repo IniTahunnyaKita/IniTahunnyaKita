@@ -20,12 +20,11 @@
             android:typeface="sans"
             android:visibility="gone"/>
 
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        <ProgressBar
             android:id="@+id/loading_view"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center"
-            android:background="@color/Teal" />
+            android:layout_gravity="center" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
