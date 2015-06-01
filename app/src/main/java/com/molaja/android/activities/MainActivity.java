@@ -233,6 +233,11 @@ public class MainActivity extends AppCompatActivity {
         setToolbarColor(Color.argb((int) convertedAlpha, Color.red(color), Color.green(color), Color.blue(color)), false);
     }
 
+    /**
+     * set the toolbar's color given the specified color.
+     * @param color the color you want to switch to.
+     * @param animate enable/disable crossfade animation.
+     */
     public void setToolbarColor(int color, boolean animate) {
         if (animate) {
             int currentColor = ((ColorDrawable)mToolbar.getBackground()).getColor();

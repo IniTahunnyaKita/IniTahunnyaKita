@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:padding="2dp"
+    android:foreground="@drawable/selectable_item_background_borderless_white">
 
     <com.molaja.android.widget.RoundRelativeLayout
         android:layout_width="wrap_content"
@@ -18,4 +19,4 @@
             android:src="@color/LightGrey"/>
 
     </com.molaja.android.widget.RoundRelativeLayout>
-</RelativeLayout>
+</FrameLayout>

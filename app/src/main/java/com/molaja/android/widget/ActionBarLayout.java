@@ -74,6 +74,9 @@ public class ActionBarLayout extends RelativeLayout{
             mRevealLayout.next();
         }
         MainActivity.mode = MainActivity.SHOP_MODE;
+
+        if (getContext() instanceof MainActivity)
+            ((MainActivity) getContext()).setToolbarColor(getResources().getColor(R.color.Aquamarine), true);
         /*YoYo.with(Techniques.FadeOut)
                 .duration(500)
                 .playOn(findViewById(R.id.usermode_action_bar_bg));
@@ -87,6 +90,9 @@ public class ActionBarLayout extends RelativeLayout{
             mRevealLayout.next();
         }
         MainActivity.mode = MainActivity.USER_MODE;
+
+        if (getContext() instanceof MainActivity)
+            ((MainActivity) getContext()).setToolbarColor(getResources().getColor(R.color.Teal), true);
 
         /*YoYo.with(Techniques.FadeIn)
                 .duration(500)

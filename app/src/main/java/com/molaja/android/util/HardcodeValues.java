@@ -96,7 +96,7 @@ public class HardcodeValues {
     public final static int [] prices = new int[]{70000, 5600000,500000, 8400000};
     public final static int [] thumbsUps = new int[]{1842, 272394,15173,397535};
 
-    public final static String [] discoverItems = new String[]{"http://cdn2.thegloss.com/wp-content/uploads/2007/09/base-loose.jpg",
+    public final static String [] discoverItems = new String[]{"http://www.cmswire.com/~/media/189f2ab2a5114beb911761f18deabdf3.jpg",
         "http://www.aonel.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/t/u/tuc778j-aonel-1.jpg",
         "http://newfashionpoint.com/wp-content/uploads/2014/08/2014-2015-Teenage-Girls-Fashion-Trends-5.jpg",
         "http://images6.fanpop.com/image/photos/33300000/i-love-it-womens-shoes-33329749-720-720.jpg",
