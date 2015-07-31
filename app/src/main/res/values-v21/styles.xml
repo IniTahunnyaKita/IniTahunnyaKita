@@ -4,7 +4,7 @@
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/Teal</item>
         <item name="colorPrimaryDark">@color/DarkTeal</item>
-        <item name="colorAccent">@color/Teal</item>
+        <item name="colorAccent">@color/DarkTeal</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>

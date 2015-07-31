@@ -3,6 +3,7 @@ package com.molaja.android.fragment.itemdetail;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +31,14 @@ public class OverviewFragment extends Fragment{
         transitionName = getArguments().getString("transitionName");
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            if(transitionName!=null)
+            if(!TextUtils.isEmpty(transitionName))
                 image.setTransitionName(transitionName);
         }
+
         Picasso.with(getActivity())
                 .load(getArguments().getString("url"))
                 .into(image);
+
         mAttacher = new PhotoViewAttacher(image);
         mAttacher.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mAttacher.setZoomable(false);

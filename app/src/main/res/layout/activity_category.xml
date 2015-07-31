@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Black">
+
+    <ImageView
+        android:id="@+id/category_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+
+    <ImageView
+        android:id="@+id/category_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:transitionName="@string/category_icon_transition"/>
+
+    <TextView
+        android:id="@+id/category_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/category_icon"
+        android:layout_marginTop="@dimen/default_large_margin"
+        android:text="Category"
+        android:textSize="30sp"
+        android:textColor="@color/White"/>
+
+    <android.support.design.widget.FloatingActionButton
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="50dp"
+        android:src="@drawable/ic_action_next_item"
+        android:visibility="gone"
+        fab:borderWidth="0dp"/>
+
+</RelativeLayout>

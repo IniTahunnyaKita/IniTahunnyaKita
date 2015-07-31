@@ -10,15 +10,31 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/empty_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_new_requests"
-            android:textSize="26sp"
-            android:typeface="sans"
-            android:visibility="gone"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":("
+                android:textSize="26sp"
+                android:rotation="90"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_new_requests"
+                android:textSize="26sp"
+                android:typeface="sans"/>
+
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/loading_view"

@@ -59,8 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAB_1_TAG = "TAB 1";
     public static final String TAB_2_TAG = "TAB 2";
-    public static final String TAB_3_TAG = "TAB 3";//trending/stories?
+    public static final String TAB_3_TAG = "TAB 3";
     public static final String TAB_4_TAG = "TAB 4";
+
+    public static final int MODE_ACTIONBAR_DEFAULT = 1;
+    public static final int MODE_ACTIONBAR_PROFILE = 2;
+
+    public int actionBarMode = MODE_ACTIONBAR_DEFAULT;
 
     final public static int USER_MODE  = 1;
     final public static int SHOP_MODE  = 2;
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String DISMISS_DIALOG = "com.molaja.android.DISMISS_DIALOG";
 
     private static boolean isPollLayoutShown = false;
+    private static int mActionBarMode = MODE_ACTIONBAR_DEFAULT;
     public static int mode  = USER_MODE;
 
     private String TAG = getClass().getSimpleName();
@@ -82,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout pollHolder;
     RevealLayout mRevealLayout;
     View rootView;
-    View content;
     NotificationLayout mNotificationLayout;
     ImageView blurredBg;
 
@@ -150,10 +155,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void bindViews() {
+    private void bindViews() {
         blurredBg = (ImageView) findViewById(R.id.blur_image);
         rootView = findViewById(R.id.root_view);
-        content = blurredBg.getRootView();
         mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         holderLayout = (RelativeLayout) findViewById(R.id.holder_layout);
@@ -162,9 +166,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initActionBar(){
+    private void initActionBar() {
         ((ActionBarLayout)mToolbar.findViewById(R.id.actionbar_layout)).setHasRevealLayout(true);
         setSupportActionBar(mToolbar);
+    }
+
+    /**
+     * gets the current mode of the action bar (Default app title or User profile).
+     * @return The current mode.
+     */
+    public int getActionBarMode() {
+        return mActionBarMode;
+    }
+
+    /**
+     * sets the current actionbar mode.
+     * @param mode the actionbar mode to set to.
+     */
+    private void setActionBarMode(int mode) {
+        mActionBarMode = mode;
     }
 
     @Override
@@ -256,13 +276,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void switchToProfileActionBar(boolean b) {
-        if (b)
+        if (b) {
             ((ViewSwitcher) findViewById(R.id.actiobar_view_switcher)).showNext();
-        else
+            setActionBarMode(MODE_ACTIONBAR_PROFILE);
+        } else {
             ((ViewSwitcher) findViewById(R.id.actiobar_view_switcher)).showPrevious();
+            setActionBarMode(MODE_ACTIONBAR_DEFAULT);
+        }
     }
 
-    public void initProfileActionBar(String profileName, String image) {
+    private void initProfileActionBar(String profileName, String image) {
         ((TextView) findViewById(R.id.action_bar_profile_name)).setText(profileName);
         Picasso.with(this)
                 .load(image)
@@ -270,6 +293,11 @@ public class MainActivity extends AppCompatActivity {
                 .into((ImageView) findViewById(R.id.action_bar_profile_picture));
     }
 
+    /**
+     *
+     * @param className
+     * @return
+     */
     public Fragment getFragment(Class className) {
         for (Fragment f : getSupportFragmentManager().getFragments()) {
             if (className.isInstance(f)) {
@@ -279,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    public void initTabs(){
+    private void initTabs(){
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -308,7 +336,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TabHost.TabSpec setIndicator(Context ctx, TabHost.TabSpec spec) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.tab_item_main, null);
-        //v.setBackgroundResource(R.drawable.tab_indicator);
         ImageView tabImg = (ImageView) v.findViewById(R.id.tab_image);
         TextView tabTitle = (TextView) v.findViewById(R.id.tab_title);
         String tag = spec.getTag();

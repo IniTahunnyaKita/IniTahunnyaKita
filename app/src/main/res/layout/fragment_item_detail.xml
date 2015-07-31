@@ -35,40 +35,37 @@
 
     </com.grantlandchew.view.VerticalPager>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/short_detail_overlay"
+    <LinearLayout
+        android:id="@+id/short_detail_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:background="#CCFFFFFF">
+
+        <TextView
+            android:id="@+id/overlay_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/activity_vertical_margin"
-            android:background="#88FFFFFF">
+            android:text="Title"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/overlay_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/overlay_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/overlay_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:textSize="14sp"/>
 
         <LinearLayout
             android:id="@+id/button_overlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:layout_gravity="right">
 
             <Button
                 android:id="@+id/ask_seller_btn"
@@ -77,26 +74,24 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="ask seller"
-                android:textSize="16sp"
-                android:textAllCaps="false"
-                android:background="@drawable/default_btn_bg"/>
+                android:textColor="@color/Teal"
+                android:textAllCaps="true"
+                android:background="?attr/selectableItemBackground"/>
 
             <Button
                 android:id="@+id/add_cart_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="add to cart"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:textAllCaps="false"
-                android:background="@drawable/btn_bg_teal"/>
+                android:textColor="@color/DarkTeal"
+                android:textAllCaps="true"
+                android:background="?attr/selectableItemBackground"/>
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/zoom_icon"

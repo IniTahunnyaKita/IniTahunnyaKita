@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/Teal">
+
+        <RelativeLayout
+            android:id="@+id/search_container"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingTop="@dimen/default_small_margin"
+            android:paddingBottom="@dimen/default_small_margin"
+            android:paddingRight="@dimen/default_small_margin">
+
+            <EditText
+                android:id="@+id/search_box"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="@dimen/default_medium_margin"
+                android:singleLine="true"
+                android:hint= "@string/molaja_search"
+                android:imeOptions="actionGo"
+                android:textColorHint="#AAFFFFFF"
+                android:textSize="16sp"
+                android:textColor="@color/White"
+                android:typeface="sans"/>
+
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:padding="7dp"
+                android:src="@mipmap/ic_search"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trending_searches_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_large_margin"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:text="@string/trending_searches"
+                android:textSize="30sp"
+                android:typeface="sans"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/default_large_margin"
+                android:layout_marginLeft="@dimen/default_large_margin"
+                android:layout_marginRight="@dimen/default_large_margin"
+                android:background="@color/Black"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trending_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/default_large_margin"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

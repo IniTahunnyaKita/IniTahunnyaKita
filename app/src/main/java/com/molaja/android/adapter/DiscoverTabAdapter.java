@@ -4,16 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.molaja.android.fragment.discover.DiscoverCategoriesFragment;
 import com.molaja.android.fragment.discover.DiscoverItemsFragment;
 import com.molaja.android.fragment.discover.DiscoverShopsFragment;
+import com.molaja.android.fragment.discover.DiscoverUsersFragment;
 
 /**
  * Created by Florian on 2/11/2015.
  */
 public class DiscoverTabAdapter extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "CATEGORIES", "ITEMS", "SHOPS" };
+    private String tabTitles[] = new String[] { "USERS", "ITEMS", "SHOPS" };
 
     public DiscoverTabAdapter(FragmentManager fm){
         super(fm);
@@ -28,7 +28,7 @@ public class DiscoverTabAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new DiscoverCategoriesFragment();
+                return new DiscoverUsersFragment();
             case 1:
                 return new DiscoverItemsFragment();
             case 2:

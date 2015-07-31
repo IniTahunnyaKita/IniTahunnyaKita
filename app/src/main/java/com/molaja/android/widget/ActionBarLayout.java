@@ -60,10 +60,17 @@ public class ActionBarLayout extends RelativeLayout{
                 if(mNotificationLayout == null)
                     mNotificationLayout = (NotificationLayout) getRootView().findViewById(R.id.notification_layout);
 
-                if(mNotificationLayout.isLayoutExpanded())
+                if(mNotificationLayout.isLayoutExpanded()) {
                     mNotificationLayout.collapseLayout();
-                else
+
+                    if (getContext() instanceof MainActivity)
+                        ((MainActivity) getContext()).switchToProfileActionBar(false);
+                } else {
                     mNotificationLayout.expandLayout();
+
+                    if (getContext() instanceof MainActivity)
+                        ((MainActivity) getContext()).switchToProfileActionBar(true);
+                }
             }
         });
         super.onFinishInflate();

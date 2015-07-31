@@ -85,5 +85,17 @@
     <string name="shares">shares</string>
     <string name="likes">likes</string>
     <string name="search_did_not_match_anything">Your search did not match anything.</string>
+    <string name="new_discussion">New</string>
+    <string name="search">Search</string>
+    <string name="action_discussion_settings">Discussion settings</string>
+    <string name="action_delete_discussions">Delete discussions</string>
+    <string name="action_notifications">Notifications</string>
+    <string name="send_a_message">Send a message</string>
+    <string name="category_icon_transition">category icon transition</string>
+    <string name="say_something">Say something...</string>
+    <string name="action_share_other_app">Share using another app</string>
+    <string name="share_to_your_friends">Share to your friends</string>
+    <string name="cancel">Cancel</string>
+    <string name="share">Share</string>
 
 </resources>

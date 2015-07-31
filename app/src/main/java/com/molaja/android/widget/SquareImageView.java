@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -32,10 +33,15 @@ public class SquareImageView extends ImageView{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        Log.d("SquareImageView", "width:"+getMeasuredWidth()+ " height:"+getMeasuredHeight());
+        int width = getMeasuredWidth();
+        setMeasuredDimension(width, width);
+        /*int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int size = width > height ? width : height;
-        setMeasuredDimension(size, size);
+        setMeasuredDimension(size, size);*/
     }
 
     @Override

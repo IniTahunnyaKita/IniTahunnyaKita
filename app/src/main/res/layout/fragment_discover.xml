@@ -68,7 +68,8 @@
             android:layout_margin="25dp"
             android:elevation="12dp"
             android:src="@mipmap/ic_search"
-            app:fabSize="normal"/>
+            app:fabSize="normal"
+            app:borderWidth="0dp"/>
 
     </RelativeLayout>
 

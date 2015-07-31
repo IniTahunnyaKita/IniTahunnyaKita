@@ -51,14 +51,12 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
     //
     // -----------------------------------------------------------------------
     private VerticalPager mVerticalPager;
-    private View itemDetailOverlay, buttonOverlay;
+    private View itemDetailOverlay;
     private TextView priceOverlay, titleOverlay;
     private ImageView zoomIcon, zoomInBtn, zoomOutBtn;
     public static HangoutPost itemInfo;
-    private boolean isZoomIconShown = false;
-    public static boolean isOverlayShown = true, isInZoomMode = false;
-
-    private boolean onPause = false;
+    public static boolean isInZoomMode;
+    private boolean isZoomIconShown = false, isOverlayShown = true;
     private Vibrator haptic;
     private SpringSystem springSystem;
 
@@ -74,6 +72,8 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isInZoomMode = false;
+
         Gson gson = new Gson();
         itemInfo = gson.fromJson(getIntent().getStringExtra("ITEM_INFO"), HangoutPost.class);
         setContentView(R.layout.fragment_item_detail);
@@ -87,6 +87,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d("tetet","is overlay shown"+isOverlayShown);
                 if (isOverlayShown)
                     hideOverlays();
             }
@@ -101,7 +102,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         zoomInBtn = (ImageView) findViewById(R.id.zoom_in_btn);
 
         itemDetailOverlay = findViewById(R.id.short_detail_overlay);
-        buttonOverlay = findViewById(R.id.button_overlay);
+        //buttonOverlay = findViewById(R.id.button_overlay);
         priceOverlay = (TextView) findViewById(R.id.overlay_price);
         priceOverlay.setText(itemInfo.getPrice());
         titleOverlay = (TextView) findViewById(R.id.overlay_title);
@@ -150,6 +151,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
         mVerticalPager.setOnTapListener(new VerticalPager.OnTapListener() {
             @Override
             public void onTap() {
+                Log.d("tetet", "ontap");
                 //disable itemDetailOverlay if in zoom mode
                 if(isInZoomMode)
                     return;
@@ -204,8 +206,8 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
     private void hideOverlays(){
         itemDetailOverlay.animate().translationY(-itemDetailOverlay.getMeasuredHeight())
                 .setInterpolator(new FastOutSlowInInterpolator()).start();
-        buttonOverlay.animate().translationY(buttonOverlay.getMeasuredHeight())
-                .setInterpolator(new FastOutSlowInInterpolator()).start();
+        /*buttonOverlay.animate().translationY(buttonOverlay.getMeasuredHeight())
+                .setInterpolator(new FastOutSlowInInterpolator()).start();*/
         isOverlayShown = false;
     }
 
@@ -214,7 +216,7 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
      */
     private void showOverlays() {
         itemDetailOverlay.animate().translationY(0).setInterpolator(new FastOutSlowInInterpolator()).start();
-        buttonOverlay.animate().translationY(0).setInterpolator(new FastOutSlowInInterpolator()).start();
+        //buttonOverlay.animate().translationY(0).setInterpolator(new FastOutSlowInInterpolator()).start();
         isOverlayShown = true;
     }
 
@@ -353,7 +355,6 @@ public class ItemDetailActivity extends AppCompatActivity implements VerticalPag
     @Override
     public void onPause() {
         super.onPause();
-        onPause = true;
     }
 
     private void goToZoomMode(){

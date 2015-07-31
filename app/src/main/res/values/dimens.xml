@@ -23,4 +23,5 @@
     <dimen name="default_medium_margin">10dp</dimen>
     <dimen name="default_large_margin">20dp</dimen>
     <dimen name="default_elevation">5dp</dimen>
+    <dimen name="discussion_toolbar_size">50dp</dimen>
 </resources>

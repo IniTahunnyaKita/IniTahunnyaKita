@@ -192,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                         );
                 ActivityCompat.startActivity(LoginActivity.this, new Intent(LoginActivity.this, MainActivity.class),
                         options.toBundle());
-                finish();
+                ActivityCompat.finishAfterTransition(LoginActivity.this);
             }
         },2000);
     }

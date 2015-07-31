@@ -109,14 +109,12 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/LightGrey">
-
-        </RelativeLayout>
+            android:background="@color/LightGrey"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -127,27 +125,34 @@
             android:background="@color/White"
             android:focusableInTouchMode="true">
 
-            <ImageView
+            <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="5dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_action_emoticon"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <EditText
+                android:id="@+id/chat_input"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:padding="2dp"
+                android:inputType="textImeMultiLine"
+                android:imeOptions="actionSend"
+                android:hint="@string/send_a_message"
                 android:background="@drawable/login_box"/>
 
-            <ImageView
+            <ImageButton
+                android:id="@+id/send_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="5dp"
-                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_action_send"/>
 
         </LinearLayout>

@@ -13,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -214,12 +213,12 @@ public class NotificationLayout extends RelativeLayout{
                 topOffset = getResources().getDisplayMetrics().heightPixels - getMeasuredHeight();
             }
         });
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
             }
-        }, 500);
+        }, 500);*/
 
 
     }

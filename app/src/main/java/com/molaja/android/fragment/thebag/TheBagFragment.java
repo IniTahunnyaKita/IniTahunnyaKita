@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
@@ -48,13 +49,13 @@ import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
 import com.molaja.android.activities.UploadImageActivity;
 import com.molaja.android.adapter.TheBagTabAdapter;
+import com.molaja.android.fragment.BaseFragment;
 import com.molaja.android.model.BusEvent.GetBuddiesEvent;
 import com.molaja.android.model.User;
 import com.molaja.android.util.BackendHelper;
 import com.molaja.android.util.ImageUtil;
 import com.molaja.android.util.Scroller;
 import com.molaja.android.util.Validations;
-import com.molaja.android.widget.BaseFragment;
 import com.molaja.android.widget.BuddyButton;
 import com.molaja.android.widget.ProfileItem;
 import com.nineoldandroids.view.ViewHelper;
@@ -85,6 +86,11 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     public static final int TAKE_PHOTO_REQUEST_CODE = 2;
     public static final int EDIT_IMAGE_REQUEST_CODE = 3;
 
+    private GetBuddiesEvent getBuddiesEvent;
+    private int mMinHeaderTranslation;
+    private String mCurrentPhotoPath;
+    private boolean isCurrentUser;
+    private int areBuddies;
     private int DEFAULT_THEME;
     private int THEMED_DARK_COLOR;
     private Palette.Swatch userSwatch;
@@ -101,36 +107,20 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
     UploadImageTask uploadImageTask;
     Context mContext;
 
-    private int mMinHeaderTranslation;
-    private String mCurrentPhotoPath;
-    private boolean isCurrentUser;
-    private int areBuddies;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
-        setFragmentView(fragmentView);
-
-        mContext = getActivity().getApplicationContext();
-
-        bindViews();
-
-        DEFAULT_THEME = getResources().getColor(R.color.Teal);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         String username;
-        final boolean withRebound;
         if (getArguments() != null &&
                 !getArguments().getString("USERNAME").equals(User.getCurrentUser(getActivity()).username) ) {
             isCurrentUser = false;
             username = getArguments().getString("USERNAME");
-            withRebound = true;
         } else {
             isCurrentUser = true;
-            withRebound = false;
             user = User.getCurrentUser(getActivity());
             username = user.username;
-            initProfile(true);
-            //initPager();
+            getUserBuddies();
         }
 
         BackendHelper.getProfile(getActivity(), username, new FutureCallback<JsonObject>() {
@@ -147,27 +137,43 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
                         areBuddies = PENDING_INVITE;
                     }
 
+                    initProfile(!isCurrentUser);
 
-                    initProfile(withRebound);
-                    initPager();
-
-                    BackendHelper.getBuddies(getActivity(), user.id, 1, new FutureCallback<JsonObject>() {
-
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-                            EventBus.getDefault().post(new GetBuddiesEvent(result));
-                        }
-                    });
+                    if (!isCurrentUser)
+                        getUserBuddies();
                 }
             }
         });
 
 
+    }
 
-        /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-            setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-        }*/
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View fragmentView = inflater.inflate(R.layout.fragment_the_bag, container, false);
+        setFragmentView(fragmentView);
+
+        mContext = getActivity().getApplicationContext();
+
+        bindViews();
+
+        if (isCurrentUser)
+            initProfile(true);
+
+        initPager();
+
+        if (getBuddiesEvent != null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(getBuddiesEvent);
+                }
+            }, 100);
+        }
+
+
+        DEFAULT_THEME = getResources().getColor(R.color.Teal);
+
         return fragmentView;
     }
 
@@ -249,6 +255,17 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         });
         viewPagerTab.setViewPager(mViewPager);
         viewPagerTab.setOnPageChangeListener(this);
+    }
+
+    private void getUserBuddies() {
+        BackendHelper.getBuddies(getActivity(), user.id, 1, new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                getBuddiesEvent = new GetBuddiesEvent(result);
+                EventBus.getDefault().post(getBuddiesEvent);
+            }
+        });
     }
 
     public static float clamp(float value, float max, float min) {
@@ -508,18 +525,20 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
         float ratio = clamp(ViewHelper.getTranslationY(mHeader) / mMinHeaderTranslation, 0.0f, 1.0f);
         setTitleAlpha(ratio, THEMED_DARK_COLOR);
 
-        switch (actionBarMode) {
-            case MODE_ACTIONBAR_DEFAULT:
-                if (totalScroll > Math.abs(mMinHeaderTranslation)) {
-                    Log.d ("basdl", "mminheadertr:"+mMinHeaderTranslation);
-                    switchActionBarMode(MODE_ACTIONBAR_PROFILE);
-                }
-                break;
-            case MODE_ACTIONBAR_PROFILE:
-                if (totalScroll < Math.abs(mMinHeaderTranslation)) {
-                    Log.d ("basdls", "mminheadertr:"+mMinHeaderTranslation);
-                    switchActionBarMode(MODE_ACTIONBAR_DEFAULT);
-                }
+        if (getActivity() instanceof MainActivity) {
+            switch (((MainActivity) getActivity()).getActionBarMode()) {
+                case MainActivity.MODE_ACTIONBAR_DEFAULT:
+                    if (totalScroll > Math.abs(mMinHeaderTranslation)) {
+                        Log.d("basdl", "mminheadertr:" + mMinHeaderTranslation);
+                        switchActionBarMode(MainActivity.MODE_ACTIONBAR_PROFILE);
+                    }
+                    break;
+                case MainActivity.MODE_ACTIONBAR_PROFILE:
+                    if (totalScroll < Math.abs(mMinHeaderTranslation)) {
+                        Log.d("basdls", "mminheadertr:" + mMinHeaderTranslation);
+                        switchActionBarMode(MainActivity.MODE_ACTIONBAR_DEFAULT);
+                    }
+            }
         }
     }
 

@@ -3,7 +3,6 @@ package com.molaja.android.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,7 +24,7 @@ import com.google.gson.Gson;
 import com.molaja.android.R;
 import com.molaja.android.activities.ItemDetailActivity;
 import com.molaja.android.activities.MainActivity;
-import com.molaja.android.fragment.HangoutFragment;
+import com.molaja.android.activities.ShareActivity;
 import com.molaja.android.model.HangoutPost;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -34,37 +33,34 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostViewHolder> {
+public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostViewHolder> implements View.OnClickListener{
 	public final static int TYPE_PROFILE = 0;
 	public final static int TYPE_POST = 1;
 	public final static int TYPE_DISCUSS = 2;
 	private ArrayList<HangoutPost> group;
-    private static Context mContext;
-    private static Resources resources;
     private GestureDetector gestureDetector;
     private int doubleTappedPos;
     private View doubleTappedView;
-    private String transitionTag;
-    private HangoutFragment hangoutFragment;
 
-	public HangoutAdapter(Context context, ArrayList<HangoutPost> list, HangoutFragment hangoutFragment) {
+	public HangoutAdapter(ArrayList<HangoutPost> list) {
         this.group = list;
-        this.mContext = context;
-        this.hangoutFragment = hangoutFragment;
-        this.resources = mContext.getResources();
-        gestureDetector = new GestureDetector(mContext, new DoubleTapListener());
-        transitionTag = resources.getString(R.string.item_detail_transition);
     }
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.list_post, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_post, null);
         return new PostViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final PostViewHolder postHolder, final int position) {
-        Picasso.with(mContext)
+        final Context context = postHolder.itemView.getContext();
+        
+        if (gestureDetector == null)
+            gestureDetector = new GestureDetector(context, new DoubleTapListener());
+        
+        
+        Picasso.with(context)
                 .load(group.get(position).getProfileUrl())
                 .fit().centerCrop()
                 .transform(new Transformation() {
@@ -97,20 +93,20 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                     totalThumbsUp++;
                     group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = true;
-                    postHolder.thumbsUpIv.setImageResource(R.drawable.ic_thumbs_up_enabled);
+                    postHolder.thumbsUpIv.setImageResource(R.mipmap.ic_thumbs_up_enabled);
                     postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 } else {
                     totalThumbsUp--;
                     group.get(position).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = false;
-                    postHolder.thumbsUpIv.setImageResource(R.drawable.ic_thumbs_up_default);
+                    postHolder.thumbsUpIv.setImageResource(R.mipmap.ic_thumbs_up_default);
                     postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 }
             }
         });
         postHolder.thumbsUp.setText(Integer.toString(group.get(position).getThumbsUp()));
         postHolder.price.setText(group.get(position).getPrice());
-        Picasso.with(mContext)
+        Picasso.with(context)
                 .load(group.get(position).getItemUrl())
                 .fit().centerCrop()
                 .into(postHolder.postImg);
@@ -127,9 +123,11 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         postHolder.pollBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)mContext).addPollItem(group.get(position));
+                if (context instanceof MainActivity)
+                    ((MainActivity)context).addPollItem(group.get(position));
             }
         });
+        postHolder.shareBtn.setOnClickListener(this);
     }
 
     @Override
@@ -142,17 +140,32 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         return position;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.share_btn:
+                Context context = v.getContext();
+                Intent intent = new Intent(context, ShareActivity.class);
+                /*if (context instanceof Activity) {
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
+                                    null,
+                                    context.getString(R.string.item_detail_transition)
+                            );
+                    ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+                } else {
+                    context.startActivity(intent);
+                }*/
+                context.startActivity(intent);
+                break;
+        }
+    }
+
     static class PostViewHolder extends RecyclerView.ViewHolder{
         CircleImageView profilePic;
-        TextView fullName;
-        TextView title;
-        TextView overview;
-        ImageView postImg;
-        View thumbsUpBtn;
-        ImageView thumbsUpIv;
-        TextView thumbsUp;
-        View pollBtn;
-        TextView price;
+        TextView fullName, title, overview, thumbsUp, price;
+        ImageView postImg, thumbsUpIv;
+        View thumbsUpBtn, pollBtn, shareBtn;
 
         boolean thumbsUpState;
 
@@ -163,6 +176,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             title = (TextView) v.findViewById(R.id.post_title);
             overview = (TextView) v.findViewById(R.id.post_overview);
             postImg = (ImageView) v.findViewById(R.id.post_image);
+            shareBtn = v.findViewById(R.id.share_btn);
             thumbsUpBtn = v.findViewById(R.id.thumbs_up_btn);
             thumbsUpIv = (ImageView) v.findViewById(R.id.thumbs_up_img);
             thumbsUpState = false;
@@ -182,19 +196,21 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d("kodok","doubletap");
+            Context context = doubleTappedView.getContext();
+
             Gson gson = new Gson();
-            Intent intent = new Intent(mContext, ItemDetailActivity.class);
+            Intent intent = new Intent(context, ItemDetailActivity.class);
             intent.putExtra("ITEM_INFO", gson.toJson(group.get(doubleTappedPos)));
 
-            if (mContext instanceof Activity) {
+            if (context instanceof Activity) {
                 ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
+                        ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
                                 doubleTappedView,   // The view which starts the transition
-                                mContext.getString(R.string.item_detail_transition)    // The transitionName of the view we’re transitioning to
+                                context.getString(R.string.item_detail_transition)    // The transitionName of the view we’re transitioning to
                         );
-                ActivityCompat.startActivity((Activity) mContext, intent, options.toBundle());
+                ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
             } else {
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
             return true;
         }
@@ -208,13 +224,13 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         }
         @Override
         public HeaderViewHolder onCreateViewHolder(ViewGroup viewGroup) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.list_post_header, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_post_header, viewGroup, false);
             return new HeaderViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(final HeaderViewHolder viewHolder,final int position) {
-            Picasso.with(mContext)
+            Picasso.with(viewHolder.itemView.getContext())
                     .load(group.get(position).getProfileUrl())
                     .resize(100,100)
                     .into(viewHolder.profilePic);

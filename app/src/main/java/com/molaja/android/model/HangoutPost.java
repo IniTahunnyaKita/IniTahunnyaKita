@@ -1,8 +1,5 @@
 package com.molaja.android.model;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 /**
  * Created by Florian on 1/4/2015.
  */
@@ -40,9 +37,15 @@ public class HangoutPost {
     }
 
     public void setPrice(int value){
-        NumberFormat format = NumberFormat.getCurrencyInstance( new Locale("in", "ID"));
+        //NumberFormat format = NumberFormat.getCurrencyInstance( new Locale("in", "ID"));
+        this.price = Integer.toString(value);
 
-        this.price = format.format(value);
+        if (price.length() > 6) {
+            price = "Rp " + price.substring(0, price.length() - 6)+"jt";
+        } else if (price.length() >3) {
+            price = "Rp " + price.substring(0, price.length() - 3)+"k";
+        }
+        //this.price = format.format(value);
         //this.price = price.
     }
 

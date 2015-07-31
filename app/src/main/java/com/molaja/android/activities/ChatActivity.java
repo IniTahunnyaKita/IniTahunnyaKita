@@ -8,15 +8,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.molaja.android.R;
+import com.molaja.android.adapter.ChatAdapter;
 import com.molaja.android.adapter.ItemDetailPagerAdapter;
 import com.molaja.android.fragment.itemdetail.OverviewFragment;
+import com.molaja.android.model.ChatData;
 import com.molaja.android.model.Discussion;
 import com.molaja.android.model.HangoutPost;
+import com.molaja.android.model.User;
 import com.molaja.android.util.HardcodeValues;
 import com.molaja.android.util.ImageUtil;
 import com.molaja.android.widget.ViewPagerIndicator;
@@ -26,15 +36,25 @@ import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+
 /**
  * Created by tinklabs on 4/16/2015.
  */
-public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, Target {
+public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TextView.OnEditorActionListener, Target {
+    public static String TAG = "ChatActivity";
+
+    //Views
     SlidingUpPanelLayout slidingLayout;
-    private ViewPagerIndicator mViewPagerIndicator;
+    RecyclerView recyclerView;
+    ViewPagerIndicator mViewPagerIndicator;
     ImageView profileBarBg;
+    ImageButton emojiBtn, sendBtn;
+    EditText chatInput;
     View profileBar;
     FloatingActionButton addImageBtn;
+
+    ChatAdapter chatAdapter;
 
     Discussion.Conversation conversation;
 
@@ -48,8 +68,24 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
         setupViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatInput.setOnEditorActionListener(this);
+        //chatInput.addTextChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        chatInput.setOnEditorActionListener(null);
+        //chatInput.removeTextChangedListener(this);
+    }
+
     private void setupViews() {
+        //find views
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.chat_content);
         profileBar = findViewById(R.id.profile_bar);
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.viewpager_indicator);
         profileBarBg = (ImageView) findViewById(R.id.profile_bar_background);
@@ -58,6 +94,10 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
         ImageView itemImage = (ImageView) findViewById(R.id.chat_item_image);
         TextView name = (TextView) findViewById(R.id.name);
         TextView itemName = (TextView) findViewById(R.id.item_name);
+        chatInput = (EditText) findViewById(R.id.chat_input);
+        sendBtn = (ImageButton) findViewById(R.id.send_button);
+
+        initRecyclerView();
 
         Picasso.with(this)
                 .load(getIntent().getStringExtra("PROFILE_PICTURE"))
@@ -81,7 +121,7 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
-        ArrayList<Class<? extends Fragment>> pages = new ArrayList<Class<? extends Fragment>>();
+        ArrayList<Class<? extends Fragment>> pages = new ArrayList<>();
 
         int totalPage = HardcodeValues.ItemDetailValues.imageUrls.length;
         for(int i=0;i< totalPage;i++)
@@ -92,11 +132,18 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
         post.setTitle(conversation.title);
         post.setPrice(210000);
         viewPager.setAdapter(new ItemDetailPagerAdapter(getSupportFragmentManager(), this, pages, post));
-        viewPager.setOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(this);
 
         slidingLayout.setDragView(profileBar);
 
         mViewPagerIndicator.initIndicators(HardcodeValues.ItemDetailValues.imageUrls.length);
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage(chatInput.getText().toString());
+            }
+        });
 
         //open chat layout after 1s delay
         new Handler().postDelayed(new Runnable() {
@@ -136,5 +183,43 @@ public class ChatActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
+    }
+
+    /**
+     * Initialize the chat content.
+     */
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        chatAdapter = new ChatAdapter(new ArrayList<ChatData>());
+        chatAdapter.setCurrentUser(User.getCurrentUser(this));
+
+        recyclerView.setLayoutManager(layoutManager);
+        FadeInAnimator animator = new FadeInAnimator();
+        animator.setAddDuration(500);
+        recyclerView.setItemAnimator(animator);
+        recyclerView.setAdapter(chatAdapter);
+    }
+
+    /**
+     * Send message to the conversation.
+     * @param text The text to send
+     */
+    private void sendMessage(String text) {
+        if (TextUtils.isEmpty(text))
+            return;
+
+        chatAdapter.addMessage(text);
+        recyclerView.smoothScrollToPosition(0);
+        chatInput.setText(null);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEND) {
+            sendMessage(chatInput.getText().toString());
+        }
+        return true;
     }
 }

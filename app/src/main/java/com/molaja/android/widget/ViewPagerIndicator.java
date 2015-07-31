@@ -14,6 +14,8 @@ import com.nineoldandroids.animation.ObjectAnimator;
  * Created by Florian on 2/19/2015.
  */
 public class ViewPagerIndicator extends LinearLayout {
+    private static final int ANIMATION_TIME = 300;
+    private static final int ANIMATION_DELAY = 300;
     int mSelectedPos = 0;
     Context mContext;
 
@@ -37,19 +39,31 @@ public class ViewPagerIndicator extends LinearLayout {
             indicator.setBackgroundResource(R.drawable.pager_indicator);
             indicator.setTag(i);
             addView(indicator, lp);
+
+            indicator.setScaleX(0f);
+            indicator.setScaleY(0f);
+
+            if (i != mSelectedPos) {
+                indicator.animate()
+                        .scaleX(1f).scaleY(1f)
+                        .setDuration(ANIMATION_TIME)
+                        .setStartDelay(ANIMATION_DELAY)
+                        .start();
+            }
         }
 
         TransitionDrawable transition = (TransitionDrawable) findViewWithTag(mSelectedPos).getBackground();
         transition.startTransition(500);
+
         ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(findViewWithTag(mSelectedPos), "scaleX", 2f);
         ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(findViewWithTag(mSelectedPos), "scaleY", 2f);
 
-        scaleUpX.setDuration(300);
-        scaleUpY.setDuration(300);
+        scaleUpX.setDuration(ANIMATION_TIME);
+        scaleUpY.setDuration(ANIMATION_TIME);
 
         AnimatorSet scaleUp = new AnimatorSet();
 
-        scaleUp.play(scaleUpX).with(scaleUpY);
+        scaleUp.play(scaleUpX).with(scaleUpY).after(ANIMATION_DELAY);
         scaleUp.start();
 
     }
@@ -57,12 +71,12 @@ public class ViewPagerIndicator extends LinearLayout {
     public void selectIndicator(int position){
         //unselect previous indicator
         TransitionDrawable transition1 = (TransitionDrawable) findViewWithTag(mSelectedPos).getBackground();
-        transition1.reverseTransition(300);
+        transition1.reverseTransition(ANIMATION_TIME);
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(findViewWithTag(mSelectedPos), "scaleX", 1f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(findViewWithTag(mSelectedPos), "scaleY", 1f);
 
-        scaleDownX.setDuration(300);
-        scaleDownY.setDuration(300);
+        scaleDownX.setDuration(ANIMATION_TIME);
+        scaleDownY.setDuration(ANIMATION_TIME);
 
         AnimatorSet scaleDown = new AnimatorSet();
 

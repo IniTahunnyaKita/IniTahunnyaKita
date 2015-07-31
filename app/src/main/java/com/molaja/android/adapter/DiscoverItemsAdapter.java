@@ -3,6 +3,7 @@ package com.molaja.android.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.molaja.android.R;
+import com.molaja.android.activities.CategoryActivity;
 import com.molaja.android.activities.ItemDetailActivity;
 import com.molaja.android.model.DiscoverItem;
 import com.molaja.android.model.HangoutPost;
@@ -91,8 +93,8 @@ public class DiscoverItemsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     .fit().centerCrop()
                     .into(viewHolder.image);
         } else if (holder instanceof CategoryViewHolder) {
-            CategoryViewHolder viewHolder = (CategoryViewHolder) holder;
-            DiscoverItem.Category category = (DiscoverItem.Category) list.get(position);
+            final CategoryViewHolder viewHolder = (CategoryViewHolder) holder;
+            final DiscoverItem.Category category = (DiscoverItem.Category) list.get(position);
 
             viewHolder.categoryTitle.setText(category.category_title);
 
@@ -157,7 +159,24 @@ public class DiscoverItemsAdapter extends RecyclerView.Adapter<RecyclerView.View
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO implement click listener
+                    String transitionName = viewHolder.itemView.getContext().getString(R.string.category_icon_transition);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        viewHolder.categoryIcon.setTransitionName(transitionName);
+
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)v.getContext(),
+                                    viewHolder.categoryIcon,
+                                    transitionName
+                            );
+
+                    Intent intent = new Intent(v.getContext(), CategoryActivity.class);
+                    intent.putExtra(CategoryActivity.CATEGORY_TITLE_EXTRA, category.category_title);
+                    intent.putExtra(CategoryActivity.CATEGORY_ICON_EXTRA, category.category_icon);
+                    intent.putExtra(CategoryActivity.CATEGORY_BG_EXTRA, category.category_bg);
+
+                    ActivityCompat.startActivity((Activity)v.getContext(), intent,
+                            options.toBundle());
                 }
             });
         }

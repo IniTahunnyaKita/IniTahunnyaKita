@@ -40,6 +40,7 @@
                 android:layout_height="30dp"
                 android:padding="5dp"
                 android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_action_cancel"/>
             <Button
                 android:id="@+id/poll_btn"
@@ -50,7 +51,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/White"
                 android:typeface="sans"
-                android:background="@drawable/default_btn_bg"/>
+                android:backgroundTint="@color/Teal"/>
 
         </LinearLayout>
 
