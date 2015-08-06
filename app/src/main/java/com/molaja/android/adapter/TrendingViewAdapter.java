@@ -1,7 +1,6 @@
 package com.molaja.android.adapter;
 
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.molaja.android.R;
+import com.molaja.android.widget.CustomTextView;
 
 import java.util.List;
 
@@ -33,14 +33,14 @@ public class TrendingViewAdapter extends RecyclerView.Adapter<TrendingViewAdapte
     @SuppressWarnings("deprecation")
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView textView = new TextView(parent.getContext());
+        CustomTextView textView = new CustomTextView(parent.getContext());
         textView.setTextColor(parent.getContext().getResources().getColor(R.color.Teal));
         textView.setTextSize(20f);
-        textView.setTypeface(Typeface.SANS_SERIF);
+        textView.setTypeface(CustomTextView.Roboto.LIGHT);
         textView.setGravity(Gravity.CENTER);
 
         //setbackground
-        int [] attrs = new int[] {android.R.attr.selectableItemBackgroundBorderless};
+        int [] attrs = new int[] {R.attr.selectableItemBackgroundBorderless};
         TypedArray ta = parent.getContext().obtainStyledAttributes(attrs);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
             textView.setBackground(ta.getDrawable(0));

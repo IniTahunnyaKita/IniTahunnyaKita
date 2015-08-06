@@ -1,11 +1,14 @@
 package com.molaja.android;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.molaja.android.util.FontsOverride;
@@ -38,6 +41,22 @@ public class MolajaApplication extends Application {
         SharedPreferences.Editor editor = getLoginCookies(context).edit();
         editor.putBoolean(is_logged_in, loggedIn);
         editor.commit();
+    }
+
+    /**
+     * Hides the status bar (for fullscreen purposes).
+     * @param activity The currently active activity.
+     */
+    public static void hideStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT < 16) {
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            View decorView = activity.getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
     public static boolean isLoggedIn(Context context) {

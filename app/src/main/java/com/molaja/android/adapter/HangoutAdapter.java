@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.graphics.Palette;
@@ -114,9 +113,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 doubleTappedPos = position;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    doubleTappedView = v;
-                }
+                doubleTappedView = v;
                 return gestureDetector.onTouchEvent(event);
             }
         });

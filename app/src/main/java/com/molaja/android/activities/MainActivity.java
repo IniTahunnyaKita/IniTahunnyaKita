@@ -40,6 +40,7 @@ import com.molaja.android.fragment.ProfileFragment;
 import com.molaja.android.fragment.discover.DiscoverFragment;
 import com.molaja.android.fragment.thebag.TheBagFragment;
 import com.molaja.android.model.HangoutPost;
+import com.molaja.android.model.User;
 import com.molaja.android.util.MainTabStack;
 import com.molaja.android.widget.ActionBarLayout;
 import com.molaja.android.widget.NotificationLayout;
@@ -64,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int MODE_ACTIONBAR_DEFAULT = 1;
     public static final int MODE_ACTIONBAR_PROFILE = 2;
-
-    public int actionBarMode = MODE_ACTIONBAR_DEFAULT;
 
     final public static int USER_MODE  = 1;
     final public static int SHOP_MODE  = 2;
@@ -143,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
         initPollHolder();
 
         initNotification();
+
+        //init profile action bar
+        User user = User.getCurrentUser(this);
+        initProfileActionBar(user.name, user.image);
     }
 
     @Override
@@ -185,6 +188,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setActionBarMode(int mode) {
         mActionBarMode = mode;
+    }
+
+    /**
+     * gets the current fragment in the container.
+     */
+    public Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(android.R.id.tabhost);
     }
 
     @Override
@@ -275,7 +285,15 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setElevation(mToolbar, elevation);
     }
 
+    /**
+     * Switches between two action bar title modes: default title and profile title.
+     * @param b true for profile title, false for default.
+     */
     public void switchToProfileActionBar(boolean b) {
+        //return if actionbar mode is the same
+        if (b == (getActionBarMode() == MODE_ACTIONBAR_PROFILE))
+            return;
+
         if (b) {
             ((ViewSwitcher) findViewById(R.id.actiobar_view_switcher)).showNext();
             setActionBarMode(MODE_ACTIONBAR_PROFILE);

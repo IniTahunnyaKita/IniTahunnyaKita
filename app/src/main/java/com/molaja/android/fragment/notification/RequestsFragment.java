@@ -19,6 +19,7 @@ import com.molaja.android.adapter.RequestsAdapter;
 import com.molaja.android.util.BackendHelper;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
@@ -63,8 +64,12 @@ public class RequestsFragment extends Fragment implements SwipeRefreshLayout.OnR
                 refreshLayout.setRefreshing(false);
 
                 if (e == null) {
-                    Type type = new TypeToken<List<RequestsAdapter.Request>>() { }.getType();
+                    Type type = new TypeToken<List<RequestsAdapter.Request>>() {}.getType();
                     List<RequestsAdapter.Request> list = new Gson().fromJson(result.get("entries"), type);
+
+                    //if list is null,
+                    list = list==null? new ArrayList<RequestsAdapter.Request>() : list;
+
                     mAdapter = new RequestsAdapter(getActivity(), emptyView, list);
                     recyclerView.setAdapter(mAdapter);
                 }

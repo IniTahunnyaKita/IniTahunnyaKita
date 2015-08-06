@@ -10,15 +10,19 @@ import android.widget.RelativeLayout;
 
 import com.molaja.android.R;
 import com.molaja.android.activities.MainActivity;
+import com.molaja.android.fragment.thebag.TheBagFragment;
 
 /**
  * Created by florian on 31/1/15.
  */
 public class ActionBarLayout extends RelativeLayout{
     private static boolean hasRevealLayout = false;
+
     private RevealLayout mRevealLayout;
     private NotificationLayout mNotificationLayout;
-    GestureDetector gestureDetector;
+    private GestureDetector gestureDetector;
+
+    private boolean shouldSwitchActionBarMode = true;
 
     public ActionBarLayout(Context context) {
         super(context);
@@ -63,13 +67,22 @@ public class ActionBarLayout extends RelativeLayout{
                 if(mNotificationLayout.isLayoutExpanded()) {
                     mNotificationLayout.collapseLayout();
 
-                    if (getContext() instanceof MainActivity)
+                    if (getContext() instanceof MainActivity && shouldSwitchActionBarMode)
                         ((MainActivity) getContext()).switchToProfileActionBar(false);
+
+                    shouldSwitchActionBarMode = true;
                 } else {
                     mNotificationLayout.expandLayout();
 
-                    if (getContext() instanceof MainActivity)
-                        ((MainActivity) getContext()).switchToProfileActionBar(true);
+                    if (getContext() instanceof MainActivity) {
+                        MainActivity mainActivity = (MainActivity) getContext();
+
+                        if (mainActivity.getCurrentFragment() instanceof TheBagFragment
+                                && mainActivity.getActionBarMode() == MainActivity.MODE_ACTIONBAR_PROFILE)
+                            shouldSwitchActionBarMode = false;
+
+                        mainActivity.switchToProfileActionBar(true);
+                    }
                 }
             }
         });

@@ -301,14 +301,12 @@ public class TheBagFragment extends BaseFragment implements Target, Scroller, Vi
 
                     }
                 });
+
         Picasso.with(getActivity())
                 .load(imagePath)
                 .placeholder(new ColorDrawable(getResources().getColor(R.color.LightGrey)))
                 .into(this);
 
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).initProfileActionBar(user.name, imagePath);
-        }
     }
 
     public void sendPickImageIntent() {

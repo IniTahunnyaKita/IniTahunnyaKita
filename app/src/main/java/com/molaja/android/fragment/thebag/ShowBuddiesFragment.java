@@ -18,6 +18,7 @@ import com.molaja.android.model.User;
 import com.molaja.android.widget.TheBagPagerFragment;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,13 +60,14 @@ public class ShowBuddiesFragment extends TheBagPagerFragment {
     }
 
     public void onEvent(GetBuddiesEvent event) {
-        Type type = new TypeToken<List<User>>() {
-        }.getType();
+        Type type = new TypeToken<List<User>>() {}.getType();
         List<User> list = new Gson().fromJson(event.jsonObject.get("entries"), type);
 
         //for dummy view
         if (list != null)
             list.add(0, new User());
+        else
+            list = new ArrayList<>();
 
         recyclerView.setAdapter(new ShowBuddiesAdapter(list, headerHeight));
     }
