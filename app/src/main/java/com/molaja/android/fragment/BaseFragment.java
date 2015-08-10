@@ -1,6 +1,7 @@
 package com.molaja.android.fragment;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -69,6 +70,16 @@ public class BaseFragment extends Fragment {
      */
     public int getColor(int colorId) {
         return getResources().getColor(colorId);
+    }
+
+    /**
+     * pass arguments to the fragment.
+     * @param args the arguments to pass.
+     * @return the fragment itself.
+     */
+    public BaseFragment passArguments(Bundle args) {
+        setArguments(args);
+        return this;
     }
 
     private void updateToolbarElevation(MainActivity mainActivity) {

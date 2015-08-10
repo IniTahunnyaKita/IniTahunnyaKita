@@ -1,22 +1,15 @@
 package com.molaja.android.fragment;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.eowise.recyclerview.stickyheaders.OnHeaderClickListener;
 import com.molaja.android.R;
 import com.molaja.android.adapter.HangoutAdapter;
 import com.molaja.android.model.HangoutPost;
@@ -24,21 +17,23 @@ import com.molaja.android.util.HardcodeValues;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 
 /**
  * Created by Florian on 1/3/2015.
  */
-public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnHeaderClickListener {
+public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecyclerView;
-    private Context mContext;
     ArrayList<HangoutPost> list;
+
+    @Override
+    public void setInitialSavedState(SavedState state) {
+        super.setInitialSavedState(state);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_hangout, container, false);
-        mContext = container.getContext();
 
         return rootView;
     }
@@ -66,24 +61,12 @@ public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.
             list.add(post);
         }
         HangoutAdapter mAdapter= new HangoutAdapter(list);
-        /*mAdapter.setHasStableIds(true);
-        HangoutAdapter.HeaderAdapter headerAdapter= new HangoutAdapter.HeaderAdapter(list);
-        StickyHeadersItemDecoration decoration = new StickyHeadersBuilder()
-                .setAdapter(mAdapter)
-                .setRecyclerView(mRecyclerView.getRecyclerView())
-                .setStickyHeadersAdapter(headerAdapter)
-                .setOnHeaderClickListener(this)
-                .build();*/
 
         mRecyclerView.setAdapter(mAdapter);
-        //mRecyclerView.addItemDecoration(decoration);
-        //mRecyclerView.setRefreshListener(this);
     }
 
     @Override
     public void onRefresh() {
-        int darkRed = R.color.DarkRed;
-        //mRecyclerView.setRefreshingColorResources(darkRed, darkRed, darkRed, darkRed);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -93,30 +76,4 @@ public class HangoutFragment extends BaseFragment implements SwipeRefreshLayout.
         },3000);
     }
 
-
-    @Override
-    public void onHeaderClick(View view, long l) {
-        CircleImageView profilePic = (CircleImageView) view.getTag();
-        String transitionTag = getResources().getString(R.string.profile_transition);
-        ProfileFragment profileFragment = new ProfileFragment();
-        profileFragment.profileUrl = list.get((int)l).getProfileUrl();
-
-
-        if(profilePic instanceof ImageView){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Log.d("taikodok", "tralalala" + transitionTag);
-                profilePic.setTransitionName(transitionTag);
-                setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
-                //setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-                profileFragment.setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
-                //profileFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.slide_bottom));
-            }
-        }
-        ((FragmentActivity) mContext).getSupportFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.tabcontent, profileFragment, "PROFILE")
-                .addToBackStack("PROFILE")
-                .addSharedElement(profilePic, transitionTag)
-                .commit();
-    }
 }

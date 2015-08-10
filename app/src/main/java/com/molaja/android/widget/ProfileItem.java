@@ -47,13 +47,23 @@ public class ProfileItem extends RelativeLayout{
     }
 
     public void setItemValue(String value){
-        if(this.itemValue!=null)
+        if (this.itemValue!=null)
             this.itemValue.setText(value);
     }
 
-    public void setItemValue(int value){
-        if(this.itemValue!=null)
+    public void setItemValue(int value) {
+        if (this.itemValue!=null)
             this.itemValue.setText(Integer.toString(value));
+    }
+
+    public void setItemValue(float value) {
+        if (this.itemValue != null)
+            this.itemValue.setText(Float.toString(value));
+    }
+
+    public void setItemValue(double value) {
+        if (this.itemValue != null)
+            this.itemValue.setText(Double.toString(value));
     }
 
     public void setItemTitle(String title){

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/featured_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@id/dummy"
+        android:background="@color/LightGrey"
+        android:elevation="6dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:src="@color/DarkGray"
+        android:background="@drawable/circle_bg_white"
+        android:elevation="6dp"/>
+
+    <com.molaja.android.widget.CustomTextView
+        android:id="@+id/shop_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/profile_picture"
+        app:ttf_name="roboto/Roboto-Light"
+        android:text="Shop Name"
+        android:textSize="24sp"
+        android:textColor="@color/Black"/>
+
+    <com.molaja.android.widget.CustomTextView
+        android:id="@+id/shop_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/shop_name"
+        app:ttf_name="roboto/Roboto-Light"
+        android:text="Shop Bio"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shop_bio"
+        android:gravity="center">
+
+        <com.molaja.android.widget.ProfileItem
+            android:id="@+id/profile_item_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            app:item_title="@string/rating"/>
+
+        <com.molaja.android.widget.ProfileItem
+            android:id="@+id/profile_item_items"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            app:item_title="@string/items"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/default_large_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.molaja.android.widget.CustomTextView
+            android:id="@+id/browse_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_medium_margin"
+            android:padding="@dimen/default_small_margin"
+            android:text="@string/browse_shop"
+            android:textAllCaps="true"
+            android:background="?attr/selectableItemBackground"
+            app:ttf_name="roboto/Roboto-Light"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/browse_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_next_item"
+            app:borderWidth="0dp"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

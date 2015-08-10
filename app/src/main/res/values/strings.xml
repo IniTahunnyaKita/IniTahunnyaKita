@@ -97,5 +97,8 @@
     <string name="share_to_your_friends">Share to your friends</string>
     <string name="cancel">Cancel</string>
     <string name="share">Share</string>
+    <string name="items">items</string>
+    <string name="rating">rating</string>
+    <string name="browse_shop">Browse Shop</string>
 
 </resources>

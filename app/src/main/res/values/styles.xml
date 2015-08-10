@@ -29,4 +29,8 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="TranslucentStatusBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- just a dummy -->
+    </style>
+
 </resources>

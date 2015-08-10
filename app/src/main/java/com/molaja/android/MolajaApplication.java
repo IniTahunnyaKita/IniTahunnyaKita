@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.molaja.android.util.FontsOverride;
-
 /**
  * Created by Florian on 3/10/2015.
  */
@@ -27,20 +25,25 @@ public class MolajaApplication extends Application {
         super.onCreate();
 
         //override default fonts
-        FontsOverride.setDefaultFont(this, "SERIF", "fonts/roboto/Roboto-Medium.ttf");
+        //FontsOverride.setDefaultFont(this, "SERIF", "fonts/roboto/Roboto-Medium.ttf");
         //FontsOverride.setDefaultFont(this, "MONOSPACE", "MyFontAsset2.ttf");
         //FontsOverride.setDefaultFont(this, "SERIF", "MyFontAsset3.ttf");
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/roboto/Roboto-Light.ttf");
+        //FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/roboto/Roboto-Light.ttf");
     }
 
     public static SharedPreferences getLoginCookies(Context context) {
         return context.getSharedPreferences(login_cookies, Context.MODE_PRIVATE);
     }
 
+    /**
+     * Modifies the login status to the desired value.
+     * @param context the context used to edit the shared preferences.
+     * @param loggedIn the login status value to be stored.
+     */
     public static void changeLoginStatus(Context context, boolean loggedIn) {
         SharedPreferences.Editor editor = getLoginCookies(context).edit();
         editor.putBoolean(is_logged_in, loggedIn);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -56,6 +59,15 @@ public class MolajaApplication extends Application {
             // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    public static void makeContentAppearBehindStatusBar(Activity activity) {
+        View decorView = activity.getWindow().getDecorView();
+        // Hide the status bar.
+        if (Build.VERSION.SDK_INT >= 19) {
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
     }
 

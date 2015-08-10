@@ -57,6 +57,6 @@ public class ShareActivity extends BaseActivity implements View.OnClickListener{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0, R.anim.fade_out);
+        //overridePendingTransition(0, R.anim.fade_out);
     }
 }

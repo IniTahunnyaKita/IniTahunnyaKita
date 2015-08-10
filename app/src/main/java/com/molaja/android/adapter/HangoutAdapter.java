@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,13 +20,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.eowise.recyclerview.stickyheaders.StickyHeadersAdapter;
 import com.google.gson.Gson;
 import com.molaja.android.R;
 import com.molaja.android.activities.ItemDetailActivity;
 import com.molaja.android.activities.MainActivity;
 import com.molaja.android.activities.ShareActivity;
+import com.molaja.android.activities.ShopActivity;
+import com.molaja.android.fragment.ShopProfileFragment;
 import com.molaja.android.model.HangoutPost;
+import com.molaja.android.util.FragmentUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -52,7 +56,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
     }
 
     @Override
-    public void onBindViewHolder(final PostViewHolder postHolder, final int position) {
+    public void onBindViewHolder(final PostViewHolder postHolder, int position) {
         final Context context = postHolder.itemView.getContext();
         
         if (gestureDetector == null)
@@ -80,31 +84,36 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                     }
                 })
                 .into(postHolder.profilePic);
+
         postHolder.fullName.setText(group.get(position).getFullname());
         postHolder.title.setText(group.get(position).getTitle());
         postHolder.profilePic.getRootView().setTag(postHolder.profilePic);
         postHolder.overview.setText(group.get(position).getOverview());
+
         postHolder.thumbsUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int totalThumbsUp = group.get(position).getThumbsUp();
+                int totalThumbsUp = group.get(postHolder.getAdapterPosition()).getThumbsUp();
+
                 if (!postHolder.thumbsUpState) {
                     totalThumbsUp++;
-                    group.get(position).setThumbsUp(totalThumbsUp);
+                    group.get(postHolder.getAdapterPosition()).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = true;
                     postHolder.thumbsUpIv.setImageResource(R.mipmap.ic_thumbs_up_enabled);
                     postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 } else {
                     totalThumbsUp--;
-                    group.get(position).setThumbsUp(totalThumbsUp);
+                    group.get(postHolder.getAdapterPosition()).setThumbsUp(totalThumbsUp);
                     postHolder.thumbsUpState = false;
                     postHolder.thumbsUpIv.setImageResource(R.mipmap.ic_thumbs_up_default);
                     postHolder.thumbsUp.setText(Integer.toString(totalThumbsUp));
                 }
             }
         });
+
         postHolder.thumbsUp.setText(Integer.toString(group.get(position).getThumbsUp()));
         postHolder.price.setText(group.get(position).getPrice());
+
         Picasso.with(context)
                 .load(group.get(position).getItemUrl())
                 .fit().centerCrop()
@@ -112,7 +121,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                doubleTappedPos = position;
+                doubleTappedPos = postHolder.getAdapterPosition();
                 doubleTappedView = v;
                 return gestureDetector.onTouchEvent(event);
             }
@@ -121,7 +130,33 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             @Override
             public void onClick(View v) {
                 if (context instanceof MainActivity)
-                    ((MainActivity)context).addPollItem(group.get(position));
+                    ((MainActivity) context).addPollItem(group.get(postHolder.getAdapterPosition()));
+            }
+        });
+
+        postHolder.fullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = postHolder.getAdapterPosition();
+
+                if (position % 2 == 0) {
+                    MainActivity mainActivity = (MainActivity) v.getContext();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ShopProfileFragment.SHOP_NAME, group.get(position).getFullname());
+                    bundle.putString(ShopProfileFragment.PROFILE_PICTURE_URL,
+                            group.get(position).getProfileUrl());
+
+                    FragmentManager fm = mainActivity.getCurrentFragment().getChildFragmentManager();
+                    FragmentUtil.switchFragment(fm, R.id.fragment_main_tab_container, new ShopProfileFragment(), bundle);
+                } else {
+                    Intent intent = new Intent(v.getContext(), ShopActivity.class);
+                    intent.putExtra(ShopProfileFragment.SHOP_NAME, group.get(position).getFullname());
+                    intent.putExtra(ShopProfileFragment.PROFILE_PICTURE_URL,
+                            group.get(position).getProfileUrl());
+                    v.getContext().startActivity(intent);
+                }
+
             }
         });
         postHolder.shareBtn.setOnClickListener(this);
@@ -143,16 +178,6 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             case R.id.share_btn:
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ShareActivity.class);
-                /*if (context instanceof Activity) {
-                    ActivityOptionsCompat options =
-                            ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
-                                    null,
-                                    context.getString(R.string.item_detail_transition)
-                            );
-                    ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
-                } else {
-                    context.startActivity(intent);
-                }*/
                 context.startActivity(intent);
                 break;
         }
@@ -209,49 +234,10 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             } else {
                 context.startActivity(intent);
             }
+
+            doubleTappedView = null;
+
             return true;
-        }
-    }
-
-    public static class HeaderAdapter implements StickyHeadersAdapter<HeaderAdapter.HeaderViewHolder> {
-        private ArrayList<HangoutPost> group;
-
-        public HeaderAdapter( ArrayList<HangoutPost> group){
-            this.group = group;
-        }
-        @Override
-        public HeaderViewHolder onCreateViewHolder(ViewGroup viewGroup) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_post_header, viewGroup, false);
-            return new HeaderViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(final HeaderViewHolder viewHolder,final int position) {
-            Picasso.with(viewHolder.itemView.getContext())
-                    .load(group.get(position).getProfileUrl())
-                    .resize(100,100)
-                    .into(viewHolder.profilePic);
-            viewHolder.fullName.setText(group.get(position).getFullname());
-            viewHolder.title.setText(group.get(position).getTitle());
-            viewHolder.profilePic.getRootView().setTag(viewHolder.profilePic);
-        }
-
-        @Override
-        public long getHeaderId(int i) {
-            return i;
-        }
-
-        static class HeaderViewHolder extends RecyclerView.ViewHolder {
-            CircleImageView profilePic;
-            TextView fullName;
-            TextView title;
-
-            public HeaderViewHolder(View v) {
-                super(v);
-                profilePic = (CircleImageView) v.findViewById(R.id.profile_picture);
-                fullName = (TextView) v.findViewById(R.id.full_name);
-                title = (TextView) v.findViewById(R.id.post_title);
-            }
         }
     }
 

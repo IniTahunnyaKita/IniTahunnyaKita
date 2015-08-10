@@ -35,9 +35,9 @@ import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
 import com.molaja.android.adapter.NotificationPagerAdapter;
 import com.molaja.android.fragment.DiscussionFragment;
-import com.molaja.android.fragment.HangoutFragment;
-import com.molaja.android.fragment.ProfileFragment;
 import com.molaja.android.fragment.discover.DiscoverFragment;
+import com.molaja.android.fragment.maintab.FirstTabFragment;
+import com.molaja.android.fragment.maintab.MainTabFragment;
 import com.molaja.android.fragment.thebag.TheBagFragment;
 import com.molaja.android.model.HangoutPost;
 import com.molaja.android.model.User;
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
      * gets the current fragment in the container.
      */
     public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentById(android.R.id.tabhost);
+        return getSupportFragmentManager().findFragmentById(android.R.id.tabcontent);
     }
 
     @Override
@@ -207,31 +207,26 @@ public class MainActivity extends AppCompatActivity {
             ((ActionBarLayout) findViewById(R.id.actionbar_layout)).switchToUserMode();
             return;
         }
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        //int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(android.R.id.tabcontent);
-        if (backStackEntryCount > 0) {
-            if (currentFragment instanceof ProfileFragment) {
-                setToolbarDefault();
-            } else if (currentFragment instanceof DiscussionFragment) {
-                DiscussionFragment discussionFragment = (DiscussionFragment) currentFragment;
-                if(discussionFragment.onBackPressed())
-                    return;
-            } else if (currentFragment instanceof DiscoverFragment) {
-                DiscoverFragment discoverFragment = (DiscoverFragment) currentFragment;
-                if (discoverFragment.onBackPressed())
-                    return;
-            }
-            getSupportFragmentManager().popBackStack();
-        } else {
-            if (currentFragment instanceof DiscussionFragment)
-                if (((DiscussionFragment)currentFragment).onBackPressed())
-                    return;
 
-            if (currentFragment instanceof DiscoverFragment)
-                if (((DiscoverFragment)currentFragment).onBackPressed())
-                    return;
-                handleTabNavigation();
+        if (currentFragment instanceof MainTabFragment) {
+            int backStackEntryCount = currentFragment.getChildFragmentManager().getBackStackEntryCount();
+
+            if (backStackEntryCount > 0)
+                currentFragment.getChildFragmentManager().popBackStack();
+
+            return;
         }
+
+        if (currentFragment instanceof DiscussionFragment)
+            if (((DiscussionFragment)currentFragment).onBackPressed())
+                return;
+
+        if (currentFragment instanceof DiscoverFragment)
+            if (((DiscoverFragment)currentFragment).onBackPressed())
+                return;
+        handleTabNavigation();
     }
 
     public void handleTabNavigation() {
@@ -273,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             int currentColor = ((ColorDrawable)mToolbar.getBackground()).getColor();
             ObjectAnimator colorFade = ObjectAnimator.ofObject(mToolbar, "backgroundColor", new ArgbEvaluator(),
                     currentColor, color);
-            colorFade.setDuration(500);
+            colorFade.setDuration(300);
             colorFade.start();
         } else {
             mToolbar.setBackgroundColor(color);
@@ -325,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    private void initTabs(){
+    private void initTabs() {
         mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -344,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), HangoutFragment.class, null);
+        mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_1_TAG)), FirstTabFragment.class, null);
         mTabHost.addTab(setIndicator(this,mTabHost.newTabSpec(TAB_2_TAG)), DiscoverFragment.class, null);
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_3_TAG)), DiscussionFragment.class, null);
         mTabHost.addTab(setIndicator(this, mTabHost.newTabSpec(TAB_4_TAG)), TheBagFragment.class, null);
