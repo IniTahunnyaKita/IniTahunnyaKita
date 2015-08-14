@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +21,7 @@
             android:scaleType="centerCrop"
             android:src="@color/Gray"/>
 
-        <TextView
+        <com.molaja.android.widget.CustomTextView
             android:id="@+id/full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
             android:layout_marginLeft="@dimen/default_small_margin"
             android:text="Shop name"
             android:textSize="18sp"
-            android:typeface="sans"/>
+            app:ttf_name="roboto/Roboto-Light"/>
 
     </LinearLayout>
 
@@ -60,25 +61,20 @@
 
     </com.molaja.android.widget.RoundRelativeLayout>
 
-    <TextView
+    <com.molaja.android.widget.CustomTextView
         android:id="@+id/post_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Item Title"
         android:textSize="20sp"
-        android:typeface="sans"
-        android:fontFamily="sans-serif-medium"/>
+        app:ttf_name="roboto/Roboto-Medium"/>
 
-
-
-
-    <TextView
+    <com.molaja.android.widget.CustomTextView
         android:id="@+id/post_overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_medium_margin"
-        android:typeface="sans"
-        android:fontFamily="sans-serif-light"/>
+        app:ttf_name="roboto/Roboto-Light"/>
 
 
 

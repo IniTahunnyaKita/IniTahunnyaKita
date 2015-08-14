@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         if(!isLoggedIn) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            return;
         }
 
         setContentView(R.layout.activity_main);
@@ -213,10 +214,10 @@ public class MainActivity extends AppCompatActivity {
         if (currentFragment instanceof MainTabFragment) {
             int backStackEntryCount = currentFragment.getChildFragmentManager().getBackStackEntryCount();
 
-            if (backStackEntryCount > 0)
+            if (backStackEntryCount > 0) {
                 currentFragment.getChildFragmentManager().popBackStack();
-
-            return;
+                return;
+            }
         }
 
         if (currentFragment instanceof DiscussionFragment)

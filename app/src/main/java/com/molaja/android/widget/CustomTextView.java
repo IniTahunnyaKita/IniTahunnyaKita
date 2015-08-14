@@ -11,14 +11,13 @@ import java.util.Map;
 
 public class CustomTextView extends TextView {
 
-    //public static final String ROBOTO_REGULAR = "Roboto-Regular.ttf"
+    private static final String LOG_TAG = CustomTextView.class.getSimpleName();
+
     public enum Roboto {
         LIGHT, MEDIUM, REGULAR, THIN
     }
 
     private static Map<String, Typeface> typefaceMap = new HashMap<>();
-
-    String ttfName;
 
     String TAG = getClass().getName();
 
@@ -31,22 +30,22 @@ public class CustomTextView extends TextView {
 
         for (int i = 0; i < attrs.getAttributeCount(); i++) {
             Log.i(TAG, attrs.getAttributeName(i));
+
             /*
              * Read value of custom attributes
              */
-
-            this.ttfName = attrs.getAttributeValue(
+            String ttfName = attrs.getAttributeValue(
                     "http://schemas.android.com/apk/res-auto", "ttf_name");
             //Log.i(TAG, "firstText " + firstText);
             // Log.i(TAG, "lastText "+ lastText);
 
-            init(context);
+            init(ttfName);
         }
 
     }
 
-    private void init(Context context) {
-        Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/" + ttfName + ".ttf");
+    private void init(String ttfName) {
+        Typeface font = getTypeface(ttfName);
         setTypeface(font);
     }
 

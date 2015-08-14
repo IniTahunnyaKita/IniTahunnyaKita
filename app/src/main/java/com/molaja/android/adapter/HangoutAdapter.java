@@ -41,9 +41,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
 	public final static int TYPE_POST = 1;
 	public final static int TYPE_DISCUSS = 2;
 	private ArrayList<HangoutPost> group;
-    private GestureDetector gestureDetector;
-    private int doubleTappedPos;
-    private View doubleTappedView;
+    private CustomGestureDetector gestureDetector;
 
 	public HangoutAdapter(ArrayList<HangoutPost> list) {
         this.group = list;
@@ -60,7 +58,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         final Context context = postHolder.itemView.getContext();
         
         if (gestureDetector == null)
-            gestureDetector = new GestureDetector(context, new DoubleTapListener());
+            gestureDetector = new CustomGestureDetector(context, new DoubleTapListener());
         
         
         Picasso.with(context)
@@ -121,8 +119,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         postHolder.postImg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                doubleTappedPos = postHolder.getAdapterPosition();
-                doubleTappedView = v;
+                gestureDetector.setTargetView(v, postHolder.getAdapterPosition());
                 return gestureDetector.onTouchEvent(event);
             }
         });
@@ -139,7 +136,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
             public void onClick(View v) {
                 int position = postHolder.getAdapterPosition();
 
-                if (position % 2 == 0) {
+                if (position % 2 == 1) {
                     MainActivity mainActivity = (MainActivity) v.getContext();
 
                     Bundle bundle = new Bundle();
@@ -208,7 +205,36 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         }
     }
 
+    private class CustomGestureDetector extends GestureDetector {
+
+        private OnGestureListener listener;
+
+        public CustomGestureDetector(Context context, OnGestureListener listener) {
+            super(context, listener);
+
+            this.listener = listener;
+        }
+
+        /**
+         * sets target view for custom double-tap handling.
+         * @param v the target view itself.
+         * @param pos the target view position in the list.
+         */
+        protected void setTargetView(View v, int pos) {
+            if (listener instanceof DoubleTapListener)
+                ((DoubleTapListener) listener).setTargetView(v, pos);
+        }
+    }
+
     private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+        
+        private View mTargetView;
+        private int mTargetViewPos;
+
+        protected void setTargetView(View v, int pos) {
+            mTargetView = v;
+            mTargetViewPos = pos;
+        }
 
         @Override
         public boolean onDown(MotionEvent e) {
@@ -218,16 +244,19 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d("kodok","doubletap");
-            Context context = doubleTappedView.getContext();
+            if (mTargetView == null)
+                return true;
+            
+            Context context = mTargetView.getContext();
 
             Gson gson = new Gson();
             Intent intent = new Intent(context, ItemDetailActivity.class);
-            intent.putExtra("ITEM_INFO", gson.toJson(group.get(doubleTappedPos)));
+            intent.putExtra("ITEM_INFO", gson.toJson(group.get(mTargetViewPos)));
 
             if (context instanceof Activity) {
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context,
-                                doubleTappedView,   // The view which starts the transition
+                                mTargetView,   // The view which starts the transition
                                 context.getString(R.string.item_detail_transition)    // The transitionName of the view we’re transitioning to
                         );
                 ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
@@ -235,7 +264,7 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                 context.startActivity(intent);
             }
 
-            doubleTappedView = null;
+            mTargetView = null;
 
             return true;
         }

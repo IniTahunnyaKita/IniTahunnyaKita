@@ -3,7 +3,6 @@ package com.molaja.android.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +26,6 @@ public class ShopProfileFragment extends BaseFragment implements View.OnClickLis
 
     public static final String PROFILE_PICTURE_URL = "PICTURE_URL";
     public static final String SHOP_NAME = "SHOP_NAME";
-
-    private ViewPager mViewPager;
 
 
     @Nullable

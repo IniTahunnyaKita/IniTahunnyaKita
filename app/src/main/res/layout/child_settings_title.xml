@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <TextView
+    <com.molaja.android.widget.CustomTextView
         android:id="@+id/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,10 +13,10 @@
         android:paddingLeft="@dimen/default_medium_margin"
         android:paddingBottom="@dimen/default_small_margin"
         android:gravity="center_vertical"
-        android:typeface="serif"
         android:textSize="16sp"
         android:textColor="@color/DarkTeal"
-        android:textAllCaps="true"/>
+        android:textAllCaps="true"
+        app:ttf_name="roboto/Roboto-Medium"/>
 
     <View
         android:layout_width="match_parent"

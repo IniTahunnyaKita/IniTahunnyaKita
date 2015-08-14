@@ -61,22 +61,22 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <TextView
+            <com.molaja.android.widget.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_text"
                 android:textSize="28sp"
                 android:textColor="@color/White"
-                android:typeface="sans"/>
+                alibabi:ttf_name="roboto/Roboto-Light"/>
 
-            <TextView
+            <com.molaja.android.widget.CustomTextView
                 android:id="@+id/welcome_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_text"
                 android:textColor="@color/White"
                 android:textSize="28sp"
-                android:typeface="sans"/>
+                alibabi:ttf_name="roboto/Roboto-Light"/>
 
         </LinearLayout>
     </RelativeLayout>
@@ -90,7 +90,7 @@
         android:text="@string/app_name"
         android:textSize="36sp"
         android:textColor="@android:color/white"
-        alibabi:ttf_name="black_jack.ttf" />
+        alibabi:ttf_name="black_jack" />
 
     <RelativeLayout
         android:id="@+id/form_container"
@@ -101,6 +101,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:background="#DDFFFFFF">
+
         <EditText
             android:id="@+id/usernameBox"
             android:layout_width="250dp"
@@ -152,16 +153,16 @@
             android:layout_marginTop="10dp"
             android:text="@string/sign_up"
             android:textSize="14sp"
-            android:typeface="sans"/>
+            android:fontFamily="sans-serif-light"/>
 
-        <TextView
+        <com.molaja.android.widget.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/signup_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="@string/terms_of_service"
-            android:typeface="sans"/>
+            alibabi:ttf_name="roboto/Roboto-Light"/>
     </RelativeLayout>
 
 </RelativeLayout>

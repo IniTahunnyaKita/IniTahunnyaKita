@@ -33,7 +33,7 @@ public class User {
         //save to shared prefs
         SharedPreferences.Editor editor = MolajaApplication.getLoginCookies(context).edit();
         editor.putString("user",user);
-        editor.commit();
+        editor.apply();
     }
 
 }
