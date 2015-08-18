@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.molaja.android.R;
 import com.molaja.android.activities.ItemDetailActivity;
+import com.molaja.android.activities.ShopActivity;
 import com.molaja.android.model.DiscoverShops;
 import com.molaja.android.model.HangoutPost;
 import com.molaja.android.widget.SquareImageView;
@@ -63,10 +64,7 @@ public class DiscoverShopsAdapter extends ArrayAdapter<DiscoverShops> implements
         viewHolder.picture1Btn = (ImageButton) v.findViewById(R.id.shop_image1_button);
         viewHolder.picture2Btn = (ImageButton) v.findViewById(R.id.shop_image2_button);
         viewHolder.picture3Btn = (ImageButton) v.findViewById(R.id.shop_image3_button);
-            //v.setTag(viewHolder);
-        /*} else {
-            viewHolder = (ViewHolder) v.getTag();
-        }*/
+
         Picasso.with(mContext)
                 .load(items.get(position).profileUrl)
                 .fit().centerCrop()
@@ -90,6 +88,7 @@ public class DiscoverShopsAdapter extends ArrayAdapter<DiscoverShops> implements
 
         //assign implemented click listener
         v.setOnClickListener(this);
+        ((ViewGroup) viewHolder.profilePicture.getParent()).setOnClickListener(this);
         viewHolder.picture1Btn.setOnClickListener(this);
         viewHolder.picture2Btn.setOnClickListener(this);
         viewHolder.picture3Btn.setOnClickListener(this);
@@ -106,6 +105,10 @@ public class DiscoverShopsAdapter extends ArrayAdapter<DiscoverShops> implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.child_discover_shop_parent:
+                Intent intent = new Intent(v.getContext(), ShopActivity.class);
+                intent.putExtra(ShopActivity.SHOP_NAME, items.get((Integer) v.getTag()).shopName);
+                intent.putExtra(ShopActivity.SHOP_PICTURE, items.get((Integer) v.getTag()).profileUrl);
+                v.getContext().startActivity(intent);
                 break;
             case R.id.shop_image1_button:
                 goToItemDetailFragment(v, (Integer) v.getTag(), 1);

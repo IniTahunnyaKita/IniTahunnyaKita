@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.molaja.android.fragment.ShopCollectionsFragment;
 import com.molaja.android.fragment.ShopProfileFragment;
-import com.molaja.android.fragment.discover.DiscoverItemsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ShopPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new ShopProfileFragment().passArguments(bundleList.get(0));
             case 1:
-                return new DiscoverItemsFragment();
+                return new ShopCollectionsFragment().passArguments(bundleList.get(0));
         }
         return null;
     }

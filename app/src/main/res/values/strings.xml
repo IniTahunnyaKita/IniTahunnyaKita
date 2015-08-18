@@ -99,6 +99,8 @@
     <string name="share">Share</string>
     <string name="items">items</string>
     <string name="rating">rating</string>
-    <string name="browse_shop">Browse Shop</string>
+    <string name="browse_collections">Browse Collections</string>
+    <string name="search_something">Search something...</string>
+    <string name="add_to_cart">Add to cart</string>
 
 </resources>

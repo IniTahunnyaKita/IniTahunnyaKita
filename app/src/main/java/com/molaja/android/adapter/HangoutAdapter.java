@@ -140,16 +140,16 @@ public class HangoutAdapter extends RecyclerView.Adapter<HangoutAdapter.PostView
                     MainActivity mainActivity = (MainActivity) v.getContext();
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(ShopProfileFragment.SHOP_NAME, group.get(position).getFullname());
-                    bundle.putString(ShopProfileFragment.PROFILE_PICTURE_URL,
+                    bundle.putString(ShopActivity.SHOP_NAME, group.get(position).getFullname());
+                    bundle.putString(ShopActivity.SHOP_PICTURE,
                             group.get(position).getProfileUrl());
 
                     FragmentManager fm = mainActivity.getCurrentFragment().getChildFragmentManager();
                     FragmentUtil.switchFragment(fm, R.id.fragment_main_tab_container, new ShopProfileFragment(), bundle);
                 } else {
                     Intent intent = new Intent(v.getContext(), ShopActivity.class);
-                    intent.putExtra(ShopProfileFragment.SHOP_NAME, group.get(position).getFullname());
-                    intent.putExtra(ShopProfileFragment.PROFILE_PICTURE_URL,
+                    intent.putExtra(ShopActivity.SHOP_NAME, group.get(position).getFullname());
+                    intent.putExtra(ShopActivity.SHOP_PICTURE,
                             group.get(position).getProfileUrl());
                     v.getContext().startActivity(intent);
                 }

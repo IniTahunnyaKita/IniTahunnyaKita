@@ -7,12 +7,15 @@ import android.support.v4.view.ViewPager;
 import com.molaja.android.MolajaApplication;
 import com.molaja.android.R;
 import com.molaja.android.adapter.ShopPagerAdapter;
-import com.molaja.android.fragment.ShopProfileFragment;
+import com.molaja.android.model.Shop;
 
 /**
  * Created by Florian on 1/27/2015.
  */
 public class ShopActivity extends BaseActivity {
+
+    public static final String SHOP_PICTURE = "PICTURE_URL";
+    public static final String SHOP_NAME = "SHOP_NAME";
 
     private ViewPager mViewPager;
 
@@ -34,10 +37,10 @@ public class ShopActivity extends BaseActivity {
         ShopPagerAdapter adapter = new ShopPagerAdapter(getSupportFragmentManager());
 
         Bundle args = new Bundle();
-        args.putString(ShopProfileFragment.SHOP_NAME, getIntent()
-                .getStringExtra(ShopProfileFragment.SHOP_NAME));
-        args.putString(ShopProfileFragment.PROFILE_PICTURE_URL, getIntent()
-                .getStringExtra(ShopProfileFragment.PROFILE_PICTURE_URL));
+        args.putString(SHOP_NAME, getIntent()
+                .getStringExtra(SHOP_NAME));
+        args.putString(SHOP_PICTURE, getIntent()
+                .getStringExtra(SHOP_PICTURE));
         adapter.setArguments(args, 0);
         mViewPager.setAdapter(adapter);
 
@@ -48,12 +51,12 @@ public class ShopActivity extends BaseActivity {
         ProfileItem items = (ProfileItem) findViewById(R.id.profile_item_items);
 
         PicassoPalette paletteCallback = PicassoPalette.with(getIntent()
-                .getStringExtra(ProfileFragment.PROFILE_PICTURE_URL), profilePicture)
+                .getStringExtra(ProfileFragment.SHOP_PICTURE), profilePicture)
                 .use(PicassoPalette.Profile.VIBRANT)
                 .intoBackground(featuredImage);
 
         Picasso.with(this)
-                .load(getIntent().getStringExtra(ProfileFragment.PROFILE_PICTURE_URL))
+                .load(getIntent().getStringExtra(ProfileFragment.SHOP_PICTURE))
                 .fit().centerCrop()
                 .into(profilePicture, paletteCallback);
 
@@ -64,6 +67,14 @@ public class ShopActivity extends BaseActivity {
         rating.setItemValue(5d + (double) rand.nextInt(50) / 10);
         items.setItemValue(rand.nextInt(50));*/
 
+    }
+
+    public static Shop convertArgsToShop(Bundle args) {
+        Shop shop = new Shop();
+        shop.name = args.getString(SHOP_NAME);
+        shop.image = args.getString(SHOP_PICTURE);
+
+        return shop;
     }
 
     public void goToCollection() {

@@ -24,8 +24,6 @@ import java.util.Random;
  */
 public class ShopProfileFragment extends BaseFragment implements View.OnClickListener {
 
-    public static final String PROFILE_PICTURE_URL = "PICTURE_URL";
-    public static final String SHOP_NAME = "SHOP_NAME";
 
 
     @Nullable
@@ -44,27 +42,29 @@ public class ShopProfileFragment extends BaseFragment implements View.OnClickLis
         ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture);
         ImageView featuredImage = (ImageView) findViewById(R.id.featured_image);
         TextView shopName = (TextView) findViewById(R.id.shop_name);
-        ProfileItem rating = (ProfileItem) findViewById(R.id.profile_item_rating);
-        ProfileItem items = (ProfileItem) findViewById(R.id.profile_item_items);
+        final ProfileItem rating = (ProfileItem) findViewById(R.id.profile_item_rating);
+        final ProfileItem items = (ProfileItem) findViewById(R.id.profile_item_items);
         final FloatingActionButton browseBtn = (FloatingActionButton) findViewById(R.id.browse_btn);
 
         PicassoPalette paletteCallback = PicassoPalette.with(getArguments()
-                .getString(ShopProfileFragment.PROFILE_PICTURE_URL), profilePicture)
+                .getString(ShopActivity.SHOP_PICTURE), profilePicture)
                 .use(PicassoPalette.Profile.VIBRANT)
                 .intoBackground(featuredImage)
                 .intoCallBack(new BitmapPalette.CallBack() {
                     @Override
                     public void onPaletteLoaded(Palette palette) {
-                        browseBtn.setRippleColor(palette.getVibrantColor(R.color.Teal));
+                        browseBtn.setRippleColor(getThemeColor(palette));
+                        rating.setValueColor(getThemeColor(palette));
+                        items.setValueColor(getThemeColor(palette));
                     }
                 });
 
         Picasso.with(getActivity())
-                .load(getArguments().getString(ShopProfileFragment.PROFILE_PICTURE_URL))
+                .load(getArguments().getString(ShopActivity.SHOP_PICTURE))
                 .fit().centerCrop()
                 .into(profilePicture, paletteCallback);
 
-        shopName.setText(getArguments().getString(ShopProfileFragment.SHOP_NAME));
+        shopName.setText(getArguments().getString(ShopActivity.SHOP_NAME));
 
         Random rand = new Random();
 
@@ -74,6 +74,10 @@ public class ShopProfileFragment extends BaseFragment implements View.OnClickLis
         browseBtn.setOnClickListener(this);
         findViewById(R.id.browse_text).setOnClickListener(this);
 
+    }
+    
+    private int getThemeColor(Palette palette) {
+        return palette.getVibrantColor(palette.getMutedColor(getColor(R.color.Teal)));
     }
 
     @Override
